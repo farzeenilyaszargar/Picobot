@@ -16,6 +16,7 @@ function updateComposer() {
   input.style.height = 'auto';
   input.style.height = `${Math.min(input.scrollHeight, 180)}px`;
   send.disabled = busy || !input.value.trim();
+  $('model-select').disabled = busy;
 }
 
 function appendMessage(content, kind) {
@@ -94,7 +95,7 @@ form.addEventListener('submit', async (event) => {
     if (currentId === generationId) {
       busy = false;
       log.removeAttribute('aria-busy');
-      $('model-status').textContent = model ? 'Model connected' : 'Model coming soon';
+      $('model-status').textContent = model ? 'Connected' : 'Not connected';
       updateComposer();
       if (!$('chat-page').hidden) input.focus();
     }
@@ -109,7 +110,7 @@ $('new-chat').addEventListener('click', () => {
   log.replaceChildren();
   input.value = '';
   setChatStarted(false);
-  $('model-status').textContent = model ? 'Model connected' : 'Model coming soon';
+  $('model-status').textContent = model ? 'Connected' : 'Not connected';
   updateComposer();
   input.focus();
 });
@@ -122,7 +123,7 @@ window.picoboi = Object.freeze({
     }
     model = adapter;
     history.length = 0;
-    $('model-status').textContent = model ? 'Model connected' : 'Model coming soon';
+    $('model-status').textContent = model ? 'Connected' : 'Not connected';
   },
 });
 

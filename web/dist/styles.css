@@ -29,6 +29,15 @@ h1{font-size:clamp(36px,4.7vw,56px);line-height:1.14;letter-spacing:-2.6px;font-
 textarea{display:block;width:100%;min-height:57px;max-height:180px;resize:none;border:0;outline:none;background:transparent;color:#252525;font-size:15px;line-height:1.6;padding:0 1px}
 textarea::placeholder{color:#a0a09b}
 .composer-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:9px}
+.model-controls{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;min-width:0}
+.model-select-wrap{position:relative;display:inline-flex;align-items:center;max-width:100%;border-radius:5px}
+#model-select{appearance:none;-webkit-appearance:none;font:inherit;font-size:11px;color:#62625a;background:transparent;border:0;border-radius:5px;padding:6px 21px 6px 0;max-width:100%;cursor:pointer}
+#model-select:hover{color:#242424}
+#model-select:focus-visible{outline:2px solid #999;outline-offset:3px}
+#model-select:disabled{cursor:default;opacity:.6}
+#model-select option{color:#242424;background:#fff}
+#model-select option:disabled{color:#a0a099}
+.model-chevron{position:absolute;right:3px;color:#8c8c85;pointer-events:none}
 .model-status{display:flex;align-items:center;gap:7px;font-size:11px;color:#8c8c85}
 .status-dot{height:5px;width:5px;border-radius:50%;background:#b6b6ad;flex-shrink:0}
 .send-button{width:34px;height:34px;border:0;border-radius:50%;color:#fff;background:#272725;display:grid;place-items:center;transition:background .2s,transform .2s}
