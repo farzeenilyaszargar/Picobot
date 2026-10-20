@@ -18,6 +18,7 @@ let generationId = 0;
 
 function closeModelMenu(returnFocus = false) {
   modelMenu.hidden = true;
+  document.body.classList.remove('model-menu-open');
   modelTrigger.setAttribute('aria-expanded', 'false');
   if (returnFocus && !modelTrigger.disabled) modelTrigger.focus();
 }
@@ -25,6 +26,7 @@ function closeModelMenu(returnFocus = false) {
 function openModelMenu() {
   if (busy) return;
   modelMenu.hidden = false;
+  document.body.classList.add('model-menu-open');
   modelTrigger.setAttribute('aria-expanded', 'true');
   currentModelOption.focus();
 }
