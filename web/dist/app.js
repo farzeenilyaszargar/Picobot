@@ -39,7 +39,7 @@ function route() {
   $('about-page').hidden = !about;
   if (about) $('about-link').setAttribute('aria-current', 'page');
   else $('about-link').removeAttribute('aria-current');
-  document.title = about ? 'about — picoboi' : 'picoboi';
+  document.title = about ? 'about | picoboi' : 'picoboi';
   if (about) $('about-heading').focus({ preventScroll: true });
 }
 
@@ -69,7 +69,7 @@ form.addEventListener('submit', async (event) => {
   updateComposer();
 
   if (!model) {
-    appendMessage('Picoboi is still taking shape. The language model isn’t connected yet — this is a preview of its future home.', 'notice');
+    appendMessage('Picoboi is still taking shape. The language model isn’t connected yet. This is a preview of its future home.', 'notice');
     input.focus();
     return;
   }
