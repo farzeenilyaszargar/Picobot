@@ -42,15 +42,11 @@ textarea::placeholder{color:#a0a09b}
 .composer-hint span{margin:0 7px}
 .footer{padding:25px 52px 30px;display:flex;gap:20px;justify-content:space-between;align-items:center;font-size:10px;color:#a0a099;letter-spacing:.1px}
 .footer-right{display:flex;align-items:center;gap:12px}
-.about-page{flex:1;display:flex;align-items:center;justify-content:center;padding:55px 24px 85px;text-align:center}
-.about-content{max-width:820px;margin:auto}
-.about-content .eyebrow{margin-bottom:26px}
-.about-content h1{font-size:clamp(40px,5.5vw,68px);letter-spacing:-3px;line-height:1.12;outline:none}
-.about-description{font-size:clamp(20px,2.4vw,27px);font-weight:400;letter-spacing:-.65px;line-height:1.5;color:#5d5d57;max-width:720px;margin:33px auto 0;text-wrap:pretty}
-.about-detail{font-size:15px;line-height:1.9;color:#91918a;max-width:540px;margin:21px auto 0;text-wrap:pretty}
-.about-credit{font-size:19px;color:#85857e;margin:35px 0 0;letter-spacing:-.4px}
-.about-credit span{color:#2a2a27}
-.about-credit .credit-period{color:#a4a49a}
+.about-page{flex:1;display:flex;align-items:center;justify-content:center;padding:48px 24px;text-align:center}
+.about-content{width:100%;max-width:940px;margin:auto}
+.about-copy{font-size:clamp(26px,3.5vw,40px);font-weight:400;letter-spacing:-.9px;line-height:1.5;color:#42423e;margin:0;text-wrap:pretty;outline:none}
+.about-copy a{font:inherit;color:inherit;text-decoration:underline;text-decoration-color:#c8c8bf;text-decoration-thickness:1px;text-underline-offset:5px;transition:text-decoration-color .2s}
+.about-copy a:hover{color:#171717;text-decoration-color:#171717}
 .back-link{display:inline-flex;align-items:center;gap:10px;margin-top:39px;font-size:12px;color:#7c7c75;border-bottom:1px solid #e7e7e1;padding-bottom:7px}
 .back-link:hover{color:#222;border-color:#777}
 .conversation-header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}
