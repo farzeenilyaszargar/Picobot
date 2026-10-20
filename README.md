@@ -1,8 +1,8 @@
-# Picobot
+# Picoboi
 
 An experiment in small, personal AI that runs in your browser. Made by **@farilyaz**.
 
-Picobot explores natively trained ternary language models, local tools, memory, and optional specialist models. The current implementation is a minimal white chat frontend with an About page. The language model is not connected yet; the interface labels this clearly.
+Picoboi explores natively trained ternary language models, local tools, memory, and optional specialist models. The current implementation is a minimal white chat frontend with an About page. The language model is not connected yet; the interface labels this clearly.
 
 ## Run the frontend
 
@@ -27,7 +27,7 @@ The frontend includes message submission, conversation starters, a New chat acti
 Once the inference engine is ready, provide an adapter in the page:
 
 ```js
-window.picobot.setModel({
+window.picoboi.setModel({
   async generate(messages) {
     return await yourEngine.generate(messages);
   },

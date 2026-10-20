@@ -1,4 +1,4 @@
-# Picobot frontend
+# Picoboi frontend
 
 A buildless, responsive chat frontend. The Home and About views share one static page. The frontend uses no remote APIs, external fonts, analytics, or persistent conversation storage.
 
@@ -19,7 +19,7 @@ The current chat accepts messages and explicitly explains that the model is not 
 The integration hook in `dist/app.js` accepts a model adapter:
 
 ```js
-window.picobot.setModel({
+window.picoboi.setModel({
   async generate(messages) {
     // Send messages to your browser-local worker/inference engine.
     // Return the generated answer as a string.

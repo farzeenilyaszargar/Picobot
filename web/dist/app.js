@@ -1,5 +1,5 @@
 // Attach a local inference engine later with:
-// window.picobot.setModel({ async generate(messages) { return 'model output'; } });
+// window.picoboi.setModel({ async generate(messages) { return 'model output'; } });
 // `messages` contains { role: 'user' | 'assistant', content: string } objects.
 // No remote service or fabricated model response is used in this frontend.
 const $ = (id) => document.getElementById(id);
@@ -39,7 +39,7 @@ function route() {
   $('about-page').hidden = !about;
   if (about) $('about-link').setAttribute('aria-current', 'page');
   else $('about-link').removeAttribute('aria-current');
-  document.title = about ? 'about — picobot' : 'picobot — a little intelligence, all yours';
+  document.title = about ? 'about — picoboi' : 'picoboi';
   if (about) $('about-heading').focus({ preventScroll: true });
 }
 
@@ -69,7 +69,7 @@ form.addEventListener('submit', async (event) => {
   updateComposer();
 
   if (!model) {
-    appendMessage('Picobot is still taking shape. The language model isn’t connected yet — this is a preview of its future home.', 'notice');
+    appendMessage('Picoboi is still taking shape. The language model isn’t connected yet — this is a preview of its future home.', 'notice');
     input.focus();
     return;
   }
@@ -114,7 +114,7 @@ $('new-chat').addEventListener('click', () => {
   input.focus();
 });
 
-window.picobot = Object.freeze({
+window.picoboi = Object.freeze({
   setModel(adapter) {
     if (busy) throw new Error('Finish the current response before switching models.');
     if (adapter !== null && typeof adapter?.generate !== 'function') {

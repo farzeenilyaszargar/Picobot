@@ -1,4 +1,4 @@
-# Picobot: browser-local assistant research and development plan
+# Picoboi: browser-local assistant research and development plan
 
 Research date: 14 October 2026. This is a researched proposal, not a measured benchmark. The workspace was empty at the start of this investigation. Confirmed direction: laptops first, phones later; train a new model from scratch with ternary {-1, 0, +1} weights; rented training compute is acceptable. Training is not constrained to the user's laptop. All deployed inference and personal memory stay on the client. Existing checkpoints below are comparison baselines and runtime probes.
 
@@ -104,7 +104,7 @@ The current [WebLLM model catalogue](https://raw.githubusercontent.com/mlc-ai/we
 | Qwen3-4B | 3,431.59 |
 | Qwen3-8B | 5,695.78 |
 
-These are upstream configuration estimates, not total tab/process memory or measurements made for Picobot. They demonstrate why model architecture and runtime matter alongside parameter count. The same catalogue has FP16/FP32 entries for SmolLM2-135M; do not assume every model has every desired quantization precompiled.
+These are upstream configuration estimates, not total tab/process memory or measurements made for Picoboi. They demonstrate why model architecture and runtime matter alongside parameter count. The same catalogue has FP16/FP32 entries for SmolLM2-135M; do not assume every model has every desired quantization precompiled.
 
 Use these initial test bands as hypotheses, not compatibility promises:
 
