@@ -27,17 +27,17 @@ if (context) {
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    context.font = '12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+    context.font = '500 13px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    const count = Math.min(520, Math.max(65, Math.round(width * height / 2200)));
+    const count = Math.min(900, Math.max(100, Math.round(width * height / 1300)));
     particles = Array.from({ length: count }, () => ({
       x: Math.random(),
       y: Math.random(),
       phase: Math.random() * tau,
-      speed: .5 + Math.random() * 1.5,
-      drift: (Math.random() - .5) * 1.5,
-      opacity: .07 + Math.random() * .17,
+      speed: 2 + Math.random() * 3,
+      drift: (Math.random() - .5) * 4,
+      opacity: .2 + Math.random() * .24,
       glyph: Math.floor(Math.random() * glyphs.length),
       changeEvery: 5 + Math.random() * 9,
     }));
@@ -55,7 +55,7 @@ if (context) {
       // Keep the middle quiet, with a gradual falloff towards the margins.
       const distance = Math.hypot((x - width / 2) / (width * .44),
         (y - height * .48) / (height * .43));
-      const clearing = .035 + .965 * smoothstep(.55, 1.3, distance);
+      const clearing = .1 + .9 * smoothstep(.4, 1.1, distance);
       const edge = Math.min(1, Math.max(0, Math.min(x, width - x, y, height - y) / 35));
       // Glyph changes happen at zero opacity, preventing visible flicker.
       const progress = time / particle.changeEvery + particle.phase / tau;
@@ -63,7 +63,7 @@ if (context) {
       const alpha = particle.opacity * clearing * edge * fade;
       if (alpha < .006) continue;
       const glyph = glyphs[(particle.glyph + Math.floor(progress)) % glyphs.length];
-      context.fillStyle = `rgba(137, 141, 129, ${alpha})`;
+      context.fillStyle = `rgba(110, 117, 104, ${alpha})`;
       context.fillText(glyph, x, y);
     }
   }
