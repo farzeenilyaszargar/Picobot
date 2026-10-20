@@ -32,12 +32,14 @@ function setChatStarted(started) {
   $('suggestions').hidden = started;
   $('conversation-header').hidden = !started;
   log.hidden = !started;
+  document.body.classList.toggle('chat-active', started && location.hash !== '#about');
 }
 
 function route() {
   const about = location.hash === '#about';
   $('chat-page').hidden = about;
   $('about-page').hidden = !about;
+  document.body.classList.toggle('chat-active', !about && !log.hidden);
   if (about) $('about-link').setAttribute('aria-current', 'page');
   else $('about-link').removeAttribute('aria-current');
   document.title = about ? 'about | picoboi' : 'picoboi';
