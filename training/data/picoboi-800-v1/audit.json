@@ -1,0 +1,37 @@
+{
+  "status": "passed",
+  "english_word_types": 800,
+  "english_word_occurrences": 6672057,
+  "total_tokens": 10000088,
+  "total_dialogues": 145953,
+  "duplicate_dialogues": 0,
+  "cross_split_groups": 0,
+  "out_of_vocabulary_words": 0,
+  "checks": [
+    "JSONL hashes and exact deduplication",
+    "semantic group split assignment",
+    "closed vocabulary and formatting",
+    "roles and loss masks",
+    "packed tokens and offsets",
+    "small-count arithmetic",
+    "selected speaker and article invariants",
+    "artifact checksums"
+  ],
+  "splits": {
+    "train": {
+      "tokens": 9800070,
+      "dialogues": 143056,
+      "supervised_tokens": 4099890
+    },
+    "validation": {
+      "tokens": 100015,
+      "dialogues": 1452,
+      "supervised_tokens": 42093
+    },
+    "test": {
+      "tokens": 100003,
+      "dialogues": 1445,
+      "supervised_tokens": 41884
+    }
+  }
+}

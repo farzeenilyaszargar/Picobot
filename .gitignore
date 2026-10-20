@@ -8,3 +8,5 @@ previews/
 picobot-site.tar.gz
 __pycache__/
 .venv/
+training/data/**/*.bin
+training/data/**/*.offsets.jsonl

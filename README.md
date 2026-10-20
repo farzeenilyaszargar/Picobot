@@ -19,6 +19,7 @@ Open [localhost:4173](http://localhost:4173).
 - [`web/dist/`](web/dist/): HTML, CSS, JavaScript, and favicon.
 - [`web/README.md`](web/README.md): frontend details and the model adapter interface.
 - [`RESEARCH_PLAN.md`](RESEARCH_PLAN.md): model research, browser constraints, training stages, and evaluation plans.
+- [`training/README.md`](training/README.md): the Picoboi 100K synthetic chat baseline, frozen 800-word vocabulary, tokenizer, corpus, and audit tools.
 
 The frontend includes message submission, conversation starters, a New chat action, and a model adapter hook for future integration. Conversation state stays in memory. There is currently no inference backend or model download.
 
