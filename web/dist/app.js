@@ -8,15 +8,63 @@ const input = $('message-input');
 const send = $('send-button');
 const log = $('messages');
 const history = [];
+const modelPicker = $('model-picker');
+const modelTrigger = $('model-select');
+const modelMenu = $('model-menu');
+const currentModelOption = $('model-1m');
 let model = null;
 let busy = false;
 let generationId = 0;
+
+function closeModelMenu(returnFocus = false) {
+  modelMenu.hidden = true;
+  modelTrigger.setAttribute('aria-expanded', 'false');
+  if (returnFocus && !modelTrigger.disabled) modelTrigger.focus();
+}
+
+function openModelMenu() {
+  if (busy) return;
+  modelMenu.hidden = false;
+  modelTrigger.setAttribute('aria-expanded', 'true');
+  currentModelOption.focus();
+}
+
+modelTrigger.addEventListener('click', () => {
+  if (modelMenu.hidden) openModelMenu();
+  else closeModelMenu(true);
+});
+modelTrigger.addEventListener('keydown', (event) => {
+  if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+    event.preventDefault();
+    openModelMenu();
+  }
+});
+currentModelOption.addEventListener('click', () => closeModelMenu(true));
+modelMenu.addEventListener('keydown', (event) => {
+  if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+    event.preventDefault();
+    currentModelOption.focus();
+  }
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && !modelMenu.hidden) {
+    event.preventDefault();
+    closeModelMenu(true);
+  }
+});
+document.addEventListener('pointerdown', (event) => {
+  if (!modelPicker.contains(event.target)) closeModelMenu();
+});
+document.addEventListener('focusin', (event) => {
+  if (!modelPicker.contains(event.target)) closeModelMenu();
+});
 
 function updateComposer() {
   input.style.height = 'auto';
   input.style.height = `${Math.min(input.scrollHeight, 180)}px`;
   send.disabled = busy || !input.value.trim();
   $('model-select').disabled = busy;
+  if (busy) closeModelMenu();
 }
 
 function appendMessage(content, kind) {
@@ -28,6 +76,7 @@ function appendMessage(content, kind) {
 }
 
 function setChatStarted(started) {
+  closeModelMenu();
   $('welcome').hidden = started;
   $('suggestions').hidden = started;
   $('conversation-header').hidden = !started;
@@ -36,6 +85,7 @@ function setChatStarted(started) {
 }
 
 function route() {
+  closeModelMenu();
   const about = location.hash === '#about';
   $('chat-page').hidden = about;
   $('about-page').hidden = !about;
