@@ -9,7 +9,9 @@ a{color:inherit;text-decoration:none}
 button{cursor:pointer}
 [hidden]{display:none!important}
 button:focus-visible,a:focus-visible{outline:2px solid #777;outline-offset:5px}
-.site-shell{min-height:100svh;display:flex;flex-direction:column}
+.ascii-background{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.7;transition:opacity .7s}
+.chat-active .ascii-background{opacity:.4}
+.site-shell{position:relative;z-index:1;min-height:100svh;display:flex;flex-direction:column}
 .navbar{padding:18px 52px;display:flex;align-items:center;justify-content:space-between}
 .wordmark{font-size:25px;font-weight:650;letter-spacing:-1.2px;line-height:1.2}
 .wordmark-period{color:#a3a39d}
