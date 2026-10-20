@@ -35,6 +35,5 @@ History is held in memory. New chat clears it and ignores outstanding replies. T
 - `dist/index.html`: navigation, chat view, About content.
 - `dist/styles.css`: white, minimal, responsive styling.
 - `dist/app.js`: routing, composer interactions, chat state, model integration hook.
-- `dist/ascii.js`: faint, locally rendered ASCII animation with reduced-motion support and background-tab pausing.
 
 No dependency installation or build step is required.
