@@ -10,7 +10,7 @@ button{cursor:pointer}
 [hidden]{display:none!important}
 button:focus-visible,a:focus-visible{outline:2px solid #777;outline-offset:5px}
 .site-shell{min-height:100svh;display:flex;flex-direction:column}
-.navbar{padding:35px 52px;display:flex;align-items:center;justify-content:space-between}
+.navbar{padding:18px 52px;display:flex;align-items:center;justify-content:space-between}
 .wordmark{font-size:25px;font-weight:650;letter-spacing:-1.2px;line-height:1.2}
 .wordmark-period{color:#a3a39d}
 .nav-link{font-size:14px;display:flex;align-items:center;gap:9px;color:#626260;transition:color .2s}
@@ -85,5 +85,5 @@ textarea::placeholder{color:#a0a09b}
 @media(max-width:600px){.chat-active .chat-page{padding:8px 20px max(16px,env(safe-area-inset-bottom))}}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(min-height:850px){.chat-page{padding-bottom:115px}}
-@media(max-width:600px){.navbar{padding:26px 24px}.wordmark{font-size:23px}.chat-page{padding:44px 20px 70px}.welcome{margin-bottom:29px}h1{letter-spacing:-1.8px}.pico-symbol{margin-bottom:25px}.eyebrow{font-size:9px;letter-spacing:1.7px}.intro{font-size:14px}.composer{padding:18px 17px 13px;border-radius:16px}.suggestions{gap:7px;margin-top:16px}.suggestions button{padding:9px 10px;font-size:10px;gap:8px}.footer{padding:20px 24px 24px;font-size:9px}.footer-right{display:none}.about-page{padding:35px 25px 60px}.about-content h1{letter-spacing:-1.8px}.about-description{margin-top:27px}.about-detail{font-size:14px}.about-credit{font-size:18px}.messages{max-height:45svh}.message{max-width:94%}}
+@media(max-width:600px){.navbar{padding:16px 24px}.wordmark{font-size:23px}.chat-page{padding:44px 20px 70px}.welcome{margin-bottom:29px}h1{letter-spacing:-1.8px}.pico-symbol{margin-bottom:25px}.eyebrow{font-size:9px;letter-spacing:1.7px}.intro{font-size:14px}.composer{padding:18px 17px 13px;border-radius:16px}.suggestions{gap:7px;margin-top:16px}.suggestions button{padding:9px 10px;font-size:10px;gap:8px}.footer{padding:20px 24px 24px;font-size:9px}.footer-right{display:none}.about-page{padding:35px 25px 60px}.about-content h1{letter-spacing:-1.8px}.about-description{margin-top:27px}.about-detail{font-size:14px}.about-credit{font-size:18px}.messages{max-height:45svh}.message{max-width:94%}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
