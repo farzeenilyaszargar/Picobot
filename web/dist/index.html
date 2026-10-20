@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content="Picobot is an experiment in small, personal AI that runs in your browser. Made by @farilyaz." />
+    <title>picobot — a little intelligence, all yours</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="navbar">
+        <a class="wordmark" href="#" aria-label="picobot home">picobot<span class="wordmark-period">.</span></a>
+        <nav aria-label="Main navigation"><a class="nav-link" id="about-link" href="#about">about <span aria-hidden="true">↗</span></a></nav>
+      </header>
+
+      <main id="chat-page" class="chat-page">
+        <section class="chat-stage" aria-labelledby="chat-heading">
+          <div class="welcome" id="welcome">
+            <div class="pico-symbol" aria-hidden="true"><span></span><span></span></div>
+            <p class="eyebrow">A LITTLE INTELLIGENCE. ALL YOURS.</p>
+            <h1 id="chat-heading">Say hello to picobot.</h1>
+            <p class="intro">A small space for your biggest ideas.</p>
+          </div>
+
+          <div class="conversation-header" id="conversation-header" hidden>
+            <span class="conversation-title">Your conversation</span>
+            <button class="text-button" id="new-chat" type="button">New chat <span aria-hidden="true">↗</span></button>
+          </div>
+          <div class="messages" id="messages" role="log" aria-label="Conversation" aria-live="polite" aria-relevant="additions" hidden></div>
+
+          <form class="composer" id="chat-form" aria-label="Send a message">
+            <label class="sr-only" for="message-input">Your message</label>
+            <textarea id="message-input" rows="2" maxlength="8000" placeholder="What’s on your mind?" autocomplete="off"></textarea>
+            <div class="composer-bottom">
+              <span class="model-status"><span class="status-dot" aria-hidden="true"></span><span id="model-status">Model coming soon</span></span>
+              <button class="send-button" id="send-button" type="submit" aria-label="Send message" disabled>
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5m0 0-6 6m6-6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </button>
+            </div>
+          </form>
+
+          <div class="suggestions" id="suggestions" aria-label="Conversation starters">
+            <button type="button" data-prompt="Explain something complex in a simple way.">Explain something <span aria-hidden="true">↗</span></button>
+            <button type="button" data-prompt="Help me think through an idea.">Explore an idea <span aria-hidden="true">↗</span></button>
+            <button type="button" data-prompt="Let’s start a conversation.">Just say hello <span aria-hidden="true">↗</span></button>
+          </div>
+          <p class="composer-hint" id="composer-hint">Enter to send <span aria-hidden="true">·</span> Shift + Enter for a new line</p>
+        </section>
+      </main>
+
+      <main id="about-page" class="about-page" hidden>
+        <section class="about-content" aria-labelledby="about-heading">
+          <p class="eyebrow">SMALL BY DESIGN.</p>
+          <h1 id="about-heading" tabindex="-1">Intelligence, with<br />a smaller footprint.</h1>
+          <p class="about-description">Picobot is an experiment in making AI small enough to live in your browser, and useful enough to be part of your everyday.</p>
+          <p class="about-detail">We’re building a tiny language model, with local tools and memory, to explore how much is possible when the intelligence stays with you.</p>
+          <p class="about-credit">Made by <span>@farilyaz</span><span class="credit-period">.</span></p>
+          <a class="back-link" href="#"><span aria-hidden="true">←</span> Back to picobot</a>
+        </section>
+      </main>
+
+      <footer class="footer"><span>Small model. Open possibilities.</span><span class="footer-right">An independent experiment <span aria-hidden="true">↗</span></span></footer>
+    </div>
+  </body>
+</html>

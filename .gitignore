@@ -1,0 +1,10 @@
+.DS_Store
+node_modules/
+.env
+.env.*
+!.env.example
+**/.openai/
+previews/
+picobot-site.tar.gz
+__pycache__/
+.venv/
