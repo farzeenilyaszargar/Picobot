@@ -26,7 +26,6 @@ button:focus-visible,a:focus-visible{outline:2px solid #777;outline-offset:5px}
 h1{font-size:clamp(36px,4.7vw,56px);line-height:1.14;letter-spacing:-2.6px;font-weight:450;margin:0}
 .intro{color:#888883;font-size:15px;line-height:1.7;margin:17px 0 0}
 .composer{border:1px solid #deded9;border-radius:19px;background:#fff;padding:21px 20px 14px;box-shadow:0 3px 5px #00000002,0 12px 30px #00000003;transition:border-color .2s,box-shadow .2s}
-.composer:focus-within{border-color:#a7a7a0;box-shadow:0 4px 22px #00000006}
 textarea{display:block;width:100%;min-height:57px;max-height:180px;resize:none;border:0;outline:none;background:transparent;color:#252525;font-size:15px;line-height:1.6;padding:0 1px}
 textarea::placeholder{color:#a0a09b}
 .composer-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:9px}
