@@ -15,16 +15,18 @@ const wordPattern = /[a-z]+(?:'[a-z]+)?/g;
 const copy = binding => ({ ...binding });
 
 export function createConceptParser(tokenizer) {
+  const mappings = { ...surfaceConcepts, ...tokenizer.generalized_words };
   const vocabulary = new Set(tokenizer.tokens.filter(t => /^[a-z]+$/.test(t)));
   const slots = tokenizer.reference_tokens;
   if (!Array.isArray(slots) || !slots.length || new Set(slots).size !== slots.length ||
       slots.some((t, i) => t !== `<term_${i}>` || !tokenizer.tokens.includes(t))) {
     throw new Error('Concept parser needs a tokenizer with ordered reference slots');
   }
-  for (const concept of Object.values(surfaceConcepts)) {
+  for (const concept of Object.values(mappings)) {
     if (!vocabulary.has(concept)) throw new Error(`Concept outside model vocabulary: ${concept}`);
   }
-  const normalize = createNormalizer(tokenizer);
+  // Spelling repair may produce an intermediate surface such as apple before generalization.
+  const normalize = createNormalizer({ ...tokenizer, tokens: [...tokenizer.tokens, ...Object.keys(mappings)] });
   let bindings = [];
 
   return {
@@ -41,11 +43,11 @@ export function createConceptParser(tokenizer) {
       const overflow = new Set();
       let modelText = normalized.text.replace(wordPattern, surface => {
         // Keep known words, inflections, and negation. Only explicit mappings generalize.
-        if (vocabulary.has(surface) || !Object.hasOwn(surfaceConcepts, surface)) return surface;
+        if (vocabulary.has(surface) || !Object.hasOwn(mappings, surface)) return surface;
         let binding = candidate.find(item => item.surface === surface);
         if (!binding) {
           if (candidate.length === slots.length) { overflow.add(surface); return surface; }
-          binding = { token: slots[candidate.length], surface, concept: surfaceConcepts[surface] };
+          binding = { token: slots[candidate.length], surface, concept: mappings[surface] };
           candidate.push(binding);
         }
         const to = `${binding.concept} ${binding.token}`;

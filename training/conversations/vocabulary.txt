@@ -21,8 +21,6 @@ answered
 answering
 answers
 any
-apple
-apples
 are
 area
 arm
@@ -43,7 +41,6 @@ bag
 bags
 ball
 balls
-banana
 bank
 basket
 bathroom
@@ -377,7 +374,6 @@ leaves
 left
 leg
 legs
-lemon
 let
 letter
 level
@@ -998,3 +994,4 @@ probably
 usually
 finally
 rather
+fruits

@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+from conversations.canonical import canonicalize
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / 'conversations'
@@ -21,17 +22,22 @@ def audit():
     max_context = contract['max_conversation_tokens']
     if len(base_words) != len(set(base_words)) or len(base_words) != 800:
         raise ValueError('The frozen baseline vocabulary must contain 800 distinct word forms')
-    if len(words) != len(set(words)) or not set(base_words).issubset(words):
+    retired = set(tokenizer['retired_words'])
+    if retired != set(contract['retired_words']) or any(w not in tokenizer['generalized_words'] for w in retired):
+        raise ValueError('Retired words need an explicit concept mapping')
+    if len(words) != len(set(words)) or not (set(base_words)-retired).issubset(words):
         raise ValueError('The new vocabulary must preserve every baseline word')
-    if len(words) != contract['english_word_forms'] or len(words) != 1000:
-        raise ValueError('The active vocabulary must contain exactly 1000 word forms')
-    previous = json.loads((DATA/'archive/tokenizer-818.json').read_text())
-    if tokenizer['tokens'][:818] != previous['tokens']:
-        raise ValueError('All previous 818 token IDs must remain unchanged')
+    if len(words) != contract['english_word_forms']:
+        raise ValueError(f"The active vocabulary must contain exactly {contract['english_word_forms']} word forms")
+    previous = json.loads((DATA/'archive/tokenizer-1020.json').read_text())
+    if tokenizer['tokens'][:12] != previous['tokens'][:12]:
+        raise ValueError('The previous 12 structural token IDs must remain unchanged')
+    expected_words = [t for t in previous['tokens'] if re.fullmatch('[a-z]+',t) and t not in retired]+['fruits']
+    if words != expected_words:
+        raise ValueError('Only declared fruit words may be retired in this migration')
     if references != [f'<term_{i}>' for i in range(contract['reference_slots'])]:
         raise ValueError('Reference slot definitions do not match the data contract')
-    expected_tokens = ['<pad>', '<unk>', '<bos>', '<eos>', '<user>', '<assistant>', '<turn>', '.', ',', '?', '!', ':'] + base_words
-    expected_tokens += [word for word in words if word not in set(base_words)]
+    expected_tokens = previous['tokens'][:12] + words
     expected_tokens += references
     if tokenizer['tokens'] != expected_tokens:
         raise ValueError('Tokenizer must preserve baseline IDs and append new tokens')
@@ -54,6 +60,7 @@ def audit():
             seen_ids.add(row['id'])
             if row['id'] in excluded:
                 continue
+            row = canonicalize(row, tokenizer)
             if row['id'] in ids or row['scenario'] in scenarios:
                 errors.append(f'{location}: duplicate ID or scenario')
             ids.add(row['id']); scenarios.add(row['scenario'])
@@ -113,10 +120,13 @@ def audit():
             row = json.loads(line)
             if row['id'] in excluded:
                 continue
+            row = canonicalize(row, tokenizer)
             training_user_messages.update(m['content'] for m in row['messages'] if m['role']=='user')
     for path in sorted((DATA/'evaluation').glob('*.jsonl')):
         for line in path.read_text().splitlines():
             row = json.loads(line)
+            adapted = canonicalize({**row, 'messages': row['messages'] + [{'role':'assistant','content':row['reference']}]}, tokenizer)
+            row = {**row, 'messages':adapted['messages'][:-1], 'reference':adapted['messages'][-1]['content']}
             if not row['messages'] or row['messages'][-1]['role'] != 'user':
                 raise ValueError(f"Evaluation case must end with user: {row['id']}")
             if row['messages'][-1]['content'] in training_user_messages:
@@ -140,6 +150,7 @@ def audit():
                   vocabulary_word_types_used=len(word_counts), vocabulary_limit=len(words),
                   added_vocabulary=sorted(vocabulary-set(base_words)), tokenizer_size=len(tokenizer['tokens']),
                   reference_tokens=references, max_conversation_tokens=max_context,
+                  source_view='canonicalized_once', generalized_words=tokenizer['generalized_words'],
                   unused_vocabulary=sorted(vocabulary-set(word_counts)),
                   shortest_conversation_tokens=min(lengths,default=0), longest_conversation_tokens=max(lengths,default=0),
                   conversations_over_512_tokens=sum(n>512 for n in lengths), topics=dict(sorted(topics.items())),

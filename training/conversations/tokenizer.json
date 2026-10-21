@@ -1,5 +1,5 @@
 {
-  "name": "picoboi-conversation-v3",
+  "name": "picoboi-conversation-v4",
   "tokens": [
     "<pad>",
     "<unk>",
@@ -36,8 +36,6 @@
     "answering",
     "answers",
     "any",
-    "apple",
-    "apples",
     "are",
     "area",
     "arm",
@@ -58,7 +56,6 @@
     "bags",
     "ball",
     "balls",
-    "banana",
     "bank",
     "basket",
     "bathroom",
@@ -392,7 +389,6 @@
     "left",
     "leg",
     "legs",
-    "lemon",
     "let",
     "letter",
     "level",
@@ -1013,6 +1009,7 @@
     "usually",
     "finally",
     "rather",
+    "fruits",
     "<term_0>",
     "<term_1>",
     "<term_2>",
@@ -1227,7 +1224,8 @@
     "probably",
     "usually",
     "finally",
-    "rather"
+    "rather",
+    "fruits"
   ],
   "added_punctuation": [],
   "base_vocabulary_sha256": "1cf8ef8435acdea4cb9bb7bc8d6b9170400522867f552a35fdb3334ba8c3f968",
@@ -1241,5 +1239,20 @@
     "<term_6>",
     "<term_7>"
   ],
-  "previous_token_count": 818
+  "previous_token_count": 1020,
+  "generalized_words": {
+    "apple": "fruit",
+    "apples": "fruits",
+    "banana": "fruit",
+    "bananas": "fruits",
+    "lemon": "fruit",
+    "lemons": "fruits"
+  },
+  "retired_words": [
+    "apple",
+    "apples",
+    "banana",
+    "lemon"
+  ],
+  "token_ids_compatible_with_previous": false
 }

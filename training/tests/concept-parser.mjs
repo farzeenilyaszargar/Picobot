@@ -59,7 +59,24 @@ assert.equal(other.parse('an oak.').modelText, 'a tree <term_3>.');
 assert.equal(other.render('a tree <term_3> is here.'), 'an oak is here.');
 assert.throws(() => other.render('tool <term_0>more'), /unknown reference/);
 assert.equal(other.parse('my bird is here.').modelText, 'my bird is here.');
-console.log(JSON.stringify({ status: 'passed', vocabulary_words: 1000, token_ids: tokenizer.tokens.length,
+const fruit = createConceptParser(tokenizer);
+assert.equal(fruit.parse('an apple and a banana.').modelText, 'a fruit <term_0> and a fruit <term_1>.');
+assert.equal(fruit.render('a fruit <term_0> is here.'), 'an apple is here.');
+assert.equal(fruit.render('the fruit <term_1> is yellow.'), 'the banana is yellow.');
+assert.equal(fruit.parse('two apples and a lemon.').modelText, 'two fruits <term_2> and a fruit <term_3>.');
+assert.equal(fruit.render('the fruits <term_2> are here.'), 'the apples are here.');
+assert.equal(fruit.render('fruit is food.'), 'fruit is food.');
+assert.equal(fruit.parse('an orange shirt.').modelText, 'an orange shirt.');
+assert.equal(fruit.parse('an orange.').modelText, 'an orange.');
+assert.equal(fruit.bindings.length, 4);
+assert.equal(fruit.parse('pineapple').ready, false);
+const spelling = createConceptParser(tokenizer);
+assert.equal(spelling.parse('teh aples are here.').modelText, 'the fruits <term_0> are here.');
+assert.equal(spelling.parse('the banana is not here.').modelText, 'the fruit <term_1> is not here.');
+assert.equal(spelling.render('the fruit <term_1> is not here.'), 'the banana is not here.');
+assert.equal(new Set(tokenizer.tokens.filter(t => /^[a-z]+$/.test(t))).size, 997);
+for (const word of ['apple', 'apples', 'banana', 'lemon']) assert.ok(!tokenizer.tokens.includes(word));
+console.log(JSON.stringify({ status: 'passed', vocabulary_words: 997, token_ids: tokenizer.tokens.length,
   checks: ['bindings across turns', 'plural forms', 'negation', 'contractions', 'generic noun preservation',
     'unknown words', 'slot exhaustion', 'transactional state', 'reference validation', 'reset', 'known words'] }));
 

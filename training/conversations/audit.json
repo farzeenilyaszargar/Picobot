@@ -16,11 +16,11 @@
   },
   "messages": 9606,
   "assistant_english_words": 60248,
-  "model_tokens": 142045,
+  "model_tokens": 142167,
   "held_out_relevance_cases": 24,
   "evaluation_words_counted_toward_target": false,
-  "vocabulary_word_types_used": 862,
-  "vocabulary_limit": 1000,
+  "vocabulary_word_types_used": 859,
+  "vocabulary_limit": 997,
   "added_vocabulary": [
     "across",
     "added",
@@ -73,6 +73,7 @@
     "finally",
     "flowers",
     "forgot",
+    "fruits",
     "full",
     "general",
     "given",
@@ -223,7 +224,7 @@
     "yours",
     "yourself"
   ],
-  "tokenizer_size": 1020,
+  "tokenizer_size": 1017,
   "reference_tokens": [
     "<term_0>",
     "<term_1>",
@@ -235,6 +236,15 @@
     "<term_7>"
   ],
   "max_conversation_tokens": 1024,
+  "source_view": "canonicalized_once",
+  "generalized_words": {
+    "apple": "fruit",
+    "apples": "fruits",
+    "banana": "fruit",
+    "bananas": "fruits",
+    "lemon": "fruit",
+    "lemons": "fruits"
+  },
   "unused_vocabulary": [
     "across",
     "added",

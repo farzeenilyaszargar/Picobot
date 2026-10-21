@@ -7,8 +7,10 @@ from pathlib import Path
 import shutil
 import tempfile
 import unittest
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 SPEC = importlib.util.spec_from_file_location('conversation_auditor', ROOT/'audit_conversations.py')
 AUDITOR = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(AUDITOR)
@@ -22,7 +24,7 @@ class ConversationContractTests(unittest.TestCase):
         (self.data/'authored').mkdir()
         (self.data/'evaluation').mkdir()
         (self.data/'archive').mkdir()
-        for name in ['contract.json', 'tokenizer.json', 'vocabulary.txt', 'archive/tokenizer-818.json']:
+        for name in ['contract.json', 'tokenizer.json', 'vocabulary.txt', 'archive/tokenizer-1020.json']:
             shutil.copyfile(ROOT/'conversations'/name, self.data/name)
         (self.data/'excluded-conversations.json').write_text('{}')
         self.row = dict(id='test', scenario='test', provenance='assistant_direct_authorship', topics=['test'],
@@ -42,7 +44,7 @@ class ConversationContractTests(unittest.TestCase):
         report = self.run_audit()
         self.assertEqual(report['english_words'], 5)
         self.assertEqual(report['model_tokens'], 15)
-        self.assertEqual(report['tokenizer_size'], 1020)
+        self.assertEqual(report['tokenizer_size'], 1017)
 
     def test_unbound_output_reference_is_rejected(self):
         self.row['messages'][0]['content'] = 'hello.'
@@ -75,19 +77,39 @@ class ConversationContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unknown words'):
             self.run_audit()
 
-    def test_previous_token_ids_cannot_drift(self):
+    def test_structural_token_ids_cannot_drift(self):
         path = self.data/'tokenizer.json'
         tokenizer = json.loads(path.read_text())
-        tokenizer['tokens'][12], tokenizer['tokens'][13] = tokenizer['tokens'][13], tokenizer['tokens'][12]
+        tokenizer['tokens'][0], tokenizer['tokens'][1] = tokenizer['tokens'][1], tokenizer['tokens'][0]
         path.write_text(json.dumps(tokenizer))
-        with self.assertRaisesRegex(ValueError, '818 token IDs'):
+        with self.assertRaisesRegex(ValueError, '12 structural token IDs'):
             self.run_audit()
 
     def test_vocabulary_cannot_silently_grow(self):
         with (self.data/'vocabulary.txt').open('a') as stream:
             stream.write('cat\n')
-        with self.assertRaisesRegex(ValueError, 'exactly 1000'):
+        with self.assertRaisesRegex(ValueError, 'exactly 997'):
             self.run_audit()
+
+    def test_fruit_source_is_preserved_and_counted_once(self):
+        from conversations.canonical import canonicalize
+        self.row['messages'] = [dict(role='user', content='i have an apple.'),
+                                dict(role='assistant', content='the apple is here.')]
+        tokenizer = json.loads((self.data/'tokenizer.json').read_text())
+        adapted = canonicalize(self.row, tokenizer)
+        self.assertEqual(adapted['messages'][0]['content'], 'i have a fruit <term_0>.')
+        self.assertEqual(adapted['messages'][1]['content'], 'the fruit <term_0> is here.')
+        self.assertEqual(self.row['messages'][0]['content'], 'i have an apple.')
+        self.assertEqual(self.run_audit()['english_words'], 8)
+
+    def test_new_story_fruit_stays_generic_without_an_input_binding(self):
+        from conversations.canonical import canonicalize
+        self.row['messages'] = [dict(role='user', content='tell a story.'),
+                                dict(role='assistant', content='she found an apple.')]
+        tokenizer = json.loads((self.data/'tokenizer.json').read_text())
+        adapted = canonicalize(self.row, tokenizer)
+        self.assertEqual(adapted['messages'][1]['content'], 'she found a fruit.')
+        self.run_audit()
 
 
 if __name__ == '__main__':

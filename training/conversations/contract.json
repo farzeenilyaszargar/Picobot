@@ -1,8 +1,8 @@
 {
-  "version": 3,
-  "english_word_forms": 1000,
+  "version": 4,
+  "english_word_forms": 997,
   "reference_slots": 8,
-  "tokenizer_size": 1020,
+  "tokenizer_size": 1017,
   "max_conversation_tokens": 1024,
   "target_english_words": 10000000,
   "reference_concepts": [
@@ -17,8 +17,16 @@
     "flower",
     "flowers",
     "tree",
-    "trees"
+    "trees",
+    "fruit",
+    "fruits"
   ],
   "status": "untrained_next_model_data",
-  "notes": "Reference slots bind surface terms, not individual real-world entities. Preserve the binding table with each conversation. The deployed 812-token model is unchanged."
+  "notes": "Only unambiguous fruit forms are retired. Orange remains because it is also a color. Old source text is preserved; canonical.py derives the model view without counting both. Token IDs intentionally change for the untrained next model.",
+  "retired_words": [
+    "apple",
+    "apples",
+    "banana",
+    "lemon"
+  ]
 }
