@@ -24,7 +24,9 @@ Ambiguous words such as `orange`, `train`, `dress`, `fish`, `chicken`, `brush`, 
 
 Earlier source messages still contain the original concrete nouns. `canonical.py` derives their canonical model text before validation, counting, or training. User nouns covered by the category policy receive explicit bindings; assistant mentions reuse those bindings. An assistant introducing a mapped noun not named by the user uses a generic category instead of inventing an unbound reference. A category is not a substitute for every specific property of its members. The migration was inspected for property claims; category-specific knowledge still needs supplied facts or a separate tool.
 
-A future packer must use `canonicalize(row, tokenizer)` and apply the exclusion manifest. Training directly on raw authored files would reintroduce retired words. Generic references preserve word identity only when the user supplied that word; they do not infer additional object properties. The audit counts only the canonical view once, not both versions, and records raw source checksums.
+The parallel tokenizer packer uses `canonicalize(row, tokenizer)` and applies the exclusion manifest. Training directly on raw authored files would reintroduce retired words. Generic references preserve word identity only when the user supplied that word; they do not infer additional object properties. The audit counts only the canonical view once, not both versions, and records raw source checksums.
+
+Both the unchanged 988-ID word-level vocabulary and a separate 512-ID BPE vocabulary are available in [tokenizers/](tokenizers/README.md). Their prepared streams represent the same conversations. Neither has new trained weights, and the live website keeps its existing tokenizer and model.
 
 ## Preservation and evaluation
 

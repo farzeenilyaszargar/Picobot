@@ -16,7 +16,7 @@ const copy = binding => ({ ...binding });
 
 export function createConceptParser(tokenizer) {
   const mappings = { ...surfaceConcepts, ...tokenizer.generalized_words };
-  const vocabulary = new Set(tokenizer.tokens.filter(t => /^[a-z]+$/.test(t)));
+  const vocabulary = new Set(tokenizer.word_vocabulary ?? tokenizer.tokens.filter(t => /^[a-z]+$/.test(t)));
   const slots = tokenizer.reference_tokens;
   if (!Array.isArray(slots) || !slots.length || new Set(slots).size !== slots.length ||
       slots.some((t, i) => t !== `<term_${i}>` || !tokenizer.tokens.includes(t))) {
@@ -26,7 +26,7 @@ export function createConceptParser(tokenizer) {
     if (!vocabulary.has(concept)) throw new Error(`Concept outside model vocabulary: ${concept}`);
   }
   // Spelling repair may produce an intermediate surface such as apple before generalization.
-  const normalize = createNormalizer({ ...tokenizer, tokens: [...tokenizer.tokens, ...Object.keys(mappings)] });
+  const normalize = createNormalizer({ ...tokenizer, tokens: [...vocabulary, ...Object.keys(mappings)] });
   let bindings = [];
 
   return {

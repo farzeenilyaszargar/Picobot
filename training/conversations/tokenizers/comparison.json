@@ -1,0 +1,154 @@
+{
+  "status": "both_prepared_model_untrained",
+  "default": "word-level",
+  "variants": {
+    "word-level": {
+      "tokenizer_size": 988,
+      "conversations": 1290,
+      "source_english_words": 103749,
+      "model_tokens": 143505,
+      "longest_conversation_tokens": 586,
+      "assistant_targets": 76997
+    },
+    "bpe-512": {
+      "tokenizer_size": 512,
+      "conversations": 1290,
+      "source_english_words": 103749,
+      "model_tokens": 171414,
+      "longest_conversation_tokens": 839,
+      "assistant_targets": 94028
+    }
+  },
+  "bpe_sequence_ratio": 1.1944810285355911,
+  "examples": [
+    {
+      "text": "fact",
+      "word_level_tokens": [
+        "fact"
+      ],
+      "bpe_tokens": [
+        "fa",
+        "c",
+        "t\u2581"
+      ]
+    },
+    {
+      "text": "facts",
+      "word_level_tokens": [
+        "facts"
+      ],
+      "bpe_tokens": [
+        "fa",
+        "c",
+        "t",
+        "s\u2581"
+      ]
+    },
+    {
+      "text": "know",
+      "word_level_tokens": [
+        "know"
+      ],
+      "bpe_tokens": [
+        "know\u2581"
+      ]
+    },
+    {
+      "text": "knows",
+      "word_level_tokens": [
+        "knows"
+      ],
+      "bpe_tokens": [
+        "k",
+        "no",
+        "w",
+        "s\u2581"
+      ]
+    },
+    {
+      "text": "knowing",
+      "word_level_tokens": [
+        "knowing"
+      ],
+      "bpe_tokens": [
+        "k",
+        "no",
+        "w",
+        "ing\u2581"
+      ]
+    },
+    {
+      "text": "known",
+      "word_level_tokens": [
+        "known"
+      ],
+      "bpe_tokens": [
+        "k",
+        "no",
+        "wn\u2581"
+      ]
+    },
+    {
+      "text": "knew",
+      "word_level_tokens": [
+        "knew"
+      ],
+      "bpe_tokens": [
+        "k",
+        "ne",
+        "w\u2581"
+      ]
+    },
+    {
+      "text": "i know the facts.",
+      "word_level_tokens": [
+        "i",
+        "know",
+        "the",
+        "facts",
+        "."
+      ],
+      "bpe_tokens": [
+        "i\u2581",
+        "know\u2581",
+        "the\u2581",
+        "fa",
+        "c",
+        "t",
+        "s\u2581",
+        "."
+      ]
+    },
+    {
+      "text": "the animal <term_0> is not hungry.",
+      "word_level_tokens": [
+        "the",
+        "animal",
+        "<term_0>",
+        "is",
+        "not",
+        "hungry",
+        "."
+      ],
+      "bpe_tokens": [
+        "the\u2581",
+        "animal\u2581",
+        "<term_0>",
+        "is\u2581",
+        "not\u2581",
+        "h",
+        "un",
+        "g",
+        "ry\u2581",
+        "."
+      ]
+    }
+  ],
+  "notes": [
+    "Both variants use exactly the same canonical source conversations.",
+    "BPE was fitted on this same corpus. This is not held-out quality evidence.",
+    "The concept parser lexicon is separate from BPE model token IDs.",
+    "Packed files are ignored by Git and recreated by this script.",
+    "Word and reference IDs differ between variants. Weights are not interchangeable."
+  ]
+}
