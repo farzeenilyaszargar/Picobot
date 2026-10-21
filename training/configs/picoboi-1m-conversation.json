@@ -1,7 +1,7 @@
 {
   "name": "picoboi-1m-conversation",
   "status": "proposed_untrained",
-  "vocab_size": 820,
+  "vocab_size": 818,
   "d_model": 128,
   "d_ff": 384,
   "n_heads": 4,
@@ -23,6 +23,6 @@
   "learned_step_embeddings": false,
   "train_context": 512,
   "weight_dtype": "float32",
-  "expected_parameters": 958080,
+  "expected_parameters": 957824,
   "parameter_budget": 1000000
 }

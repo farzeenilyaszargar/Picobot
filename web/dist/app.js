@@ -1,3 +1,5 @@
+import { getProjectReply } from './project-replies.js';
+
 const $ = (id) => document.getElementById(id);
 const form = $('chat-form');
 const input = $('message-input');
@@ -61,7 +63,7 @@ document.addEventListener('focusin', (event) => {
 function updateComposer() {
   input.style.height = 'auto';
   input.style.height = `${Math.min(input.scrollHeight, 180)}px`;
-  send.disabled = busy || !model || !input.value.trim();
+  send.disabled = busy || !input.value.trim() || (!model && !getProjectReply(input.value));
   $('model-select').disabled = busy;
   if (busy) closeModelMenu();
 }
@@ -166,6 +168,20 @@ form.addEventListener('submit', async (event) => {
   input.value = '';
   updateComposer();
 
+  const projectReply = getProjectReply(content);
+  if (projectReply) {
+    const item = appendMessage('', 'assistant');
+    const link = document.createElement('a');
+    link.href = projectReply.url;
+    link.textContent = projectReply.label;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    item.append(projectReply.prefix, link, projectReply.suffix);
+    item.dataset.responseSource = 'project';
+    log.scrollTop = log.scrollHeight;
+    if (!$('chat-page').hidden) input.focus();
+    return;
+  }
   if (!model) return;
 
   const currentId = ++generationId;

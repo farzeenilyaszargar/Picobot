@@ -1,6 +1,6 @@
 # Picoboi 100K: controlled chat corpus
 
-The replacement corpus is being written directly by the assistant in [conversations/](conversations/README.md), with a target of 100 million English words. It is separate from the older template baseline below. Its audit reports the actual count and remaining work. The next proposed model has 958,080 parameters and has not been trained. The new corpus adds seven project terms to a separate 807-word vocabulary, preserving all baseline data and the live model. Do not mix the old corpus into the new target count.
+The replacement corpus is being written directly by the assistant in [conversations/](conversations/README.md), with a target of 100 million English words. It is separate from the older template baseline below. Its audit reports the actual count and remaining work. The next proposed model has 957,824 parameters and has not been trained. The new corpus adds six project terms to a separate 806-word vocabulary, preserving all baseline data and the live model. Do not mix the old corpus into the new target count.
 
 This is a reproducible synthetic baseline for a model with about 100,000 parameters. It teaches a narrow selection of conversational patterns. It is generated from authored patterns and grammar-aware slot combinations, not 10 million independently written LLM tokens. No external text dataset or paid generation API is used.
 

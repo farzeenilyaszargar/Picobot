@@ -799,7 +799,6 @@ you
 your
 zero
 picoboi
-farilyaz
 llm
 webpage
 pico

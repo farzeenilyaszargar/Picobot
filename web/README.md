@@ -18,9 +18,10 @@ Open http://localhost:4173. Once the status says On device, try Find the ball, C
 - `dist/inference.js`: causal transformer, per-stage KV caches, RMSNorm, RoPE, SwiGLU, tied embeddings, greedy decoding.
 - `dist/model-worker.js`: same-origin loading, SHA-256 verification, generation and cancellation.
 - `dist/normalize.js`: browser-local greeting aliases, contraction expansion, curated spelling fixes, and conservative edit-distance suggestions.
+- `dist/project-replies.js`: narrowly matched creator questions with a fixed attribution link, handled separately from model inference.
 - `dist/app.js`: chat state, streamed replies, errors, model status, and navigation.
 
-Weights contain 99,120 learned parameters in 396,480 raw bytes. `training/export_browser.py` exports them from the trained checkpoint. Answers are not hard-coded or corrected after generation. Application notices are separate from model output.
+Weights contain 99,120 learned parameters in 396,480 raw bytes. `training/export_browser.py` exports them from the trained checkpoint. Model answers are not corrected after generation. Creator questions such as `who made you?` receive the built-in project reply `I was made by @farilyaz.` with a link to https://twitter.com/farilyaz. This reply is UI content, not evidence of learned model ability. The whole creator exchange is excluded from model history so its handle cannot become unsupported input on a later model turn. All other supported prompts use the trained model. Application notices are separate from model output.
 
 Before tokenization, user input goes through a deterministic normalizer. Whole greetings such as `yo`, `hi`, and `whats up` become `hello.`. Contractions expand, common typos are corrected, and explicit aliases map to supported words. The user sees the original input plus an `I read that as:` notice for rewrites. Successful normalized input is retained in model history. Model output is never normalized. Other recognized words retain their tense and form; negation is preserved. Broad one-edit spelling matches are suggestions, not automatic guesses. Unlisted names, synonyms, and ambiguous abbreviations such as `ur` can still be rejected. Bare ambiguous forms such as `its`, `were`, and `well` are not treated as contractions.
 
