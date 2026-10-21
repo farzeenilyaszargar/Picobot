@@ -12,9 +12,19 @@ TARGET = 100_000_000
 
 
 def audit():
-    words = (ROOT/'vocabulary_800.txt').read_text().splitlines()
-    if len(words) != len(set(words)) or len(words) != 800:
-        raise ValueError('The frozen vocabulary must contain 800 distinct word forms')
+    base_words = (ROOT/'vocabulary_800.txt').read_text().splitlines()
+    words = (DATA/'vocabulary.txt').read_text().splitlines()
+    tokenizer = json.loads((DATA/'tokenizer.json').read_text())
+    if len(base_words) != len(set(base_words)) or len(base_words) != 800:
+        raise ValueError('The frozen baseline vocabulary must contain 800 distinct word forms')
+    if len(words) != len(set(words)) or not set(base_words).issubset(words):
+        raise ValueError('The new vocabulary must preserve every baseline word')
+    expected_tokens = ['<pad>', '<unk>', '<bos>', '<eos>', '<user>', '<assistant>', '<turn>', '.', ',', '?', '!', ':'] + base_words
+    expected_tokens += [word for word in words if word not in set(base_words)] + ['@']
+    if tokenizer['tokens'] != expected_tokens:
+        raise ValueError('Tokenizer must preserve baseline IDs and append new tokens')
+    def valid_handle(text):
+        return not re.search(r'@(?!farilyaz\b)', text)
     vocabulary = set(words)
     ids, scenarios, digests = set(), set(), set()
     word_counts, topics, lengths, files = Counter(), Counter(), [], {}
@@ -39,8 +49,8 @@ def audit():
                 expected_role = 'assistant' if i % 2 else 'user'
                 if role != expected_role or not content or content != content.lower():
                     errors.append(f'{location}: invalid role or lowercase content at message {i}')
-                tokens = re.findall(r'[a-z]+|[.,?!:]', content)
-                if ''.join(tokens) != ''.join(content.split()):
+                tokens = re.findall(r'[a-z]+|[.,?!:@]', content)
+                if ''.join(tokens) != ''.join(content.split()) or not valid_handle(content):
                     errors.append(f'{location}: unsupported characters in message {i}')
                 terms = re.findall(r'[a-z]+', content)
                 unknown = sorted(set(terms)-vocabulary)
@@ -77,8 +87,8 @@ def audit():
                 if message['role'] != ('assistant' if i%2 else 'user'):
                     raise ValueError(f"Wrong evaluation role order: {row['id']}")
             for text in [*(m['content'] for m in row['messages']), row['reference']]:
-                tokens=re.findall(r'[a-z]+|[.,?!:]',text)
-                if text != text.lower() or ''.join(tokens) != ''.join(text.split()) or set(re.findall('[a-z]+',text))-vocabulary:
+                tokens=re.findall(r'[a-z]+|[.,?!:@]',text)
+                if not valid_handle(text) or text != text.lower() or ''.join(tokens) != ''.join(text.split()) or set(re.findall('[a-z]+',text))-vocabulary:
                     raise ValueError(f"Evaluation content violates vocabulary: {row['id']}: {text}")
             evaluation_cases += 1
     completed = sum(word_counts.values())
@@ -87,7 +97,8 @@ def audit():
                   target_complete=completed>=TARGET, conversations=len(ids), messages=total_messages,
                   assistant_english_words=assistant_words, model_tokens=total_tokens,
                   held_out_relevance_cases=evaluation_cases, evaluation_words_counted_toward_target=False,
-                  vocabulary_word_types_used=len(word_counts), vocabulary_limit=800,
+                  vocabulary_word_types_used=len(word_counts), vocabulary_limit=len(words),
+                  added_vocabulary=sorted(vocabulary-set(base_words)), tokenizer_size=len(tokenizer['tokens']),
                   unused_vocabulary=sorted(vocabulary-set(word_counts)),
                   shortest_conversation_tokens=min(lengths,default=0), longest_conversation_tokens=max(lengths,default=0),
                   conversations_over_512_tokens=sum(n>512 for n in lengths), topics=dict(sorted(topics.items())),

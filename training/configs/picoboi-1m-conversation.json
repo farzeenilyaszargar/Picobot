@@ -1,14 +1,19 @@
 {
   "name": "picoboi-1m-conversation",
   "status": "proposed_untrained",
-  "vocab_size": 812,
+  "vocab_size": 820,
   "d_model": 128,
   "d_ff": 384,
   "n_heads": 4,
   "unique_blocks": 4,
-  "block_order": [0, 1, 2, 3],
+  "block_order": [
+    0,
+    1,
+    2,
+    3
+  ],
   "normalization": "pre_rmsnorm",
-  "norm_epsilon": 0.00001,
+  "norm_epsilon": 1e-05,
   "feed_forward": "swiglu",
   "position_encoding": "rope",
   "rope_theta": 10000.0,
@@ -18,6 +23,6 @@
   "learned_step_embeddings": false,
   "train_context": 512,
   "weight_dtype": "float32",
-  "expected_parameters": 957056,
+  "expected_parameters": 958080,
   "parameter_budget": 1000000
 }
