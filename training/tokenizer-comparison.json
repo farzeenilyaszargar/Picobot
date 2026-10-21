@@ -1,0 +1,37 @@
+{
+  "source_tokenizer": "picoboi-conversation-v5",
+  "source_english_words": 103749,
+  "observed_word_types": 833,
+  "reserved_ids": 20,
+  "method": "temporary English-only character BPE compression probe; 26 letters plus word-end marker, 20 reserved token IDs; trained and measured on the same current canonical corpus; not model-quality evidence",
+  "baseline": {
+    "vocab_ids": 988,
+    "corpus_model_tokens": 143505,
+    "longest_conversation_tokens": 586,
+    "tied_embedding_parameters_at_width_48": 47424
+  },
+  "bpe": [
+    {
+      "vocab_ids": 256,
+      "corpus_model_tokens": 220074,
+      "sequence_ratio_vs_word": 1.534,
+      "longest_conversation_tokens": 1104,
+      "tied_embedding_parameters_at_width_48": 12288
+    },
+    {
+      "vocab_ids": 384,
+      "corpus_model_tokens": 189535,
+      "sequence_ratio_vs_word": 1.321,
+      "longest_conversation_tokens": 931,
+      "tied_embedding_parameters_at_width_48": 18432
+    },
+    {
+      "vocab_ids": 512,
+      "corpus_model_tokens": 171414,
+      "sequence_ratio_vs_word": 1.194,
+      "longest_conversation_tokens": 839,
+      "tied_embedding_parameters_at_width_48": 24576
+    }
+  ],
+  "seconds": 0.73
+}
