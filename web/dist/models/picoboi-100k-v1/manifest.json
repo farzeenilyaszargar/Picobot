@@ -1,0 +1,194 @@
+{
+  "format": "picoboi-f32-le-v1",
+  "name": "Picoboi-100K",
+  "parameters": 99120,
+  "config": {
+    "name": "picoboi-100k-looped",
+    "status": "proposed_untrained",
+    "vocab_size": 812,
+    "d_model": 48,
+    "d_ff": 144,
+    "n_heads": 2,
+    "unique_blocks": 2,
+    "block_order": [
+      0,
+      1,
+      0,
+      1
+    ],
+    "normalization": "pre_rmsnorm",
+    "norm_epsilon": 1e-05,
+    "feed_forward": "swiglu",
+    "position_encoding": "rope",
+    "rope_theta": 10000.0,
+    "tie_embeddings": true,
+    "linear_bias": false,
+    "output_bias": false,
+    "learned_step_embeddings": false,
+    "train_context": 128,
+    "weight_dtype": "float32",
+    "expected_parameters": 99120,
+    "parameter_budget": 100000
+  },
+  "tensors": {
+    "embedding.weight": {
+      "shape": [
+        812,
+        48
+      ],
+      "offset": 0,
+      "length": 38976
+    },
+    "blocks.0.attention_norm.weight": {
+      "shape": [
+        48
+      ],
+      "offset": 38976,
+      "length": 48
+    },
+    "blocks.0.ffn_norm.weight": {
+      "shape": [
+        48
+      ],
+      "offset": 39024,
+      "length": 48
+    },
+    "blocks.0.q.weight": {
+      "shape": [
+        48,
+        48
+      ],
+      "offset": 39072,
+      "length": 2304
+    },
+    "blocks.0.k.weight": {
+      "shape": [
+        48,
+        48
+      ],
+      "offset": 41376,
+      "length": 2304
+    },
+    "blocks.0.v.weight": {
+      "shape": [
+        48,
+        48
+      ],
+      "offset": 43680,
+      "length": 2304
+    },
+    "blocks.0.o.weight": {
+      "shape": [
+        48,
+        48
+      ],
+      "offset": 45984,
+      "length": 2304
+    },
+    "blocks.0.gate.weight": {
+      "shape": [
+        144,
+        48
+      ],
+      "offset": 48288,
+      "length": 6912
+    },
+    "blocks.0.up.weight": {
+      "shape": [
+        144,
+        48
+      ],
+      "offset": 55200,
+      "length": 6912
+    },
+    "blocks.0.down.weight": {
+      "shape": [
+        48,
+        144
+      ],
+      "offset": 62112,
+      "length": 6912
+    },
+    "blocks.1.attention_norm.weight": {
+      "shape": [
+        48
+      ],
+      "offset": 69024,
+      "length": 48
+    },
+    "blocks.1.ffn_norm.weight": {
+      "shape": [
+        48
+      ],
+      "offset": 69072,
+      "length": 48
+    },
+    "blocks.1.q.weight": {
+      "shape": [
+        48,
+        48
+      ],
+      "offset": 69120,
+      "length": 2304
+    },
+    "blocks.1.k.weight": {
+      "shape": [
+        48,
+        48
+      ],
+      "offset": 71424,
+      "length": 2304
+    },
+    "blocks.1.v.weight": {
+      "shape": [
+        48,
+        48
+      ],
+      "offset": 73728,
+      "length": 2304
+    },
+    "blocks.1.o.weight": {
+      "shape": [
+        48,
+        48
+      ],
+      "offset": 76032,
+      "length": 2304
+    },
+    "blocks.1.gate.weight": {
+      "shape": [
+        144,
+        48
+      ],
+      "offset": 78336,
+      "length": 6912
+    },
+    "blocks.1.up.weight": {
+      "shape": [
+        144,
+        48
+      ],
+      "offset": 85248,
+      "length": 6912
+    },
+    "blocks.1.down.weight": {
+      "shape": [
+        48,
+        144
+      ],
+      "offset": 92160,
+      "length": 6912
+    },
+    "final_norm.weight": {
+      "shape": [
+        48
+      ],
+      "offset": 99072,
+      "length": 48
+    }
+  },
+  "weights": "weights.bin",
+  "weights_bytes": 396480,
+  "weights_sha256": "af0b6dc167faaceadf48324b38f8de556960eaaca85f3b2aa2c66ebfe455423d",
+  "source_checkpoint_sha256": "4f671bfa9410458c10b46ee8d5969aa937c74a6df93c313a2163724797e5c1d2"
+}

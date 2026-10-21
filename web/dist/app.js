@@ -1,7 +1,3 @@
-// Attach a local inference engine later with:
-// window.picoboi.setModel({ async generate(messages) { return 'model output'; } });
-// `messages` contains { role: 'user' | 'assistant', content: string } objects.
-// No remote service or fabricated model response is used in this frontend.
 const $ = (id) => document.getElementById(id);
 const form = $('chat-form');
 const input = $('message-input');
@@ -11,10 +7,11 @@ const history = [];
 const modelPicker = $('model-picker');
 const modelTrigger = $('model-select');
 const modelMenu = $('model-menu');
-const currentModelOption = $('model-1m');
+const currentModelOption = $('model-100k');
 let model = null;
 let busy = false;
 let generationId = 0;
+let loadFailed = false;
 
 function closeModelMenu(returnFocus = false) {
   modelMenu.hidden = true;
@@ -64,7 +61,7 @@ document.addEventListener('focusin', (event) => {
 function updateComposer() {
   input.style.height = 'auto';
   input.style.height = `${Math.min(input.scrollHeight, 180)}px`;
-  send.disabled = busy || !input.value.trim();
+  send.disabled = busy || !model || !input.value.trim();
   $('model-select').disabled = busy;
   if (busy) closeModelMenu();
 }
@@ -75,10 +72,12 @@ function appendMessage(content, kind) {
   item.textContent = content;
   log.append(item);
   log.scrollTop = log.scrollHeight;
+  return item;
 }
 
 function setChatStarted(started) {
   closeModelMenu();
+  $('privacy-note').hidden = started || location.hash === '#about';
   $('welcome').hidden = started;
   $('suggestions').hidden = started;
   $('conversation-header').hidden = !started;
@@ -91,10 +90,11 @@ function route() {
   const about = location.hash === '#about';
   $('chat-page').hidden = about;
   $('about-page').hidden = !about;
+  $('privacy-note').hidden = about || !log.hidden;
   document.body.classList.toggle('chat-active', !about && !log.hidden);
   if (about) $('about-link').setAttribute('aria-current', 'page');
   else $('about-link').removeAttribute('aria-current');
-  document.title = about ? 'about | picoboi' : 'picoboi';
+  document.title = about ? 'about | PicoBoi' : 'PicoBoi';
   if (about) $('about-heading').focus({ preventScroll: true });
 }
 
@@ -123,11 +123,7 @@ form.addEventListener('submit', async (event) => {
   input.value = '';
   updateComposer();
 
-  if (!model) {
-    appendMessage('Picoboi is still taking shape. The language model isn’t connected yet. This is a preview of its future home.', 'notice');
-    input.focus();
-    return;
-  }
+  if (!model) return;
 
   const currentId = ++generationId;
   history.push({ role: 'user', content });
@@ -135,21 +131,31 @@ form.addEventListener('submit', async (event) => {
   log.setAttribute('aria-busy', 'true');
   $('model-status').textContent = 'Thinking…';
   updateComposer();
+  let answerElement;
   try {
-    const response = await model.generate(history.map((message) => ({ ...message })));
+    const result = await model.generate(history.map((message) => ({ ...message })), (text) => {
+      if (currentId !== generationId) return;
+      answerElement ??= appendMessage('', 'assistant');
+      answerElement.textContent = text;
+      log.scrollTop = log.scrollHeight;
+    });
+    const response = result.text;
     if (currentId !== generationId) return;
     if (typeof response !== 'string' || !response.trim()) throw new Error('Empty model response');
     history.push({ role: 'assistant', content: response });
-    appendMessage(response, 'assistant');
-  } catch {
+    answerElement ??= appendMessage(response, 'assistant');
+    if (result.dropped) appendMessage('Older messages were left out to fit the 128-token context window.', 'notice');
+    if (result.truncated) appendMessage('This answer reached the model’s length limit.', 'notice');
+  } catch (error) {
     if (currentId !== generationId) return;
     history.pop();
-    appendMessage('Something interrupted the response. Please try sending your message again.', 'notice');
+    answerElement?.remove();
+    appendMessage(error.message || 'Something interrupted the response. Please try again.', 'notice');
   } finally {
     if (currentId === generationId) {
       busy = false;
       log.removeAttribute('aria-busy');
-      $('model-status').textContent = model ? 'Connected' : 'Not connected';
+      $('model-status').textContent = model ? 'On device' : loadFailed ? 'Load failed' : 'Loading…';
       updateComposer();
       if (!$('chat-page').hidden) input.focus();
     }
@@ -158,28 +164,66 @@ form.addEventListener('submit', async (event) => {
 
 $('new-chat').addEventListener('click', () => {
   generationId++;
+  model?.cancel?.();
   busy = false;
   log.removeAttribute('aria-busy');
   history.length = 0;
   log.replaceChildren();
   input.value = '';
   setChatStarted(false);
-  $('model-status').textContent = model ? 'Connected' : 'Not connected';
+  $('model-status').textContent = model ? 'On device' : loadFailed ? 'Load failed' : 'Loading…';
   updateComposer();
   input.focus();
 });
 
-window.picoboi = Object.freeze({
-  setModel(adapter) {
-    if (busy) throw new Error('Finish the current response before switching models.');
-    if (adapter !== null && typeof adapter?.generate !== 'function') {
-      throw new TypeError('A model adapter must provide an async generate(messages) function.');
+function connectLocalModel() {
+  const worker = new Worker(new URL('./model-worker.js', import.meta.url), { type: 'module' });
+  let sequence = 0;
+  let pending;
+  const adapter = {
+    generate(messages, onToken) {
+      if (pending) return Promise.reject(new Error('A response is already running.'));
+      return new Promise((resolve, reject) => {
+        const id = ++sequence;
+        pending = { id, resolve, reject, onToken };
+        worker.postMessage({ type: 'generate', id, messages });
+      });
+    },
+    cancel() {
+      worker.postMessage({ type: 'cancel', id: ++sequence });
+      pending?.reject(new Error('Cancelled'));
+      pending = undefined;
+    },
+  };
+  const failed = (message) => {
+    loadFailed = true;
+    model = null;
+    $('model-status').textContent = 'Load failed';
+    pending?.reject(new Error(message));
+    pending = undefined;
+    $('model-help').textContent = message;
+    updateComposer();
+  };
+  worker.addEventListener('error', () => failed('The local model could not start. Please reload the page.'));
+  worker.addEventListener('message', ({ data }) => {
+    if (data.type === 'ready') {
+      model = adapter;
+      $('model-status').textContent = 'On device';
+      updateComposer();
+      return;
     }
-    model = adapter;
-    history.length = 0;
-    $('model-status').textContent = model ? 'Connected' : 'Not connected';
-  },
-});
+    if (data.type === 'load-error') { failed(data.message); return; }
+    if (!pending || data.id !== pending.id) return;
+    if (data.type === 'token') { pending.onToken(data.text); return; }
+    const request = pending;
+    pending = undefined;
+    if (data.type === 'done') request.resolve(data);
+    else request.reject(new Error(data.message));
+  });
+}
+
+try { connectLocalModel(); }
+catch { loadFailed = true; $('model-status').textContent = 'Load failed'; $('model-help').textContent = 'This browser could not start the local model. Try a current browser.'; }
 
 window.addEventListener('hashchange', route);
 route();

@@ -29,7 +29,7 @@ h1{font-size:clamp(36px,4.7vw,56px);line-height:1.14;letter-spacing:-2.6px;font-
 textarea{display:block;width:100%;min-height:57px;max-height:180px;resize:none;border:0;outline:none;background:transparent;color:#252525;font-size:15px;line-height:1.6;padding:0 1px}
 textarea::placeholder{color:#a0a09b}
 .composer-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:9px}
-.privacy-note{flex-shrink:0;margin:12px 0 0;color:#96968e;font-size:11px;line-height:1.6;text-align:center}
+.privacy-note{flex-shrink:0;margin:0;padding:12px 20px max(16px,env(safe-area-inset-bottom));color:#96968e;font-size:11px;line-height:1.6;text-align:center}
 .model-controls{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;min-width:0}
 .model-picker{position:relative;max-width:100%}
 #model-select{display:flex;align-items:center;gap:6px;width:max-content;white-space:nowrap;font:inherit;font-size:11px;color:#62625a;background:transparent;border:0;border-radius:999px;padding:5px 8px;margin-left:-8px;cursor:pointer;transition:background .15s,color .15s}
@@ -89,3 +89,5 @@ textarea::placeholder{color:#a0a09b}
 @media(min-height:850px){.chat-page{padding-bottom:115px}}
 @media(max-width:600px){.navbar{padding:16px 24px}.wordmark{font-size:23px}.chat-page{padding:44px 20px 70px}.welcome{margin-bottom:29px}h1{letter-spacing:-1.8px}.pico-symbol{margin-bottom:25px}.eyebrow{font-size:9px;letter-spacing:1.7px}.intro{font-size:14px}.composer{padding:18px 17px 13px;border-radius:16px}.suggestions{gap:7px;margin-top:16px}.suggestions button{padding:9px 10px;font-size:10px;gap:8px}.footer{padding:20px 24px 24px;font-size:9px}.footer-right{display:none}.about-page{padding:35px 25px 60px}.about-content h1{letter-spacing:-1.8px}.about-description{margin-top:27px}.about-detail{font-size:14px}.about-credit{font-size:18px}.messages{max-height:45svh}.message{max-width:94%}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.model-help{color:#96968e;font-size:11px;line-height:1.6;text-align:center;margin:12px 0 0;flex-shrink:0}
