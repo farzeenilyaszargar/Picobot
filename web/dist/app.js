@@ -184,13 +184,16 @@ form.addEventListener('submit', async (event) => {
     answerStream.update(text);
   };
   try {
-    const result = await model.generate(history.map((message) => ({ ...message })), streamAnswer);
+    const result = await model.generate(history.map((message) => ({ ...message })), streamAnswer, (text) => {
+      if (currentId === generationId) appendMessage(`I read that as: ${text}`, 'notice');
+    });
     const response = result.text;
     if (currentId !== generationId) return;
     if (typeof response !== 'string' || !response.trim()) throw new Error('Empty model response');
     streamAnswer(response);
     await answerStream.finish(response);
     if (currentId !== generationId) return;
+    history[history.length - 1].content = result.normalizedInput;
     history.push({ role: 'assistant', content: response });
     if (result.dropped) appendMessage('Older messages were left out to fit the 128-token context window.', 'notice');
     if (result.truncated) appendMessage('This answer reached the model’s length limit.', 'notice');
@@ -226,15 +229,15 @@ $('new-chat').addEventListener('click', () => {
 });
 
 function connectLocalModel() {
-  const worker = new Worker(new URL('./model-worker.js', import.meta.url), { type: 'module' });
+  const worker = new Worker(new URL('./model-worker.js?v=normalizer1', import.meta.url), { type: 'module' });
   let sequence = 0;
   let pending;
   const adapter = {
-    generate(messages, onToken) {
+    generate(messages, onToken, onNormalized) {
       if (pending) return Promise.reject(new Error('A response is already running.'));
       return new Promise((resolve, reject) => {
         const id = ++sequence;
-        pending = { id, resolve, reject, onToken };
+        pending = { id, resolve, reject, onToken, onNormalized };
         worker.postMessage({ type: 'generate', id, messages });
       });
     },
@@ -263,6 +266,7 @@ function connectLocalModel() {
     }
     if (data.type === 'load-error') { failed(data.message); return; }
     if (!pending || data.id !== pending.id) return;
+    if (data.type === 'normalized') { pending.onNormalized(data.text); return; }
     if (data.type === 'token') { pending.onToken(data.text); return; }
     const request = pending;
     pending = undefined;
