@@ -16,7 +16,7 @@ Creator attribution is handled in the webpage by a built-in reply with a clickab
 
 Other identity exchanges teach the model its name, browser location, and limits. They do not change the already trained model. New training must use this corpus and its own tokenizer together; preserving baseline token IDs does not make the old 812-row embedding matrix compatible with the new model. No old packed data is automatically mixed into this corpus.
 
-The proposed next model is specified in `../configs/picoboi-1m-conversation.json`: 957,824 parameters, four distinct width-128 blocks, context 512. It is untrained. Context 512 is an initial design target, not proof of reliable recall. We must prepare separately authored held-out conversations, audit the full corpus, and benchmark local training before starting the new training run. The existing website/model remain the current baseline while this data is built.
+The proposed next model is specified in `../configs/picoboi-1m-conversation.json`: 957,824 parameters, four distinct width-128 blocks, context 512. It is untrained. Context 512 is an initial design target, not proof of reliable recall. There are 24 separately authored held-out relevance cases in `evaluation/`, excluded from training word counts. We must expand evaluation coverage, audit the full corpus, and benchmark local training before starting the new training run. The existing website/model remain the current baseline while this data is built.
 
 Run from the repository root:
 
