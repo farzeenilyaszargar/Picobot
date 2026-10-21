@@ -35,7 +35,9 @@ self.onmessage = async ({ data }) => {
     if (normalized.changed) self.postMessage({ type: 'normalized', id, text: normalized.text });
     if (normalized.unsupported.length) {
       const hints = normalized.suggestions.filter(s => s.candidates.length).map(s => `${s.word}: ${s.candidates.join(' or ')}`);
-      throw new Error(`Outside the 800-word vocabulary: ${normalized.unsupported.slice(0, 8).join(', ')}.${hints.length ? ` Did you mean ${hints.join('; ')}?` : ' Try simpler words.'}`);
+      if (active === id) self.postMessage({ type: 'error', id, code: 'UNKNOWN_WORDS', words: normalized.unsupported,
+        message: `Outside the 800-word vocabulary: ${normalized.unsupported.slice(0, 8).join(', ')}.${hints.length ? ` Did you mean ${hints.join('; ')}?` : ' Try simpler words.'}` });
+      return;
     }
     latest.content = normalized.text;
     const result = await engine.generate(messages,

@@ -7,8 +7,8 @@
     <meta name="description" content="PicoBoi is an experiment in small, personal AI that runs in your browser. Made by @farilyaz." />
     <title>PicoBoi</title>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <link rel="stylesheet" href="./styles.css?v=5" />
-    <script type="module" src="./app.js?v=creator1"></script>
+    <link rel="stylesheet" href="./styles.css?v=6" />
+    <script type="module" src="./app.js?v=web1"></script>
   </head>
   <body>
     <div class="site-shell">
@@ -58,6 +58,8 @@
           </form>
 
           <p class="model-help" id="model-help">100K experiment · 800-word vocabulary · 128-token context. Replies can be wrong.</p>
+          <label class="web-lookup-option"><input type="checkbox" id="web-lookup" checked aria-describedby="web-lookup-help" /> Look up unfamiliar topics</label>
+          <p class="web-lookup-help" id="web-lookup-help">Uses Wikipedia when words are outside the model vocabulary. Search terms are sent to Wikipedia.</p>
 
           <div class="suggestions" id="suggestions" aria-label="Conversation starters">
             <button type="button" data-prompt="the red ball is on the table. where is it?">Find the ball <span aria-hidden="true">↗</span></button>
@@ -69,11 +71,11 @@
 
       <main id="about-page" class="about-page" hidden>
         <section class="about-content" aria-label="About PicoBoi">
-          <p class="about-copy" id="about-heading" tabindex="-1">PicoBoi is an experiment by <a href="https://twitter.com/farilyaz" target="_blank" rel="noopener noreferrer">@farilyaz</a> in running small language models directly inside a website, on your own device. I’m exploring what they can do with features like web scraping, local memory, calculators, and other small tools. The first 100K model now runs in this page with an 800-word vocabulary. It’s a limited experiment: replies can be wrong, and the extra tools aren’t connected yet.</p>
+          <p class="about-copy" id="about-heading" tabindex="-1">PicoBoi is an experiment by <a href="https://twitter.com/farilyaz" target="_blank" rel="noopener noreferrer">@farilyaz</a> in running small language models directly inside a website, on your own device. The first 100K model runs in this page with an 800-word vocabulary. Unfamiliar topics can be looked up on Wikipedia, with reference excerpts and source links. Search terms leave your device when lookup is enabled. It’s a limited experiment: replies and search matches can be wrong.</p>
         </section>
       </main>
 
-      <footer class="privacy-note" id="privacy-note">this ai lives in your browser and nothing is saved</footer>
+      <footer class="privacy-note" id="privacy-note">the model runs in your browser · web lookups contact Wikipedia · chats are not saved by this page</footer>
     </div>
   </body>
 </html>

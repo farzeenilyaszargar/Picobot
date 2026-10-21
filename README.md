@@ -23,7 +23,7 @@ Open [localhost:4173](http://localhost:4173).
 - [`RESEARCH_PLAN.md`](RESEARCH_PLAN.md): model research, browser constraints, training stages, and evaluation plans.
 - [`training/README.md`](training/README.md): the Picoboi 100K synthetic chat baseline, frozen 800-word vocabulary, tokenizer, corpus, and audit tools.
 
-The chat streams actual model replies, supports New chat, and explains vocabulary and context limits. Conversation state stays in memory. Weights download from this website; prompts are not sent to an inference service.
+The chat streams actual model replies, supports New chat, and explains vocabulary and context limits. Conversation state stays in memory. Weights download from this website; prompts are not sent to an inference service. With **Look up unfamiliar topics** enabled, words outside the model vocabulary trigger a Wikipedia search with a streamed reference excerpt and source links. Extracted search terms are sent to Wikipedia; switch off the option to keep chat input local. Web results do not retrain the model.
 
 ## Browser inference
 

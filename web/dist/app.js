@@ -1,4 +1,5 @@
 import { getProjectReply } from './project-replies.js';
+import { lookupWeb } from './web-lookup.js';
 
 const $ = (id) => document.getElementById(id);
 const form = $('chat-form');
@@ -14,6 +15,7 @@ let model = null;
 let busy = false;
 let generationId = 0;
 let loadFailed = false;
+let lookupController;
 
 function closeModelMenu(returnFocus = false) {
   modelMenu.hidden = true;
@@ -65,6 +67,7 @@ function updateComposer() {
   input.style.height = `${Math.min(input.scrollHeight, 180)}px`;
   send.disabled = busy || !input.value.trim() || (!model && !getProjectReply(input.value));
   $('model-select').disabled = busy;
+  $('web-lookup').disabled = busy;
   if (busy) closeModelMenu();
 }
 
@@ -217,7 +220,50 @@ form.addEventListener('submit', async (event) => {
     if (currentId !== generationId) return;
     history.pop();
     answerElement?.remove();
-    appendMessage(error.message || 'Something interrupted the response. Please try again.', 'notice');
+    if (error.code === 'UNKNOWN_WORDS' && $('web-lookup').checked) {
+      $('model-status').textContent = 'Searching Wikipedia…';
+      const notice = appendMessage(`Looking up unfamiliar terms: ${error.words.slice(0, 8).join(', ')}…`, 'notice');
+      const controller = new AbortController();
+      lookupController = controller;
+      try {
+        const result = await lookupWeb(content, error.words, { signal: controller.signal });
+        if (currentId !== generationId) return;
+        notice.textContent = result.text
+          ? `From Wikipedia · ${result.sources[0].title}. This is a reference excerpt; it may not answer your exact question.`
+          : 'No matching Wikipedia summary found. Try a more specific topic.';
+        if (result.text) {
+          answerElement = appendMessage('', 'assistant');
+          answerElement.dataset.responseSource = 'web';
+          answerStream = createAnswerStream(answerElement, currentId);
+          $('model-status').textContent = 'Replying…';
+          await answerStream.finish(result.text);
+          if (currentId !== generationId) return;
+          const sources = document.createElement('span');
+          sources.className = 'web-sources';
+          sources.append('Wikipedia sources: ');
+          result.sources.forEach((source, index) => {
+            if (index) sources.append(' · ');
+            const link = document.createElement('a');
+            link.href = source.url;
+            link.textContent = source.title;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            sources.append(link);
+          });
+          answerElement.append(sources);
+          log.scrollTop = log.scrollHeight;
+        }
+      } catch (lookupError) {
+        if (currentId !== generationId) return;
+        notice.textContent = lookupError.name === 'TimeoutError'
+          ? 'The Wikipedia lookup timed out. Please try again.'
+          : 'Could not reach Wikipedia. Check your connection or try another topic.';
+      } finally {
+        if (lookupController === controller) lookupController = undefined;
+      }
+    } else {
+      appendMessage(error.message || 'Something interrupted the response. Please try again.', 'notice');
+    }
   } finally {
     answerStream?.stop();
     if (currentId === generationId) {
@@ -232,6 +278,8 @@ form.addEventListener('submit', async (event) => {
 
 $('new-chat').addEventListener('click', () => {
   generationId++;
+  lookupController?.abort();
+  lookupController = undefined;
   model?.cancel?.();
   busy = false;
   log.removeAttribute('aria-busy');
@@ -245,7 +293,7 @@ $('new-chat').addEventListener('click', () => {
 });
 
 function connectLocalModel() {
-  const worker = new Worker(new URL('./model-worker.js?v=normalizer1', import.meta.url), { type: 'module' });
+  const worker = new Worker(new URL('./model-worker.js?v=web1', import.meta.url), { type: 'module' });
   let sequence = 0;
   let pending;
   const adapter = {
@@ -287,7 +335,7 @@ function connectLocalModel() {
     const request = pending;
     pending = undefined;
     if (data.type === 'done') request.resolve(data);
-    else request.reject(new Error(data.message));
+    else request.reject(Object.assign(new Error(data.message), { code: data.code, words: data.words }));
   });
 }
 

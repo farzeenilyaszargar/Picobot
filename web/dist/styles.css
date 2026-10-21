@@ -75,6 +75,11 @@ textarea::placeholder{color:#a0a09b}
 .message-user{margin-left:auto;background:#f5f5f1;border-radius:15px 15px 3px 15px;padding:13px 17px;width:fit-content;color:#3e3e38}
 .message-notice{color:#88887f;padding:6px 2px;font-size:13px;max-width:92%}
 .message-assistant{color:#40403b;padding:6px 2px}
+.web-lookup-option{display:flex;justify-content:center;align-items:center;gap:7px;margin:8px 0 0;font-size:11px;color:#62625a;flex-shrink:0}
+.web-lookup-option input{accent-color:#35352f}
+.web-lookup-help{margin:6px 0 0;text-align:center;font-size:10px;line-height:1.6;color:#898987;flex-shrink:0}
+.web-sources{display:block;margin-top:12px;font-size:11px;line-height:1.8;color:#777770}
+.web-sources a{text-decoration:underline;text-underline-offset:3px}
 .message-assistant.is-streaming::after{content:"";display:inline-block;width:2px;height:1em;margin-left:3px;background:currentColor;vertical-align:-.12em;animation:stream-cursor 1s steps(2,start) infinite}
 @keyframes stream-cursor{to{opacity:0}}
 .chat-active{overflow:hidden}
