@@ -1,6 +1,6 @@
 # Directly authored conversational corpus
 
-Target: **100,000,000 English word occurrences**, using the original 800 words plus six explicitly added project terms. Punctuation, role names, metadata, and structural tokens do not count as English words toward this target. See `audit.json` for the current verified count; the target is not a claim of completion.
+Target: **10,000,000 English word occurrences**, using the original 800 words plus six explicitly added project terms. Punctuation, role names, metadata, and structural tokens do not count as English words toward this target. See `audit.json` for the current verified count; the target is not a claim of completion.
 
 All dialogue content here is written directly by the assistant in this conversation. No template expansion, slot substitution, repetition for volume, imported generated corpus, or programmatic dialogue generator is permitted. Scripts may validate, count, deduplicate, and serialize content; they must not invent dialogue content. The previous 10M-token template corpus is not mixed into this corpus or counted toward its target.
 
@@ -16,7 +16,7 @@ Creator attribution is handled in the webpage by a built-in reply with a clickab
 
 Other identity exchanges teach the model its name, browser location, and limits. They do not change the already trained model. New training must use this corpus and its own tokenizer together; preserving baseline token IDs does not make the old 812-row embedding matrix compatible with the new model. No old packed data is automatically mixed into this corpus.
 
-The proposed next model is specified in `../configs/picoboi-1m-conversation.json`: 957,824 parameters, four distinct width-128 blocks, context 512. It is untrained. Context 512 is an initial design target, not proof of reliable recall. There are 24 separately authored held-out relevance cases in `evaluation/`, excluded from training word counts. We must expand evaluation coverage, audit the full corpus, and benchmark local training before starting the new training run. The existing website/model remain the current baseline while this data is built.
+The intended next model is about 100K parameters and has not been trained on this corpus. The earlier `../configs/picoboi-1m-conversation.json` proposal is retained for reference, not the current model target. The 24 separately authored held-out relevance cases in `evaluation/` are excluded from training word counts. The corpus includes conversations up to 428 model tokens; the future training context and batching must account for their full lengths. The existing website/model remain the baseline while this data is built.
 
 Run from the repository root:
 
@@ -24,4 +24,4 @@ Run from the repository root:
 python3 training/audit_conversations.py
 ```
 
-The resulting audit records the exact completed word count and remaining words. Work proceeds in directly authored batches. Creating a first batch does not satisfy the full 100M-word objective.
+The resulting audit records the exact completed word count and remaining words. Work proceeds in directly authored batches. Creating a first batch does not satisfy the full 10M-word objective.

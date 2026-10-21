@@ -8,7 +8,7 @@ import re
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / 'conversations'
-TARGET = 100_000_000
+TARGET = 10_000_000
 
 
 def audit():
