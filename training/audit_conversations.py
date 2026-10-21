@@ -15,14 +15,28 @@ def audit():
     base_words = (ROOT/'vocabulary_800.txt').read_text().splitlines()
     words = (DATA/'vocabulary.txt').read_text().splitlines()
     tokenizer = json.loads((DATA/'tokenizer.json').read_text())
+    contract = json.loads((DATA/'contract.json').read_text())
+    references = tokenizer['reference_tokens']
+    pattern = re.compile(tokenizer['token_pattern'])
+    max_context = contract['max_conversation_tokens']
     if len(base_words) != len(set(base_words)) or len(base_words) != 800:
         raise ValueError('The frozen baseline vocabulary must contain 800 distinct word forms')
     if len(words) != len(set(words)) or not set(base_words).issubset(words):
         raise ValueError('The new vocabulary must preserve every baseline word')
+    if len(words) != contract['english_word_forms'] or len(words) != 1000:
+        raise ValueError('The active vocabulary must contain exactly 1000 word forms')
+    previous = json.loads((DATA/'archive/tokenizer-818.json').read_text())
+    if tokenizer['tokens'][:818] != previous['tokens']:
+        raise ValueError('All previous 818 token IDs must remain unchanged')
+    if references != [f'<term_{i}>' for i in range(contract['reference_slots'])]:
+        raise ValueError('Reference slot definitions do not match the data contract')
     expected_tokens = ['<pad>', '<unk>', '<bos>', '<eos>', '<user>', '<assistant>', '<turn>', '.', ',', '?', '!', ':'] + base_words
     expected_tokens += [word for word in words if word not in set(base_words)]
+    expected_tokens += references
     if tokenizer['tokens'] != expected_tokens:
         raise ValueError('Tokenizer must preserve baseline IDs and append new tokens')
+    if len(expected_tokens) != contract['tokenizer_size']:
+        raise ValueError('Tokenizer size does not match the data contract')
     excluded = json.loads((DATA/'excluded-conversations.json').read_text())
     seen_ids = set()
     vocabulary = set(words)
@@ -49,18 +63,31 @@ def audit():
             if len(messages) < 2 or len(messages) % 2:
                 errors.append(f'{location}: incomplete conversation')
             count = 2  # BOS/EOS
+            bindings = {}
             for i, message in enumerate(messages):
                 role, content = message['role'], message['content']
                 expected_role = 'assistant' if i % 2 else 'user'
                 if role != expected_role or not content or content != content.lower():
                     errors.append(f'{location}: invalid role or lowercase content at message {i}')
-                tokens = re.findall(r'[a-z]+|[.,?!:]', content)
+                tokens = pattern.findall(content)
                 if ''.join(tokens) != ''.join(content.split()):
                     errors.append(f'{location}: unsupported characters in message {i}')
-                terms = re.findall(r'[a-z]+', content)
+                terms = [t for t in tokens if re.fullmatch('[a-z]+', t)]
                 unknown = sorted(set(terms)-vocabulary)
                 if unknown:
                     errors.append(f'{location} message {i}: unknown words {unknown}')
+                for j, token in enumerate(tokens):
+                    if token not in references:
+                        continue
+                    concept = tokens[j-1] if j else None
+                    if concept not in contract['reference_concepts']:
+                        errors.append(f'{location} message {i}: reference needs a concept word')
+                    if role == 'user':
+                        if token in bindings and bindings[token] != concept:
+                            errors.append(f'{location} message {i}: reference concept changed')
+                        bindings[token] = concept
+                    elif bindings.get(token) != concept:
+                        errors.append(f'{location} message {i}: unbound or mismatched reference')
                 word_counts.update(terms)
                 file_words += len(terms)
                 if role == 'assistant': assistant_words += len(terms)
@@ -70,6 +97,8 @@ def audit():
             digests.add(digest)
             topics.update(row['topics'])
             lengths.append(count)
+            if count > max_context:
+                errors.append(f'{location}: {count} tokens exceeds {max_context}-token contract')
             total_tokens += count; total_messages += len(messages); file_dialogues += 1
         files[path.name] = dict(dialogues=file_dialogues, english_words=file_words,
                                sha256=hashlib.sha256(path.read_bytes()).hexdigest())
@@ -96,8 +125,9 @@ def audit():
                 if message['role'] != ('assistant' if i%2 else 'user'):
                     raise ValueError(f"Wrong evaluation role order: {row['id']}")
             for text in [*(m['content'] for m in row['messages']), row['reference']]:
-                tokens=re.findall(r'[a-z]+|[.,?!:]',text)
-                if text != text.lower() or ''.join(tokens) != ''.join(text.split()) or set(re.findall('[a-z]+',text))-vocabulary:
+                tokens=pattern.findall(text)
+                terms={t for t in tokens if re.fullmatch('[a-z]+',t)}
+                if text != text.lower() or ''.join(tokens) != ''.join(text.split()) or terms-vocabulary:
                     raise ValueError(f"Evaluation content violates vocabulary: {row['id']}: {text}")
             evaluation_cases += 1
     completed = sum(word_counts.values())
@@ -109,9 +139,11 @@ def audit():
                   held_out_relevance_cases=evaluation_cases, evaluation_words_counted_toward_target=False,
                   vocabulary_word_types_used=len(word_counts), vocabulary_limit=len(words),
                   added_vocabulary=sorted(vocabulary-set(base_words)), tokenizer_size=len(tokenizer['tokens']),
+                  reference_tokens=references, max_conversation_tokens=max_context,
                   unused_vocabulary=sorted(vocabulary-set(word_counts)),
                   shortest_conversation_tokens=min(lengths,default=0), longest_conversation_tokens=max(lengths,default=0),
                   conversations_over_512_tokens=sum(n>512 for n in lengths), topics=dict(sorted(topics.items())),
+                  conversations_over_1024_tokens=sum(n>1024 for n in lengths),
                   files=files, limitations=['Structural validation does not verify semantic relevance.',
                                             'The full target is incomplete unless target_complete is true.',
                                             'Evaluation prompts are separately authored, but thematic overlap is still possible.'])

@@ -1,27 +1,39 @@
 # Directly authored conversational corpus
 
-Target: **10,000,000 English word occurrences**, using the original 800 words plus six explicitly added project terms. Punctuation, role names, metadata, and structural tokens do not count as English words toward this target. See `audit.json` for the current verified count; the target is not a claim of completion.
+Target: **10,000,000 English word occurrences**, now using exactly **1,000 permitted word forms**. Punctuation, role names, reference tokens, metadata, and structural tokens do not count toward the English-word target. See `audit.json` for the actual verified count; the target is not a claim of completion.
 
-All dialogue content here is written directly by the assistant in this conversation. No template expansion, slot substitution, repetition for volume, imported generated corpus, or programmatic dialogue generator is permitted. Scripts may validate, count, deduplicate, and serialize content; they must not invent dialogue content. The previous 10M-token template corpus is not mixed into this corpus or counted toward its target.
+All dialogue content is written directly by the assistant in this conversation. No template expansion, slot substitution to inflate volume, repetition for volume, imported generated corpus, or programmatic dialogue generator is permitted. Scripts may validate, count, deduplicate, and serialize content. The old template baseline is preserved separately and is not counted here. The parser's deterministic reference rendering is an application feature, not a corpus generator.
 
-Each JSONL record has an ID, a scenario, topic tags, provenance, and alternating user/assistant messages. Only message content is constrained by the vocabulary. Different scenarios should require different responses, decisions, or contextual dependencies, rather than merely replacing a color or noun. Ordinary short replies, clarification questions, and admissions of missing information are part of useful conversation. Do not pad answers to raise word counts.
+Each JSONL record has an ID, a scenario, topic tags, provenance, and alternating user/assistant messages. Different scenarios should require different responses or contextual dependencies, not merely replace a color or noun. Short replies and clarification remain useful. Longer stories, explanations, and multi-turn planning are appropriate when requested; do not pad answers to increase counts.
 
-The author checks each exchange for relevance to the latest user request, consistency with earlier turns, correct speaker perspective, and simple factual/logical correctness. The validator checks vocabulary, structural integrity, duplicates, lengths, and provenance labels. Passing that validator does not prove relevance or general conversational quality.
+The author checks relevance, grammar, speaker perspective, consistency, and basic factual/logical correctness. The auditor checks vocabulary, format, exact duplicates, reference declarations, and lengths. Passing it does not prove semantic quality or future model capability.
 
-Coverage priorities include greetings, requests for help, user preferences, choosing between options, following constraints, remembering and correcting facts, resolving references, asking for missing details, acknowledging uncertainty, explaining simple relations, counting, everyday planning, writing assistance, and emotional support in ordinary situations. Show a short reason when it helps the user. Do not produce hidden reasoning traces or long explanations when a short answer is appropriate. Do not pretend to have a body, access to the user's room, or live knowledge of facts absent from the conversation.
+## Active contract
 
-The original `../vocabulary_800.txt`, all older training data, the deployed tokenizer, and the trained 100K model are preserved. The active `vocabulary.txt` contains the original 800 words plus `picoboi`, `llm`, `webpage`, `pico`, `model`, and `browser`, for 806 word forms. The active `tokenizer.json` preserves all 812 baseline token IDs and appends those six words, for 818 token IDs. The previous 807-word vocabulary and 820-token specification are retained under `archive/` for provenance; they are not the active training contract.
+`contract.json` specifies 1,000 lowercase word forms and a maximum of 1,024 tokens per complete conversation. This raises the previous 512-token data allowance and is a requirement for future training, not an upgrade to the live model's 128-token context. Four new longer conversations exceed 512 tokens; the audit records actual lengths.
 
-Creator attribution is handled in the webpage by a built-in reply with a clickable link. It is not a model-generated answer. `farilyaz` and `@` are therefore absent from the active tokenizer. `excluded-conversations.json` identifies five earlier creator-handle conversations that remain unchanged in their original source file but must not be used for training or counted toward the target. The auditor applies this manifest before validation and counting. Any future data packer must apply the same exclusions; blindly concatenating all source JSONL files is incorrect.
+The active `vocabulary.txt` preserves the previous 806 forms and adds 194 forms listed in `vocabulary-additions-1000.txt`. Additions include broad concepts such as animal, plant, object, vehicle, tool, and container, plus common grammar and conversational language. Inflections count separately. `audit.json` reports which words have actually appeared; adding a word to the list alone does not teach its meaning.
 
-Other identity exchanges teach the model its name, browser location, and limits. They do not change the already trained model. New training must use this corpus and its own tokenizer together; preserving baseline token IDs does not make the old 812-row embedding matrix compatible with the new model. No old packed data is automatically mixed into this corpus.
+`tokenizer.json` preserves the previous 818 IDs, appends 194 new word IDs, then appends eight reference tokens `<term_0>` through `<term_7>`. Total: **1,020 IDs**. English word counting excludes the reference tokens. An assistant reference must previously have appeared in a user turn, preceded by the same category word. The category cannot change for that slot during the conversation.
 
-The intended next model is about 100K parameters and has not been trained on this corpus. The earlier `../configs/picoboi-1m-conversation.json` proposal is retained for reference, not the current model target. The 24 separately authored held-out relevance cases in `evaluation/` are excluded from training word counts. The corpus includes conversations up to 428 model tokens; the future training context and batching must account for their full lengths. The existing website/model remain the baseline while this data is built.
+[The concept parser prototype](PARSER.md) retains original surface words in a side table and uses explicit references to restore them. It does not replace generic category nouns or recover facts lost by generalization. The next model must be trained on this protocol; the deployed model cannot emit these new token IDs.
+
+## Preservation and evaluation
+
+All earlier authored batches, the original `../vocabulary_800.txt`, older training data, the deployed tokenizer, and trained 100K weights are preserved. `archive/vocabulary-806.txt` and `archive/tokenizer-818.json` snapshot the previous active contract. Earlier 807-word and 820-token drafts are also retained. Do not mix these tokenizer versions when packing data or loading weights.
+
+Creator attribution is a built-in webpage reply with a clickable link. Five earlier creator-handle conversations remain unchanged but are excluded using `excluded-conversations.json`. Every data packer must apply those exclusions; blindly concatenating source JSONL is incorrect. `farilyaz` and `@` are not active model tokens.
+
+The intended next model remains about 100K parameters and is untrained on this corpus. A larger vocabulary consumes more embedding/output capacity; the final architecture must respect the total parameter budget. The earlier 1M proposal in `../configs/` is historical and does not specify this next model.
+
+The 24 separately authored held-out relevance cases in `evaluation/` are excluded from training word counts. Parser fixtures and training examples test mechanics, not held-out new-model accuracy. Future evaluation must cover longer context and reference accuracy independently of the training examples.
 
 Run from the repository root:
 
 ```sh
 python3 training/audit_conversations.py
+node training/tests/concept-parser.mjs
+python3 -m unittest discover -s training/tests -p test_conversation_contract.py -v
 ```
 
-The resulting audit records the exact completed word count and remaining words. Work proceeds in directly authored batches. Creating a first batch does not satisfy the full 10M-word objective.
+The full 10M-word objective is incomplete unless the verified count reaches that target. No new model training is implied by a passing corpus audit.

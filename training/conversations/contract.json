@@ -1,0 +1,24 @@
+{
+  "version": 3,
+  "english_word_forms": 1000,
+  "reference_slots": 8,
+  "tokenizer_size": 1020,
+  "max_conversation_tokens": 1024,
+  "target_english_words": 10000000,
+  "reference_concepts": [
+    "animal",
+    "animals",
+    "plant",
+    "plants",
+    "vehicle",
+    "vehicles",
+    "tool",
+    "tools",
+    "flower",
+    "flowers",
+    "tree",
+    "trees"
+  ],
+  "status": "untrained_next_model_data",
+  "notes": "Reference slots bind surface terms, not individual real-world entities. Preserve the binding table with each conversation. The deployed 812-token model is unchanged."
+}
