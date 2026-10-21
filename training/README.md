@@ -2,6 +2,8 @@
 
 This is a reproducible synthetic baseline for a model with about 100,000 parameters. It teaches a narrow selection of conversational patterns. It is generated from authored patterns and grammar-aware slot combinations, not 10 million independently written LLM tokens. No external text dataset or paid generation API is used.
 
+The proposed model architecture, exact parameter budgets, and experiment choices are in [MODEL_DESIGN_100K.md](MODEL_DESIGN_100K.md). Inspect the configuration specifications with `python3 training/inspect_architecture.py`. These specifications do not contain trained weights or an inference implementation.
+
 ## Data contract
 
 - Exactly 800 permitted lowercase English word forms, frozen in `vocabulary_800.txt`. Inflections count separately. This is a curated conversational list, not a measured frequency ranking of the top 800 English words.

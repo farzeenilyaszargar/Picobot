@@ -2,7 +2,23 @@
 
 Research reviewed on 21 October 2026. These are proposed experiments, not measured Picoboi results. The goal is useful short conversations and reliable tracking of simple facts within a closed 800-word vocabulary. General reasoning or broad language understanding at this scale has not been established by the cited work.
 
-## Priorities
+## Selected first experiment
+
+The recommended research candidate is now **two unique width-48 blocks executed in the order A, B, A, B**, with **99,120 unique parameters**. This is an extension of candidate A below, not a measured winner. It trades additional computation for four processing stages without narrowing the hidden representation to width 32. Compare it directly with A, B execution using the same unique weights architecture, trained separately. The first model to debug remains the A, B baseline; train the repeated-block candidate after that pipeline works.
+
+Executable configuration specifications live in `configs/picoboi-100k-looped.json`, `configs/picoboi-100k-baseline.json`, and `configs/picoboi-100k-deep.json`. These are specifications, not model implementations or checkpoints. Run `python3 training/inspect_architecture.py` to validate each configuration and enumerate tensor shapes, weight bytes, per-stage KV storage, and approximate cached decoding multiply-accumulates. The calculations are not browser benchmarks. They count a single shared embedding/output tensor and reuse block tensors without counting them twice.
+
+For the selected candidate, retain ordinary two-head attention, SwiGLU with width 144, pre-RMSNorm, RoPE, no projection biases, no learned position table, and no extra pass embeddings. Use context 128 for the current corpus. Train each execution schedule explicitly; a two-stage checkpoint is not a trained four-stage checkpoint. Defer a 256-token context, factorized embeddings, grouped-query attention, adaptive halting, and ternary weights to measured ablations. These are competing tradeoffs, not upgrades to stack indiscriminately.
+
+At FP16, raw weights are 198,240 bytes and a full 128-token four-stage KV cache is 98,304 bytes for batch size one. The runtime, other buffers, tokenizer, and model metadata are additional. FP16 is a storage/runtime option to benchmark after an FP32 baseline, not a promise of support or speed on all browsers.
+
+For training, start from random weights and use AdamW with gradient clipping and warmup followed by decay. Search peak learning rates such as 0.001 and 0.003 on short runs, rather than treating either as established. Begin with the existing assistant-only target masks and compare a separately specified mixed user/assistant objective later. Keep padding, role markers, and cross-dialogue attention handling explicit. Report the actual number of supervised tokens. Evaluate regularly and select by held-out performance rather than assuming extra epochs help. Longer context, better word grounding, and human-authored evaluations remain data work; this selection does not change the corpus.
+
+Keep the repeated model only if it improves independently tested context tracking, grammar, and answer relevance enough to justify its measured latency. Compare equal training tokens and report compute differences; add a compute-matched comparison. Use at least three seeds for final claims. If the simpler baseline ties within uncertainty, deploy the baseline. No architecture in this document is established as the globally best model at 100K parameters.
+
+The motivation for shared processing comes from [MobileLLM](https://arxiv.org/abs/2402.14905), [Universal Transformers](https://arxiv.org/abs/1807.03819), and [Scaling up Test-Time Compute with Latent Reasoning](https://arxiv.org/abs/2502.05171). The latter demonstrates recurrent depth in a 3.5B model, not a 100K model. Our A, B, A, B design is a proposed small-scale experiment, not a reproduction of that architecture or its reasoning results.
+
+## Priorities for the broader experiment
 
 1. Improve grounded dialogue data and build an independent evaluation set.
 2. Tie input and output embeddings; avoid spending the parameter budget twice on vocabulary.

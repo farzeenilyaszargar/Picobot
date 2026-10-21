@@ -1,0 +1,23 @@
+{
+  "name": "picoboi-100k-baseline",
+  "status": "proposed_untrained",
+  "vocab_size": 812,
+  "d_model": 48,
+  "d_ff": 144,
+  "n_heads": 2,
+  "unique_blocks": 2,
+  "block_order": [0, 1],
+  "normalization": "pre_rmsnorm",
+  "norm_epsilon": 0.00001,
+  "feed_forward": "swiglu",
+  "position_encoding": "rope",
+  "rope_theta": 10000.0,
+  "tie_embeddings": true,
+  "linear_bias": false,
+  "output_bias": false,
+  "learned_step_embeddings": false,
+  "train_context": 128,
+  "weight_dtype": "float32",
+  "expected_parameters": 99120,
+  "parameter_budget": 100000
+}
