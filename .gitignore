@@ -11,3 +11,4 @@ __pycache__/
 training/data/**/*.bin
 training/data/**/*.offsets.jsonl
 training/runs/
+training/data/fast-chat*/

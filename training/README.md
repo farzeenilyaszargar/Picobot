@@ -1,5 +1,7 @@
 # Picoboi 100K: controlled chat corpus
 
+For faster production, the separate [parallel teacher pipeline and Colab notebook](fast_corpus/README.md) generate vocabulary-controlled chats with explicit machine-generated provenance. They preserve all older data and report actual counts. The runner has passed offline tests; GPU throughput and teacher quality still need a real pilot.
+
 The replacement corpus is being written directly by the assistant in [conversations/](conversations/README.md), with a target of 10 million English words. It is separate from the older template baseline below. Its audit reports the actual count and remaining work. The current target is a new model of about 100K parameters, to be trained after the corpus is ready. The earlier 1M configuration remains a historical proposal. The new corpus now uses a separate 968-word vocabulary after category generalization and eight parser reference slots, with a 1,024-token maximum per conversation. The concept parser prototype and longer examples are documented in [conversations/PARSER.md](conversations/PARSER.md). All baseline data and the live model are preserved. Do not mix the old corpus into the new target count.
 
 This is a reproducible synthetic baseline for a model with about 100,000 parameters. It teaches a narrow selection of conversational patterns. It is generated from authored patterns and grammar-aware slot combinations, not 10 million independently written LLM tokens. No external text dataset or paid generation API is used.
