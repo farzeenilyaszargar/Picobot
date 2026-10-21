@@ -1,0 +1,125 @@
+{
+  "hardware": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "torch": "2.14.1",
+  "threads": 4,
+  "throughput_trials": [
+    {
+      "device": "cpu",
+      "threads": 1,
+      "batch_size": 32,
+      "seconds": 0.8896449578460306,
+      "tokens_per_second": 48717,
+      "loss": 3.840540647506714
+    },
+    {
+      "device": "cpu",
+      "threads": 1,
+      "batch_size": 64,
+      "seconds": 1.8283914581406862,
+      "tokens_per_second": 47341,
+      "loss": 3.8605234622955322
+    },
+    {
+      "device": "cpu",
+      "threads": 1,
+      "batch_size": 128,
+      "seconds": 3.712989249965176,
+      "tokens_per_second": 46559,
+      "loss": 3.821521043777466
+    },
+    {
+      "device": "cpu",
+      "threads": 2,
+      "batch_size": 32,
+      "seconds": 0.6196185830049217,
+      "tokens_per_second": 69948,
+      "loss": 3.840540647506714
+    },
+    {
+      "device": "cpu",
+      "threads": 2,
+      "batch_size": 64,
+      "seconds": 1.162648665951565,
+      "tokens_per_second": 74448,
+      "loss": 3.8605234622955322
+    },
+    {
+      "device": "cpu",
+      "threads": 2,
+      "batch_size": 128,
+      "seconds": 2.6537472079508007,
+      "tokens_per_second": 65143,
+      "loss": 3.821521043777466
+    },
+    {
+      "device": "cpu",
+      "threads": 4,
+      "batch_size": 32,
+      "seconds": 0.5397425000555813,
+      "tokens_per_second": 80299,
+      "loss": 3.840540647506714
+    },
+    {
+      "device": "cpu",
+      "threads": 4,
+      "batch_size": 64,
+      "seconds": 0.9435527911409736,
+      "tokens_per_second": 91735,
+      "loss": 3.8605234622955322
+    },
+    {
+      "device": "cpu",
+      "threads": 4,
+      "batch_size": 128,
+      "seconds": 1.957486917031929,
+      "tokens_per_second": 88314,
+      "loss": 3.821521043777466
+    },
+    {
+      "device": "mps",
+      "threads": 4,
+      "batch_size": 32,
+      "seconds": 0.7832184999715537,
+      "tokens_per_second": 55337,
+      "loss": 3.8405399322509766
+    },
+    {
+      "device": "mps",
+      "threads": 4,
+      "batch_size": 64,
+      "seconds": 1.036881708074361,
+      "tokens_per_second": 83478,
+      "loss": 3.8605217933654785
+    },
+    {
+      "device": "mps",
+      "threads": 4,
+      "batch_size": 128,
+      "seconds": 1.928403666941449,
+      "tokens_per_second": 89646,
+      "loss": 3.821531057357788
+    }
+  ],
+  "learning_rate_trials": [
+    {
+      "learning_rate": 0.001,
+      "pilot_steps": 80,
+      "validation_loss": 3.3152725282866378
+    },
+    {
+      "learning_rate": 0.003,
+      "pilot_steps": 80,
+      "validation_loss": 1.5443095703125
+    }
+  ],
+  "selected": {
+    "device": "cpu",
+    "threads": 4,
+    "batch_size": 64,
+    "seconds": 0.9435527911409736,
+    "tokens_per_second": 91735,
+    "loss": 3.8605234622955322,
+    "learning_rate": 0.003
+  },
+  "limitation": "Short pilots select practical defaults, not globally optimal hyperparameters."
+}

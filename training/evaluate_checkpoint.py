@@ -59,9 +59,14 @@ if __name__=='__main__':
     report['heldout_first_answers']=dict(count=len(attempts),exact_matches=sum(r['exact_match'] for r in attempts),
                                        samples=attempts,
                                        limitation='First 100 test dialogues, shared template families; stories may have multiple valid answers.')
+    families={r['family'] for r in attempts}
+    report['heldout_first_answers']['by_family']={family:dict(
+        count=sum(r['family']==family for r in attempts),
+        exact_matches=sum(r['family']==family and r['exact_match'] for r in attempts))
+        for family in sorted(families)}
     if args.export:
         args.export.parent.mkdir(parents=True,exist_ok=True)
-        payload=dict(model=state['model'],settings=settings,step=state['step'],
+        payload=dict(status='trained',model=state['model'],settings=settings,step=state['step'],
                      best_validation_loss=state['best_validation_loss'],
                      tokenizer_sha256=hashlib.sha256((args.data/'tokenizer.json').read_bytes()).hexdigest())
         torch.save(payload,args.export)

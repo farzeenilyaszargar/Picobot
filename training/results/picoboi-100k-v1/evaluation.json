@@ -1,0 +1,961 @@
+{
+  "parameters": 99120,
+  "checkpoint_step": 6708,
+  "training_status": {
+    "status": "complete",
+    "step": 6708,
+    "total_steps": 6708,
+    "tokens_seen": 28971042,
+    "supervised_seen": 12299670,
+    "validation_loss": 0.026290931572065756,
+    "best_validation_loss": 0.026290931572065756
+  },
+  "training_settings": {
+    "config": {
+      "name": "picoboi-100k-looped",
+      "status": "proposed_untrained",
+      "vocab_size": 812,
+      "d_model": 48,
+      "d_ff": 144,
+      "n_heads": 2,
+      "unique_blocks": 2,
+      "block_order": [
+        0,
+        1,
+        0,
+        1
+      ],
+      "normalization": "pre_rmsnorm",
+      "norm_epsilon": 1e-05,
+      "feed_forward": "swiglu",
+      "position_encoding": "rope",
+      "rope_theta": 10000.0,
+      "tie_embeddings": true,
+      "linear_bias": false,
+      "output_bias": false,
+      "learned_step_embeddings": false,
+      "train_context": 128,
+      "weight_dtype": "float32",
+      "expected_parameters": 99120,
+      "parameter_budget": 100000
+    },
+    "device": "cpu",
+    "batch_size": 64,
+    "peak_lr": 0.003,
+    "epochs": 3,
+    "seed": 20261021,
+    "threads": 4,
+    "warmup_steps": 335,
+    "total_steps": 6708,
+    "data_fingerprint": "41215a1270d9d475e9cd8b0bcdb502c91eba4e74f8a80c94f67b865b8303ea74",
+    "torch": "2.14.1",
+    "precision": "float32",
+    "loss": "assistant_only",
+    "parameters": 99120
+  },
+  "limitation": "Generator families are shared across splits. Low token loss is not proof of natural chat ability.",
+  "validation": {
+    "assistant_token_loss": 0.026290931572065756,
+    "assistant_token_perplexity": 1.0266395868986238
+  },
+  "test": {
+    "assistant_token_loss": 0.02329789545938832,
+    "assistant_token_perplexity": 1.0235714114108099
+  },
+  "greedy_samples": [
+    {
+      "prompt": "hello.",
+      "answer": "say."
+    },
+    {
+      "prompt": "who are you?",
+      "answer": "the park."
+    },
+    {
+      "prompt": "can you help me?",
+      "answer": "you like help with?"
+    },
+    {
+      "prompt": "the red ball is on the table. where is it?",
+      "answer": "the ball is on the table."
+    },
+    {
+      "prompt": "the blue book is in the box. what color is it?",
+      "answer": "the book is is blue."
+    },
+    {
+      "prompt": "i have two apples. i get three more. how many do i have now?",
+      "answer": "you have five apples."
+    },
+    {
+      "prompt": "please fix this sentence: he are happy.",
+      "answer": "he is happy."
+    },
+    {
+      "prompt": "where is my book?",
+      "answer": "my friend is is is is is in the phone now."
+    }
+  ],
+  "heldout_first_answers": {
+    "count": 100,
+    "exact_matches": 85,
+    "samples": [
+      {
+        "id": "6fc6947687401c9ccf352767c57fc081e79f9409e49208c76fbe73ff678c7038",
+        "family": "plans_and_order",
+        "prompt": "can you make a simple plan for me this evening? i need to wash a shirt, buy a book, and open a box.",
+        "expected": "first, wash a shirt. then, buy a book. after that, open a box.",
+        "actual": "first, wash a shirt. then, buy a book. after that, open a box.",
+        "exact_match": true
+      },
+      {
+        "id": "4aa3bfbc3fda6c0ea57d0daca761a9f6acdc3db922ba87052a175d3854868fdf",
+        "family": "possession",
+        "prompt": "i have a green hat and a black pillow. what color is my hat?",
+        "expected": "your hat is green.",
+        "actual": "your hat is green.",
+        "exact_match": true
+      },
+      {
+        "id": "c91cf34fb67bd0a9c0b85b9db156001d4e18e41a40373c1ef001d481e8db9061",
+        "family": "story_in_chat",
+        "prompt": "please tell me a short story about a worker and a white clock.",
+        "expected": "one day, a worker found a white clock. the worker put it on the desk. they felt tired. it was time to rest.",
+        "actual": "one day, a worker found a white clock. the worker put it in the room. they felt tired. it was time to rest.",
+        "exact_match": false
+      },
+      {
+        "id": "3bcabe1f2ca5f75e99db91d8266856bc380ad79932a1bba8ee1f8de2e68310a4",
+        "family": "plans_and_order",
+        "prompt": "can you make a simple plan for me tomorrow? i need to answer a friend, close the door, and work at the desk.",
+        "expected": "first, answer a friend. then, close the door. after that, work at the desk.",
+        "actual": "first, answer a friend. then, close the door. after that, work at the desk.",
+        "exact_match": true
+      },
+      {
+        "id": "dc83b825353f6acc91ffee0c5c6bb1da2b4de58d2a1a3a37baf3f0c32d4f5c49",
+        "family": "spatial_memory",
+        "prompt": "please remember this: the red hat is on the desk. where is it?",
+        "expected": "the hat is on the desk.",
+        "actual": "the hat is on the desk.",
+        "exact_match": true
+      },
+      {
+        "id": "540a59f2ea98951ffea2ece1196e296aadf9ff7e2afa16df15a0dfb9d1a2ce76",
+        "family": "plans_and_order",
+        "prompt": "please put these things in order: help my family, talk with a friend, and sit at the table.",
+        "expected": "first, help your family. then, talk with a friend. after that, sit at the table.",
+        "actual": "first, help your family. then, talk with a friend. after that, sit at the table.",
+        "exact_match": true
+      },
+      {
+        "id": "e24e17388597417403d79efc9bc3f9ce0ce41541a54165d8322cfd2b8437bd37",
+        "family": "small_counts",
+        "prompt": "i have four keys. i get two more. how many do i have now?",
+        "expected": "you have six keys.",
+        "actual": "you have six keys.",
+        "exact_match": true
+      },
+      {
+        "id": "0c8d20f7ad42fd081dfcc8e5c13e028c5c1df0aa1d1b7ddb8749278c3fa9fc57",
+        "family": "sentence_repair",
+        "prompt": "please fix this sentence: my friend are calm.",
+        "expected": "my friend is calm.",
+        "actual": "my friend is calm.",
+        "exact_match": true
+      },
+      {
+        "id": "2a3a226acaf72304b320c310afca9bfa1dc6662907727fca45f4cb227ddb311d",
+        "family": "small_counts",
+        "prompt": "i have five boxes. i get one more. how many do i have now?",
+        "expected": "you have six boxes.",
+        "actual": "you have six boxes.",
+        "exact_match": true
+      },
+      {
+        "id": "320a7ec3b5402df13954304a25f59e4da30877361245294e64383ba2367efe88",
+        "family": "plans_and_order",
+        "prompt": "i want to fix a small box, read a short story, and help a friend this afternoon. can you help me make a plan?",
+        "expected": "first, fix a small box. then, read a short story. after that, help a friend.",
+        "actual": "first, fix a small box. then, read a short story. after that, help a friend.",
+        "exact_match": true
+      },
+      {
+        "id": "0d5ec68623c94eae33a30cbe4b67c556bc77e966ca488707400d02e2b4abea1c",
+        "family": "possession",
+        "prompt": "i have a white brush. my friend has a pink bag. what color is my brush?",
+        "expected": "your brush is white.",
+        "actual": "your brush is white.",
+        "exact_match": true
+      },
+      {
+        "id": "95891a5757e5ed3a872cd59afccc85f911fd1ca05c456ca9cbb47c14e58a421d",
+        "family": "possession",
+        "prompt": "i have a white bottle. my friend has a green camera. what color is my bottle?",
+        "expected": "your bottle is white.",
+        "actual": "your bottle is white.",
+        "exact_match": true
+      },
+      {
+        "id": "c48b04e94acecc44d43b2806917f6374e0c9fe76cb21f9e031059d85c82c147b",
+        "family": "spatial_memory",
+        "prompt": "the gray towel is in the bag. where is it?",
+        "expected": "the towel is in the bag.",
+        "actual": "the towel is in the bag.",
+        "exact_match": true
+      },
+      {
+        "id": "75df7441af39bec159d4ea9c878937b82a11e7b2b371ed0166f2adb83af36086",
+        "family": "description_and_yes_no",
+        "prompt": "i have a little gray pencil in the bag. can you say that in another way?",
+        "expected": "your pencil is little and gray. it is in the bag.",
+        "actual": "your pencil is little and gray. it is in the bag.",
+        "exact_match": true
+      },
+      {
+        "id": "2da6b6a6490dfb3bfa0ac7ca85b31a87a5f1e451267ce155d7a17cc9faeced89",
+        "family": "story_in_chat",
+        "prompt": "please tell me a short story about a boy and a blue bag.",
+        "expected": "one day, a boy found a blue bag. the boy put it on the shelf. he felt tired. it was time to rest.",
+        "actual": "one day, a boy found a blue bag. the boy put it in the room. he felt tired. it was time to rest.",
+        "exact_match": false
+      },
+      {
+        "id": "2e7ecf8f656253c71ac860f95e4400ec1e01cc79c356e8ee5a8f24f635dc84ce",
+        "family": "possession",
+        "prompt": "i have a brown pillow. my teacher has a red towel. what color is my pillow?",
+        "expected": "your pillow is brown.",
+        "actual": "your pillow is brown.",
+        "exact_match": true
+      },
+      {
+        "id": "84499deff2966d67189a3db5682d73feccce8e1d5b053bc6e9d4af662db2a45a",
+        "family": "plans_and_order",
+        "prompt": "please put these things in order: stand by the door, meet my family, and fix a chair.",
+        "expected": "first, stand by the door. then, meet your family. after that, fix a chair.",
+        "actual": "first, stand by the door. then, meet your family. after that, fix a chair.",
+        "exact_match": true
+      },
+      {
+        "id": "25c8aca9ef0b3abf2d313b2ff9de88c57bd7a968e60c8c2ac11c71c43a8fa62b",
+        "family": "preferences",
+        "prompt": "i like juice in the morning because i enjoy the taste. i like tea in the evening because i like a warm drink.",
+        "expected": "you like juice in the morning and tea in the evening.",
+        "actual": "you like juice in the morning and tea in the evening.",
+        "exact_match": true
+      },
+      {
+        "id": "9c4d679576fae15ebadbd0e8f6584f83a319fb798d4d10b5f3d274ab7f0f12ea",
+        "family": "plans_and_order",
+        "prompt": "i want to fix a table, hold a small box, and drink some tea this afternoon. can you help me make a plan?",
+        "expected": "first, fix a table. then, hold a small box. after that, drink some tea.",
+        "actual": "first, fix a table. then, hold a small box. after that, drink some tea.",
+        "exact_match": true
+      },
+      {
+        "id": "0c3f31d978708e072366553a87f5fb4b60d1b50e1856bf0ea3a8f83afc111676",
+        "family": "small_counts",
+        "prompt": "i have two coins. i get two more. how many do i have now?",
+        "expected": "you have four coins.",
+        "actual": "you have four coins.",
+        "exact_match": true
+      },
+      {
+        "id": "9a46adb85c1b8ee2bfd06e36ddf7e7f0137b18fcd387d520c8bc2dd1ae20344c",
+        "family": "plans_and_order",
+        "prompt": "can you make a simple plan for me today? i need to hold a book, build a table, and talk with my family.",
+        "expected": "first, hold a book. then, build a table. after that, talk with your family.",
+        "actual": "first, hold a book. then, build a table. after that, talk with your family.",
+        "exact_match": true
+      },
+      {
+        "id": "2fc66af83193a7d3ada01499c02b8468e971fe95fef54aa70a27247de7b39871",
+        "family": "description_and_yes_no",
+        "prompt": "i have a big purple coin on the table. can you say that in another way?",
+        "expected": "your coin is big and purple. it is on the table.",
+        "actual": "your coin is big and purple. it is on the table.",
+        "exact_match": true
+      },
+      {
+        "id": "eb0efd14f92a27db0670f26a25f0c2c753ee29527a06641c7db1f23c9565d210",
+        "family": "description_and_yes_no",
+        "prompt": "i have a big white camera in the kitchen. can you say that in another way?",
+        "expected": "your camera is big and white. it is in the kitchen.",
+        "actual": "your camera is big and white. it is in the kitchen.",
+        "exact_match": true
+      },
+      {
+        "id": "efcdf97b0efbaa80562d99eb66ffe859cabddc512712f33fdf8322a07a91102b",
+        "family": "story_in_chat",
+        "prompt": "please tell me a short story about a boy and a yellow card.",
+        "expected": "one day, a boy found a yellow card. the boy put it in the basket. he felt happy. it was a good day.",
+        "actual": "one day, a boy found a yellow card. the boy put it in the room. he felt tired. it was time to rest.",
+        "exact_match": false
+      },
+      {
+        "id": "a25a7efbf559d4dea75a93478d7218f4244720666377fd7ae868b1ecd457e543",
+        "family": "possession",
+        "prompt": "i have a white watch. my brother has a gray spoon. what color is my watch?",
+        "expected": "your watch is white.",
+        "actual": "your watch is white.",
+        "exact_match": true
+      },
+      {
+        "id": "f057eec05eb8a4161949d77e52270fce260194dd269186178283c4fd74eb1b89",
+        "family": "plans_and_order",
+        "prompt": "please put these things in order: watch a game, walk home, and bring a coat.",
+        "expected": "first, watch a game. then, walk home. after that, bring a coat.",
+        "actual": "first, watch a game. then, walk home. after that, bring a coat.",
+        "exact_match": true
+      },
+      {
+        "id": "82176c4efc2eab8a0ac6c440888653178c9320c2e82c13a7ef7e6757576467ec",
+        "family": "spatial_memory",
+        "prompt": "i left a black pencil on the chair. where is the pencil?",
+        "expected": "the pencil is on the chair.",
+        "actual": "the pencil is on the chair.",
+        "exact_match": true
+      },
+      {
+        "id": "d65a5cd7574305de1401727ac312ad1cbb0dea2c74acff6591b67d502b6483bd",
+        "family": "story_in_chat",
+        "prompt": "please tell me a short story about a friend and a yellow fork.",
+        "expected": "one day, a friend found a yellow fork. the friend put it outside the house. they felt calm. the room was quiet.",
+        "actual": "one day, a friend found a yellow fork. the friend put it in the room. they felt tired. it was time to rest.",
+        "exact_match": false
+      },
+      {
+        "id": "2a6bcf1cbecf1d1d9db5fcfe43a887d5f2b3243e05bf8dc0df009cdd7011f195",
+        "family": "spatial_memory",
+        "prompt": "i left a green hat in the room. where is the hat?",
+        "expected": "the hat is in the room.",
+        "actual": "the hat is in the room.",
+        "exact_match": true
+      },
+      {
+        "id": "dc1979253935341258f91848f2c45ecb326c441e6e7ba7c0131f28c505e66acd",
+        "family": "spatial_memory",
+        "prompt": "please remember this: the purple bowl is outside the house. where is it?",
+        "expected": "the bowl is outside the house.",
+        "actual": "the bowl is outside the house.",
+        "exact_match": true
+      },
+      {
+        "id": "9a5ec79f7ef692a5d7566d11adc2d5e2872a6c65b2e71fbab984fcd75ae448e0",
+        "family": "story_in_chat",
+        "prompt": "please tell me a short story about a worker and a yellow towel.",
+        "expected": "one day, a worker found a yellow towel. the worker put it under the bed. they felt calm. the room was quiet.",
+        "actual": "one day, a worker found a yellow towel. the worker put it in the room. they felt tired. it was time to rest.",
+        "exact_match": false
+      },
+      {
+        "id": "e5cdb132d429f19429278c1bae3f517de037b988124ef65dba86be7984e47e60",
+        "family": "story_in_chat",
+        "prompt": "please tell me a short story about a teacher and a black towel.",
+        "expected": "one day, a teacher found a black towel. the teacher put it in the kitchen. they felt sad. the day had been hard.",
+        "actual": "one day, a teacher found a black towel. the teacher put it in the room. they felt tired. it was time to rest.",
+        "exact_match": false
+      },
+      {
+        "id": "ff723d2369e515e7dbf14696b5ac18d2004d121a4b84e2fbe34def3010c53afe",
+        "family": "story_in_chat",
+        "prompt": "please tell me a short story about a student and a blue fork.",
+        "expected": "one day, a student found a blue fork. the student put it on the shelf. they felt sad. the day had been hard.",
+        "actual": "one day, a student found a blue fork. the student put it in the room. they felt tired. it was time to rest.",
+        "exact_match": false
+      },
+      {
+        "id": "288dfbea814e674fd5f09175488bff773cc12a6e57969510e2138be4ad9a0cde",
+        "family": "description_and_yes_no",
+        "prompt": "i have a large brown pen outside the house. can you say that in another way?",
+        "expected": "your pen is large and brown. it is outside the house.",
+        "actual": "your pen is large and brown. it is outside the house.",
+        "exact_match": true
+      },
+      {
+        "id": "847d25e0394c5d59cbae19a74c14593f8e48141f82d9b1b1e4d06146b5aad227",
+        "family": "tense_and_negation",
+        "prompt": "please say this about yesterday: he opens the door.",
+        "expected": "yesterday, he opened the door.",
+        "actual": "yesterday, he opened the door.",
+        "exact_match": true
+      },
+      {
+        "id": "d57c70ef6a2f2e8fe517d93181d32b41bf83096ac8adc4d11e7d21a607949024",
+        "family": "plans_and_order",
+        "prompt": "please put these things in order: move a chair, call my sister, and draw a house.",
+        "expected": "first, move a chair. then, call your sister. after that, draw a house.",
+        "actual": "first, move a chair. then, call your sister. after that, draw a house.",
+        "exact_match": true
+      },
+      {
+        "id": "8f41368bdf5054dfb1d8e2f0f2a0ec9d3ce5d43c7c2b258ee894b7af7ce0a70b",
+        "family": "spatial_memory",
+        "prompt": "the gray basket is on the desk. where is it?",
+        "expected": "the basket is on the desk.",
+        "actual": "the basket is on the desk.",
+        "exact_match": true
+      },
+      {
+        "id": "c8c5d24be117e00ab90a2ca413e9d9ea6cf024e8fd477287e68b055e58f77dad",
+        "family": "possession",
+        "prompt": "i have a purple blanket and a black ball. what color is my blanket?",
+        "expected": "your blanket is purple.",
+        "actual": "your blanket is purple.",
+        "exact_match": true
+      },
+      {
+        "id": "3c4cb5bf6aa18564912f783e4194faa8ce496d12967e0d9144c2a938a7e574b0",
+        "family": "description_and_yes_no",
+        "prompt": "i have a little blue shirt in the kitchen. can you say that in another way?",
+        "expected": "your shirt is little and blue. it is in the kitchen.",
+        "actual": "your shirt is little and blue. it is in the kitchen.",
+        "exact_match": true
+      },
+      {
+        "id": "7cae87c7185c26214887701f4530c1291c07e659957aece552d26e0c0214a047",
+        "family": "spatial_memory",
+        "prompt": "the gray clock is outside the house. where is it?",
+        "expected": "the clock is outside the house.",
+        "actual": "the clock is outside the house.",
+        "exact_match": true
+      },
+      {
+        "id": "32324ec31cdd3496df87697fc069ddd94fd28c55229bd43896cf5ee10aba46f8",
+        "family": "description_and_yes_no",
+        "prompt": "i have a big orange fork by the window. can you say that in another way?",
+        "expected": "your fork is big and orange. it is by the window.",
+        "actual": "your fork is big and orange. it is by the window.",
+        "exact_match": true
+      },
+      {
+        "id": "6d2511103b241d160dfc151c71e1fba9a39608df6517d6c551d5dfce37fd42d0",
+        "family": "tense_and_negation",
+        "prompt": "can you help me make this about now: my sister rides a bike?",
+        "expected": "my sister is riding a bike now.",
+        "actual": "my sister is riding a bike now.",
+        "exact_match": true
+      },
+      {
+        "id": "122028f671028d939a1ad534fba6a83f9b86e7c2249af72e2bcd79a5f94aef98",
+        "family": "plans_and_order",
+        "prompt": "can you make a simple plan for me this evening? i need to learn a new game, try a new game, and change a small part.",
+        "expected": "first, learn a new game. then, try a new game. after that, change a small part.",
+        "actual": "first, learn a new game. then, try a new game. after that, change a small part.",
+        "exact_match": true
+      },
+      {
+        "id": "b1b31b199ff19d273acf1b4c72f43044c9c61852413c7b9e49dcd6d71e15a4c1",
+        "family": "description_and_yes_no",
+        "prompt": "i have a large white pillow on the chair. can you say that in another way?",
+        "expected": "your pillow is large and white. it is on the chair.",
+        "actual": "your pillow is large and white. it is on the chair.",
+        "exact_match": true
+      },
+      {
+        "id": "88ad7f3a15b46e2202c6d38b79b83794b3bd05991d9b3782207d772543056082",
+        "family": "tense_and_negation",
+        "prompt": "can you help me make this about now: i listen to the birds?",
+        "expected": "i am listening to the birds now.",
+        "actual": "i am listening to the birds now.",
+        "exact_match": true
+      },
+      {
+        "id": "b11c60fb1f61c5f603a80f1ec2b193b5d20c8bbf497268954809183fb5dfde5e",
+        "family": "spatial_memory",
+        "prompt": "the black spoon is next to the bed. where is it?",
+        "expected": "the spoon is next to the bed.",
+        "actual": "the spoon is next to the bed.",
+        "exact_match": true
+      },
+      {
+        "id": "c1fdeea2ba8555a38bbe4b5786ae4f3b63b157298cf6d3abfa856e167fec726c",
+        "family": "spatial_memory",
+        "prompt": "please remember this: the red camera is in the kitchen. where is it?",
+        "expected": "the camera is in the kitchen.",
+        "actual": "the camera is in the kitchen.",
+        "exact_match": true
+      },
+      {
+        "id": "91a6d4eb0b5a83b6bcf728af0942d3143b7cef3caefbe05cb0618f2abc411327",
+        "family": "feelings_and_small_talk",
+        "prompt": "good evening. i feel happy this morning because the sun is out.",
+        "expected": "thank you for telling me. would you like to tell me about your day?",
+        "actual": "thank you for telling me. would you like to tell me about your day?",
+        "exact_match": true
+      },
+      {
+        "id": "5bdc92d3b35e21401960c772cc28517a3d5ae9b5ab58142eb060af85377f4d37",
+        "family": "vocabulary_copy",
+        "prompt": "please say man before balls.",
+        "expected": "man balls.",
+        "actual": "man balls.",
+        "exact_match": true
+      },
+      {
+        "id": "912e20c59ca8809d412310abde14fb76cfd5ba7b2fee889b37a7234fe3372308",
+        "family": "description_and_yes_no",
+        "prompt": "i have a big purple toy by the window. can you say that in another way?",
+        "expected": "your toy is big and purple. it is by the window.",
+        "actual": "your toy is big and purple. it is by the window.",
+        "exact_match": true
+      },
+      {
+        "id": "57dd287f21c41ec4e893d75f02a9a4cb6cc239ffd78d2ef5c29550bb398d073d",
+        "family": "description_and_yes_no",
+        "prompt": "i have a large blue toy under the bed. can you say that in another way?",
+        "expected": "your toy is large and blue. it is under the bed.",
+        "actual": "your toy is large and blue. it is under the bed.",
+        "exact_match": true
+      },
+      {
+        "id": "0c3fcaf57cb453746980e92e581542ef3cef11e14488c8d88bfbbc75fabbf80b",
+        "family": "possession",
+        "prompt": "i have a brown spoon. my friend has a white pen. what color is my spoon?",
+        "expected": "your spoon is brown.",
+        "actual": "your spoon is brown.",
+        "exact_match": true
+      },
+      {
+        "id": "43b11842c6c1a21a8b21739350709528685e74010cc3ab2ad71e1f65b1de278b",
+        "family": "spatial_memory",
+        "prompt": "the yellow towel is inside the house. where is it?",
+        "expected": "the towel is inside the house.",
+        "actual": "the towel is inside the house.",
+        "exact_match": true
+      },
+      {
+        "id": "4b798fd5bd8141282e8162d13ef1c56c26d3068b3ec59e69db6dee441ff43430",
+        "family": "plans_and_order",
+        "prompt": "can you make a simple plan for me tomorrow? i need to run to school, give a toy to a child, and close the window.",
+        "expected": "first, run to school. then, give a toy to a child. after that, close the window.",
+        "actual": "first, run to school. then, give a toy to a child. after that, close the window.",
+        "exact_match": true
+      },
+      {
+        "id": "1654889ebc483e48bb93d13e4b806ce937128ffe1b592945e93a2a3abc775b12",
+        "family": "preferences",
+        "prompt": "i like juice in the evening because i like a cold drink. i like tea at dinner because i like a warm drink.",
+        "expected": "you like juice in the evening and tea at dinner.",
+        "actual": "you like juice in the evening and tea at dinner.",
+        "exact_match": true
+      },
+      {
+        "id": "c08a8412a0e4e8732a7bdd8ccd532405ee8506abf89ad7761dfa97447b5c3f79",
+        "family": "plans_and_order",
+        "prompt": "please put these things in order: carry a bag, play some music, and go home.",
+        "expected": "first, carry a bag. then, play some music. after that, go home.",
+        "actual": "first, carry a bag. then, play some music. after that, go home.",
+        "exact_match": true
+      },
+      {
+        "id": "fb34d3499f906bccb5c9b26ef4534ff3288c4e6705298729f5ad1a7a7f03c541",
+        "family": "feelings_and_small_talk",
+        "prompt": "hello. i feel calm today because i had a nice walk.",
+        "expected": "thank you for telling me. would you like to talk about your day?",
+        "actual": "thank you for telling me. would you like to talk about your day?",
+        "exact_match": true
+      },
+      {
+        "id": "5a280be919218cf8f0b3b125af8126922773959610aab8f6533da988244f3cf6",
+        "family": "story_in_chat",
+        "prompt": "please tell me a short story about a worker and a blue bag.",
+        "expected": "one day, a worker found a blue bag. the worker put it behind the chair. they felt sad. the day had been hard.",
+        "actual": "one day, a worker found a blue bag. the worker put it in the room. they felt tired. it was time to rest.",
+        "exact_match": false
+      },
+      {
+        "id": "ec5e9728f984b3831af3670dfcc90eedc732815bbcc0e8b204f38a71c975d854",
+        "family": "spatial_memory",
+        "prompt": "the white watch is under the table. where is it?",
+        "expected": "the watch is under the table.",
+        "actual": "the watch is under the table.",
+        "exact_match": true
+      },
+      {
+        "id": "194335f248f25bb15710f07208bd3223ecb39c5077b0063c70592290325c311d",
+        "family": "possession",
+        "prompt": "i have a red pencil. my teacher has a green bowl. what color is my pencil?",
+        "expected": "your pencil is red.",
+        "actual": "your pencil is red.",
+        "exact_match": true
+      },
+      {
+        "id": "f5c5e1d3c9594f3aab87e4029a7545dbd08627ee1facea94155d063570e0aa77",
+        "family": "story_in_chat",
+        "prompt": "please tell me a short story about a girl and a yellow basket.",
+        "expected": "one day, a girl found a yellow basket. the girl put it under the bed. she felt tired. it was time to rest.",
+        "actual": "one day, a girl found a yellow basket. the girl put it in the room. she felt tired. it was time to rest.",
+        "exact_match": false
+      },
+      {
+        "id": "b52bafcad34d17fc41fa6089853a4a41bfd8045b32bc48dadbfa21f5d962ac65",
+        "family": "plans_and_order",
+        "prompt": "i want to call a friend, buy some fruit, and take the bus today. can you help me make a plan?",
+        "expected": "first, call a friend. then, buy some fruit. after that, take the bus.",
+        "actual": "first, call a friend. then, buy some fruit. after that, take the bus.",
+        "exact_match": true
+      },
+      {
+        "id": "e1bcf75d55b48339cfc56d9c5e549f2a07049d21443799ba529623b569c91f2d",
+        "family": "story_in_chat",
+        "prompt": "please tell me a short story about a teacher and a blue pencil.",
+        "expected": "one day, a teacher found a blue pencil. the teacher put it in the bag. they felt happy. it was a good day.",
+        "actual": "one day, a teacher found a blue pencil. the teacher put it in the room. they felt tired. it was time to rest.",
+        "exact_match": false
+      },
+      {
+        "id": "60e2ef035971540304638b60a0542c0b869c23940105a2f1c6763c05fee3b1a7",
+        "family": "story_in_chat",
+        "prompt": "please tell me a short story about a woman and a pink phone.",
+        "expected": "one day, a woman found a pink phone. the woman put it behind the chair. she felt happy. it was a good day.",
+        "actual": "one day, a woman found a pink phone. the woman put it in the room. she felt tired. it was time to rest.",
+        "exact_match": false
+      },
+      {
+        "id": "2240bee25025748f99b182dcfca72d82ed610633198f06d7de74be45048a1404",
+        "family": "spatial_memory",
+        "prompt": "i left a pink towel on the shelf. where is the towel?",
+        "expected": "the towel is on the shelf.",
+        "actual": "the towel is on the shelf.",
+        "exact_match": true
+      },
+      {
+        "id": "d07f234465f774d7d1369a696c5e6e4b22d656477dc3bfd98d3d5d2df57c2b10",
+        "family": "description_and_yes_no",
+        "prompt": "i have a big purple basket inside the house. can you say that in another way?",
+        "expected": "your basket is big and purple. it is inside the house.",
+        "actual": "your basket is big and purple. it is inside the house.",
+        "exact_match": true
+      },
+      {
+        "id": "72b0e0ae89ac3915f62f1e024dad9f3637f1a31737da17ac6a0994b0351676ed",
+        "family": "description_and_yes_no",
+        "prompt": "i have a small blue bottle outside the house. can you say that in another way?",
+        "expected": "your bottle is small and blue. it is outside the house.",
+        "actual": "your bottle is small and blue. it is outside the house.",
+        "exact_match": true
+      },
+      {
+        "id": "1560c20eae7880f9ba1208b385b03a0e8eb6eac35323f798e1389952a2984ed5",
+        "family": "story_in_chat",
+        "prompt": "please tell me a short story about a girl and a gray bowl.",
+        "expected": "one day, a girl found a gray bowl. the girl put it on the chair. she felt happy. it was a good day.",
+        "actual": "one day, a girl found a gray bowl. the girl put it in the room. she felt tired. it was time to rest.",
+        "exact_match": false
+      },
+      {
+        "id": "8ad3cf0f9d4cce603d9805606ba7f08f826e6775514ee3d8b15135f0e523834e",
+        "family": "preferences",
+        "prompt": "i like bread in the morning because i enjoy the taste. i like fish at dinner because it goes well with rice.",
+        "expected": "you like bread in the morning and fish at dinner.",
+        "actual": "you like bread in the morning and fish at dinner.",
+        "exact_match": true
+      },
+      {
+        "id": "4356a5a540d9ce4c7bd0b70ba4620d0739c9b4cbbf12c7fd62190d7553fef429",
+        "family": "spatial_memory",
+        "prompt": "the yellow pen is under the bed. where is it?",
+        "expected": "the pen is under the bed.",
+        "actual": "the pen is under the bed.",
+        "exact_match": true
+      },
+      {
+        "id": "6a653ef95af3cfb5a4475122d5f73ee827989f3c55c7d692f150c8d30018479e",
+        "family": "spatial_memory",
+        "prompt": "i left a blue mirror in the box. where is the mirror?",
+        "expected": "the mirror is in the box.",
+        "actual": "the mirror is in the box.",
+        "exact_match": true
+      },
+      {
+        "id": "25da5c274afc2c8199b332d60f2df3e08fde7ed990dcf0064c280841954206ad",
+        "family": "story_in_chat",
+        "prompt": "please tell me a short story about a friend and a yellow phone.",
+        "expected": "one day, a friend found a yellow phone. the friend put it outside the house. they felt calm. the room was quiet.",
+        "actual": "one day, a friend found a yellow phone. the friend put it in the room. they felt tired. it was time to rest.",
+        "exact_match": false
+      },
+      {
+        "id": "5665062da7f0c9ab857f187f1f9049ad6752d91cb8a26cf9ae3763c1a02c18a5",
+        "family": "plans_and_order",
+        "prompt": "please put these things in order: cook a meal, visit the park, and talk about a book.",
+        "expected": "first, cook a meal. then, visit the park. after that, talk about a book.",
+        "actual": "first, cook a meal. then, visit the park. after that, talk about a book.",
+        "exact_match": true
+      },
+      {
+        "id": "15af69e2de4e209181120f5803e0e5dd9ea24784983fceb44a746b2960eed2dc",
+        "family": "possession",
+        "prompt": "i have a purple towel. my brother has a black camera. what color is my towel?",
+        "expected": "your towel is purple.",
+        "actual": "your towel is purple.",
+        "exact_match": true
+      },
+      {
+        "id": "6f4a93cef5a8b59870a7747be5afe6edf37ec09049bee17c484e7b9b94590794",
+        "family": "tense_and_negation",
+        "prompt": "can you help me make this about now: she writes a short story?",
+        "expected": "she is writing a short story now.",
+        "actual": "she is writing a short story now.",
+        "exact_match": true
+      },
+      {
+        "id": "2f7318e8064274d3bc54944b5299a6f268ff2fd16ad87a3d5d11ccd0d335c7ee",
+        "family": "plans_and_order",
+        "prompt": "i want to sit by the window, write a question, and ride to school today. can you help me make a plan?",
+        "expected": "first, sit by the window. then, write a question. after that, ride to school.",
+        "actual": "first, sit by the window. then, write a question. after that, ride to school.",
+        "exact_match": true
+      },
+      {
+        "id": "2d31df583ce54637480127fc62c60fd79d67f449ea05c65026d8900ae8466d7e",
+        "family": "plans_and_order",
+        "prompt": "i want to watch a film, move a box, and build a table this morning. can you help me make a plan?",
+        "expected": "first, watch a film. then, move a box. after that, build a table.",
+        "actual": "first, watch a film. then, move a box. after that, build a table.",
+        "exact_match": true
+      },
+      {
+        "id": "baa611c24400e6b256e3edc392be80c9eb13e2395af020956498dce7f3844ce4",
+        "family": "description_and_yes_no",
+        "prompt": "i have a big red key on the table. can you say that in another way?",
+        "expected": "your key is big and red. it is on the table.",
+        "actual": "your key is big and red. it is on the table.",
+        "exact_match": true
+      },
+      {
+        "id": "504c0422ce65f565aa13f38571bac3a1c9fa5eeec66b1373ebb07820245a7d07",
+        "family": "spatial_memory",
+        "prompt": "the red phone is on the desk. where is it?",
+        "expected": "the phone is on the desk.",
+        "actual": "the phone is on the desk.",
+        "exact_match": true
+      },
+      {
+        "id": "288f342fd86c87970f2ddc19aa1fdd717398c9994bed7081028513a87ed41270",
+        "family": "clarification_and_help",
+        "prompt": "can you help me with it?",
+        "expected": "what would you like help with?",
+        "actual": "what would you like help with?",
+        "exact_match": true
+      },
+      {
+        "id": "8fb16765aec142df52a11bcf59cda03cc6c09640c86416ae19bdbd9284373515",
+        "family": "plans_and_order",
+        "prompt": "please put these things in order: read the new book, move a box, and close the book.",
+        "expected": "first, read the new book. then, move a box. after that, close the book.",
+        "actual": "first, read the new book. then, move a box. after that, close the book.",
+        "exact_match": true
+      },
+      {
+        "id": "ba9d171408eb7d69afaef7ff93c626505403645397c124c021859ed01ad42908",
+        "family": "plans_and_order",
+        "prompt": "i want to sit on the chair, make some soup, and get some rest today. can you help me make a plan?",
+        "expected": "first, sit on the chair. then, make some soup. after that, get some rest.",
+        "actual": "first, sit on the chair. then, make some soup. after that, get some rest.",
+        "exact_match": true
+      },
+      {
+        "id": "28ba9f7be77face76f7748002b08e2bef23d6b58be8ad9abeb83c2fc6eea3097",
+        "family": "clarification_and_help",
+        "prompt": "can you help me with it?",
+        "expected": "what would you like help with?",
+        "actual": "what would you like help with?",
+        "exact_match": true
+      },
+      {
+        "id": "0ec8c1ef8acd5cebe765a4b6e4d0c16b85471d430d482e9f648fbee8a16dbd58",
+        "family": "small_counts",
+        "prompt": "i have three bags. i get one more. how many do i have now?",
+        "expected": "you have four bags.",
+        "actual": "you have four bags.",
+        "exact_match": true
+      },
+      {
+        "id": "5d515e7096efd0ed74ea183c954b49ecb2fbff0374e58ba4dd442609b998c7ef",
+        "family": "spatial_memory",
+        "prompt": "the black plate is in the box. where is it?",
+        "expected": "the plate is in the box.",
+        "actual": "the plate is in the box.",
+        "exact_match": true
+      },
+      {
+        "id": "49b1a012c65b9048b21c650cb0cb3e8a8330b01955e8972c2baa62389467d70d",
+        "family": "spatial_memory",
+        "prompt": "the brown camera is in the kitchen. where is it?",
+        "expected": "the camera is in the kitchen.",
+        "actual": "the camera is in the kitchen.",
+        "exact_match": true
+      },
+      {
+        "id": "07d204d4c7a6c1a7646d1f072329107506827d558b5a384d1950dc5c85cefb38",
+        "family": "spatial_memory",
+        "prompt": "i left an orange clock on the table. where is the clock?",
+        "expected": "the clock is on the table.",
+        "actual": "the clock is on the table.",
+        "exact_match": true
+      },
+      {
+        "id": "f307de2aed909f7de27c4fcdcfdbb09c672b44b34e80b67d842492d98bdc2f95",
+        "family": "story_in_chat",
+        "prompt": "please tell me a short story about a man and a white towel.",
+        "expected": "one day, a man found a white towel. the man put it under the table. he felt happy. it was a good day.",
+        "actual": "one day, a man found a white towel. the man put it in the room. he felt tired. it was time to rest.",
+        "exact_match": false
+      },
+      {
+        "id": "3c69197a9a79674e40af050ca289ad594ec62db930fd5d379c98d852f91aa5f8",
+        "family": "spatial_memory",
+        "prompt": "i left a blue picture outside the house. where is the picture?",
+        "expected": "the picture is outside the house.",
+        "actual": "the picture is outside the house.",
+        "exact_match": true
+      },
+      {
+        "id": "e95d8c090f4bdb6340e5f6e3d315516b1973686d8bec6212e002695d4ca03d16",
+        "family": "plans_and_order",
+        "prompt": "please put these things in order: come to the park, eat some rice, and cook some soup.",
+        "expected": "first, come to the park. then, eat some rice. after that, cook some soup.",
+        "actual": "first, come to the park. then, eat some rice. after that, cook some soup.",
+        "exact_match": true
+      },
+      {
+        "id": "81d70e4994d84853ee89352aa131276db6605cc3e97273d4e0a8736227b476f1",
+        "family": "spatial_memory",
+        "prompt": "i left a yellow watch inside the house. where is the watch?",
+        "expected": "the watch is inside the house.",
+        "actual": "the watch is inside the house.",
+        "exact_match": true
+      },
+      {
+        "id": "39b02478a610a5877278da20227b64f40b7bf4f1ccff6c21ac89f7aac04e5589",
+        "family": "tense_and_negation",
+        "prompt": "please say this about yesterday: he comes home.",
+        "expected": "yesterday, he came home.",
+        "actual": "yesterday, he came home.",
+        "exact_match": true
+      },
+      {
+        "id": "d37ffbbed902a098efa692116289259d8e9cbfed243d60cc504788dafdb88f6a",
+        "family": "possession",
+        "prompt": "i have a green basket. my brother has a gray coat. what color is my basket?",
+        "expected": "your basket is green.",
+        "actual": "your basket is green.",
+        "exact_match": true
+      },
+      {
+        "id": "a0d6de95e53e73d67a101fccb903ba85b8719f635097904b250259cce0e4752a",
+        "family": "clarification_and_help",
+        "prompt": "can you help me with it?",
+        "expected": "what would you like help with?",
+        "actual": "what would you like help with?",
+        "exact_match": true
+      },
+      {
+        "id": "9635c800a2b73d0ae78f28e15fdaf41dcc36ea9ed2ebbc3bb7dec0d73d621bae",
+        "family": "spatial_memory",
+        "prompt": "the orange basket is near the door. where is it?",
+        "expected": "the basket is near the door.",
+        "actual": "the basket is near the door.",
+        "exact_match": true
+      },
+      {
+        "id": "d445eb27ec44c4dc6d724b02b2cea7effd8a4e3743cfef9d2d4f7da838260306",
+        "family": "plans_and_order",
+        "prompt": "please put these things in order: cook some rice, watch a film, and sleep at home.",
+        "expected": "first, cook some rice. then, watch a film. after that, sleep at home.",
+        "actual": "first, cook some rice. then, watch a film. after that, sleep at home.",
+        "exact_match": true
+      },
+      {
+        "id": "16c2cc659453bc561785379353ece5db0b21f9d94e58ba6f778c3711cb41ac7a",
+        "family": "plans_and_order",
+        "prompt": "please put these things in order: take a walk, fix a door, and drink some tea.",
+        "expected": "first, take a walk. then, fix a door. after that, drink some tea.",
+        "actual": "first, take a walk. then, fix a door. after that, drink some tea.",
+        "exact_match": true
+      },
+      {
+        "id": "52708884a4469961ec8a11020060a7da3226124c16071f21c11670f4c1436a14",
+        "family": "description_and_yes_no",
+        "prompt": "i have a big gray brush in the room. can you say that in another way?",
+        "expected": "your brush is big and gray. it is in the room.",
+        "actual": "your brush is big and gray. it is in the room.",
+        "exact_match": true
+      },
+      {
+        "id": "25691ae20e14ad2f4fd501fd02ff1edf06bf6903725956fc9f74a2274a185c3f",
+        "family": "story_in_chat",
+        "prompt": "please tell me a short story about a student and a blue bag.",
+        "expected": "one day, a student found a blue bag. the student put it next to the bed. they felt happy. it was a good day.",
+        "actual": "one day, a student found a blue bag. the student put it in the room. they felt tired. it was time to rest.",
+        "exact_match": false
+      },
+      {
+        "id": "49aac22544658aba239d6fa29d5c95af554409eee741e936a7e278a17aabd185",
+        "family": "description_and_yes_no",
+        "prompt": "i have a large blue clock next to the bed. can you say that in another way?",
+        "expected": "your clock is large and blue. it is next to the bed.",
+        "actual": "your clock is large and blue. it is next to the bed.",
+        "exact_match": true
+      }
+    ],
+    "limitation": "First 100 test dialogues, shared template families; stories may have multiple valid answers.",
+    "by_family": {
+      "clarification_and_help": {
+        "count": 3,
+        "exact_matches": 3
+      },
+      "description_and_yes_no": {
+        "count": 14,
+        "exact_matches": 14
+      },
+      "feelings_and_small_talk": {
+        "count": 2,
+        "exact_matches": 2
+      },
+      "plans_and_order": {
+        "count": 21,
+        "exact_matches": 21
+      },
+      "possession": {
+        "count": 10,
+        "exact_matches": 10
+      },
+      "preferences": {
+        "count": 3,
+        "exact_matches": 3
+      },
+      "sentence_repair": {
+        "count": 1,
+        "exact_matches": 1
+      },
+      "small_counts": {
+        "count": 4,
+        "exact_matches": 4
+      },
+      "spatial_memory": {
+        "count": 21,
+        "exact_matches": 21
+      },
+      "story_in_chat": {
+        "count": 15,
+        "exact_matches": 0
+      },
+      "tense_and_negation": {
+        "count": 5,
+        "exact_matches": 5
+      },
+      "vocabulary_copy": {
+        "count": 1,
+        "exact_matches": 1
+      }
+    }
+  },
+  "export": {
+    "path": "picoboi-100k-v1.pt",
+    "bytes": 405367,
+    "sha256": "4f671bfa9410458c10b46ee8d5969aa937c74a6df93c313a2163724797e5c1d2"
+  }
+}

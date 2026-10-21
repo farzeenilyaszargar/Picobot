@@ -1,0 +1,7 @@
+{
+  "checkpoints/picoboi-100k-v1.pt": "4f671bfa9410458c10b46ee8d5969aa937c74a6df93c313a2163724797e5c1d2",
+  "results/picoboi-100k-v1/evaluation.json": "8697b8bfa814bbcda62bac2b1b1a60f08c47dbe56315af658741cc6b384c2ee5",
+  "results/picoboi-100k-v1/benchmark.json": "f3b277f1f17ae7fda868062d84cc30c2ef90cbdeadb7e884871c37734a1a8f7b",
+  "results/picoboi-100k-v1/settings.json": "51eb4fa83172c44c99c517343e9434a0724a4dce430adad4e51e2de5b7732f31",
+  "results/picoboi-100k-v1/metrics.jsonl": "f8688dcd998e9a2334fd6b656248b0fe59978585665cd23e7c29d9ca1db1bac1"
+}

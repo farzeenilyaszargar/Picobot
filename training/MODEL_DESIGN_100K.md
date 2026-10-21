@@ -2,6 +2,8 @@
 
 Research reviewed on 21 October 2026. These are proposed experiments, not measured Picoboi results. The goal is useful short conversations and reliable tracking of simple facts within a closed 800-word vocabulary. General reasoning or broad language understanding at this scale has not been established by the cited work.
 
+The first local run of the selected shared-block configuration is now complete. See [the model card](checkpoints/MODEL_CARD.md) for measured results and failures. Architecture comparisons below remain proposed experiments.
+
 ## Selected first experiment
 
 The recommended research candidate is now **two unique width-48 blocks executed in the order A, B, A, B**, with **99,120 unique parameters**. This is an extension of candidate A below, not a measured winner. It trades additional computation for four processing stages without narrowing the hidden representation to width 32. Compare it directly with A, B execution using the same unique weights architecture, trained separately. The first model to debug remains the A, B baseline; train the repeated-block candidate after that pipeline works.

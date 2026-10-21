@@ -213,7 +213,7 @@ def train_model(config, train, validation, args):
                 log_num = log_den = 0.
             if step % args.eval_every == 0 or batch == batches-1 or stop[0]:
                 validation_loss = evaluate(model, validation, args.batch_size, args.device)
-                improved = validation_loss < best-0.001
+                improved = validation_loss < best
                 if improved: best = validation_loss; stale = 0
                 else: stale += 1
                 row = dict(event='validation', step=step, validation_loss=validation_loss, best_validation_loss=best)

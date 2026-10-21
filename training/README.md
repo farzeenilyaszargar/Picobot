@@ -64,6 +64,8 @@ Compare assistant-only loss against full-sequence loss, and report both held-out
 
 ## Local model training
 
+A completed first local run and its exported checkpoint are documented in [checkpoints/MODEL_CARD.md](checkpoints/MODEL_CARD.md). It learns controlled corpus patterns but fails basic greeting and unfamiliar-prompt probes; do not treat it as a ready general chatbot.
+
 The implementation in `model.py` has exactly 99,120 trainable parameters, including embeddings and norms. Its two distinct blocks execute A, B, A, B. It uses the existing frozen corpus without adding identity dialogues or changing vocabulary. `train.py` uses complete individual dialogues, causal attention, trailing padding, correctly shifted assistant masks, clipped gradients, AdamW, learning-rate warmup and cosine decay, validation, and early stopping. Every epoch shuffles all training dialogues without replacement. Validation uses all validation dialogues; throughput pilots and learning-rate pilots are short diagnostics, not claims of global optimality.
 
 Install into a project-only environment:
