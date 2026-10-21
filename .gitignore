@@ -10,3 +10,4 @@ __pycache__/
 .venv/
 training/data/**/*.bin
 training/data/**/*.offsets.jsonl
+training/runs/

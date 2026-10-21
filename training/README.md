@@ -60,4 +60,39 @@ Exact duplicate dialogue texts are removed globally. Semantic groups are assigne
 
 The generator uses 498 word forms in its initial grammar inventory. Some words occur only in explicitly labeled copying exercises; the report lists these. Copying a word does not teach its meaning. This baseline must not be presented as semantically grounding all 800 words. The audit verifies vocabulary, formatting, deduplication, split assignment, packed files, selected language invariants, and counting arithmetic. It does not prove that every generated conversation is natural or that a trained model will chat well.
 
-Start by training and evaluating a small run before spending on a longer run. Compare assistant-only loss against full-sequence loss, and report both held-out loss and human checks of grammatical answers, context recall, and repetition. No model has been trained by these scripts, and the website has not been connected to a model.
+Compare assistant-only loss against full-sequence loss, and report both held-out loss and human checks of grammatical answers, context recall, and repetition. The website is not connected to the local training pipeline.
+
+## Local model training
+
+The implementation in `model.py` has exactly 99,120 trainable parameters, including embeddings and norms. Its two distinct blocks execute A, B, A, B. It uses the existing frozen corpus without adding identity dialogues or changing vocabulary. `train.py` uses complete individual dialogues, causal attention, trailing padding, correctly shifted assistant masks, clipped gradients, AdamW, learning-rate warmup and cosine decay, validation, and early stopping. Every epoch shuffles all training dialogues without replacement. Validation uses all validation dialogues; throughput pilots and learning-rate pilots are short diagnostics, not claims of global optimality.
+
+Install into a project-only environment:
+
+```sh
+uv venv --python python3.13 .venv
+uv pip install --python .venv/bin/python -r training/requirements-local.txt
+.venv/bin/python -m unittest discover -s training -p test_training.py -v
+.venv/bin/python training/train.py --benchmark
+.venv/bin/python training/train.py --auto --epochs 3
+```
+
+The benchmark compares CPU thread counts, CPU versus available MPS, batch sizes, and two initial learning rates using shuffled corpus examples. `--auto` applies its selected settings. On the initial laptop benchmark, CPU with four threads, batch size 64, and peak learning rate 0.003 was selected. Sustained speed and quality can differ from the pilot.
+
+Local outputs are under `training/runs/picoboi-100k-local/`, ignored by Git. `last.pt` contains model, optimizer, deterministic epoch/batch cursor, and settings for resume; `best.pt` tracks the lowest observed validation loss. Checkpoints are written through a temporary file and atomic rename. `metrics.jsonl`, `status.json`, `settings.json`, and `benchmark.json` record the run. The agent's detached launch additionally writes `train.log` and `process.json` and uses `caffeinate -i` only while training runs.
+
+Resume with the same settings:
+
+```sh
+.venv/bin/python training/train.py --auto --epochs 3 --resume
+```
+
+SIGINT/SIGTERM request a checkpoint after the current update. Do not launch two trainers into the same run directory. The test suite checks causality, prefix equivalence, loss-mask behavior, actual parameter count, and exact CPU continuation after interruption. Runs use FP32 and fixed seeds, but cross-device bitwise reproducibility is not promised.
+
+After completion, evaluate the best checkpoint on the held-out test split and optionally export a compact model checkpoint:
+
+```sh
+.venv/bin/python training/evaluate_checkpoint.py --export training/checkpoints/picoboi-100k-v1.pt
+.venv/bin/python training/chat.py 'the red ball is on the table. where is it?'
+```
+
+`chat.py` is a CPU debugging tool with greedy decoding and a restricted set of output tokens. It recomputes the prefix and is not the optimized browser inference engine. It rejects unknown words and unsupported characters. Only load checkpoints you trust: these local tools use PyTorch checkpoint deserialization. Deployment and quantization are separate steps; a trained checkpoint alone does not connect the website.
