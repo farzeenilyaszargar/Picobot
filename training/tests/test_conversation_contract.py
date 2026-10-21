@@ -24,7 +24,7 @@ class ConversationContractTests(unittest.TestCase):
         (self.data/'authored').mkdir()
         (self.data/'evaluation').mkdir()
         (self.data/'archive').mkdir()
-        for name in ['contract.json', 'tokenizer.json', 'vocabulary.txt', 'archive/tokenizer-1020.json']:
+        for name in ['contract.json', 'tokenizer.json', 'vocabulary.txt', 'concept-groups.json', 'archive/tokenizer-1020.json']:
             shutil.copyfile(ROOT/'conversations'/name, self.data/name)
         (self.data/'excluded-conversations.json').write_text('{}')
         self.row = dict(id='test', scenario='test', provenance='assistant_direct_authorship', topics=['test'],
@@ -44,7 +44,7 @@ class ConversationContractTests(unittest.TestCase):
         report = self.run_audit()
         self.assertEqual(report['english_words'], 5)
         self.assertEqual(report['model_tokens'], 15)
-        self.assertEqual(report['tokenizer_size'], 1017)
+        self.assertEqual(report['tokenizer_size'], 988)
 
     def test_unbound_output_reference_is_rejected(self):
         self.row['messages'][0]['content'] = 'hello.'
@@ -73,7 +73,7 @@ class ConversationContractTests(unittest.TestCase):
             self.run_audit()
 
     def test_raw_unknown_words_need_the_parser(self):
-        self.row['messages'][0]['content'] = 'my cat is here.'
+        self.row['messages'][0]['content'] = 'my hamster is here.'
         with self.assertRaisesRegex(ValueError, 'unknown words'):
             self.run_audit()
 
@@ -88,7 +88,7 @@ class ConversationContractTests(unittest.TestCase):
     def test_vocabulary_cannot_silently_grow(self):
         with (self.data/'vocabulary.txt').open('a') as stream:
             stream.write('cat\n')
-        with self.assertRaisesRegex(ValueError, 'exactly 997'):
+        with self.assertRaisesRegex(ValueError, 'exactly 968'):
             self.run_audit()
 
     def test_fruit_source_is_preserved_and_counted_once(self):
@@ -110,6 +110,35 @@ class ConversationContractTests(unittest.TestCase):
         adapted = canonicalize(self.row, tokenizer)
         self.assertEqual(adapted['messages'][1]['content'], 'she found a fruit.')
         self.run_audit()
+
+    def test_categories_preserve_articles_plural_and_source(self):
+        from conversations.canonical import canonicalize
+        tokenizer = json.loads((self.data/'tokenizer.json').read_text())
+        for source, expected in [
+            ('a bird.', 'an animal <term_0>.'),
+            ('two potatoes.', 'two vegetables <term_0>.'),
+            ('my car.', 'my vehicle <term_0>.'),
+            ('two boxes.', 'two containers <term_0>.'),
+            ('my shirt.', 'my garment <term_0>.'),
+            ('the pencil.', 'the tool <term_0>.'),
+            ('one cup of water.', 'one cup of water.'),
+            ('i train the model.', 'i train the model.'),
+        ]:
+            with self.subTest(source=source):
+                self.row['messages'] = [dict(role='user', content=source),
+                                        dict(role='assistant', content='okay.')]
+                adapted = canonicalize(self.row, tokenizer)
+                self.assertEqual(adapted['messages'][0]['content'], expected)
+                self.assertEqual(self.row['messages'][0]['content'], source)
+                self.run_audit()
+
+    def test_category_policy_cannot_silently_drift(self):
+        path = self.data/'tokenizer.json'
+        tokenizer = json.loads(path.read_text())
+        tokenizer['generalized_words']['potato'] = 'animal'
+        path.write_text(json.dumps(tokenizer))
+        with self.assertRaisesRegex(ValueError, 'category policy'):
+            self.run_audit()
 
 
 if __name__ == '__main__':

@@ -4,7 +4,7 @@ An experiment in small, personal AI that runs in your browser. Made by **@farily
 
 Picoboi explores tiny language models and browser-local tools. The current website runs the locally trained 99,120-parameter FP32 model in a worker. It is a limited 800-word experiment; replies can be wrong. Ternary weights and extra tools remain future experiments.
 
-The next model's [training corpus](training/conversations/README.md) now uses a 997-word vocabulary after fruit-name generalization and includes longer conversations. Its [concept parser prototype](training/conversations/PARSER.md) preserves specific words through bound references. This next model is not trained or deployed yet.
+The next model's [training corpus](training/conversations/README.md) now uses a 968-word vocabulary after category generalization and includes longer conversations. Its [concept parser prototype](training/conversations/PARSER.md) preserves specific words through bound references. This next model is not trained or deployed yet.
 
 ## Run the frontend
 

@@ -6,6 +6,7 @@ import re
 def canonicalize(row, tokenizer):
     result = copy.deepcopy(row)
     mappings = tokenizer.get('generalized_words', {})
+    concepts = '|'.join(re.escape(c) for c in sorted(set(mappings.values()),key=len,reverse=True))
     slots = tokenizer['reference_tokens']
     occupied = {slot for m in row['messages'] for slot in slots if slot in m['content']}
     bindings = {}
@@ -15,7 +16,7 @@ def canonicalize(row, tokenizer):
             if surface not in mappings:
                 return surface
             if surface not in bindings:
-                # The model can invent a generic fruit in a story, not an unbound surface word.
+                # New story objects can be generic, not unbound original surface words.
                 if message['role'] == 'assistant':
                     return mappings[surface]
                 available = next((slot for slot in slots if slot not in occupied), None)
@@ -27,7 +28,7 @@ def canonicalize(row, tokenizer):
             return f"{binding['concept']} {binding['token']}"
         message['content'] = re.sub(r"[a-z]+(?:'[a-z]+)?", replace, message['content'])
         message['content'] = re.sub(
-            r'\b(a|an)\s+([a-z]+\s+<term_\d+>|fruits?\b)',
+            rf'\b(a|an)\s+([a-z]+\s+<term_\d+>|(?:{concepts})\b)',
             lambda m: ('an' if m[2][0] in 'aeiou' else 'a')+' '+m[2], message['content'])
     if bindings:
         result['generalized_bindings'] = list(bindings.values())

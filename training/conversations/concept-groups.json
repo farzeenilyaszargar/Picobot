@@ -1,0 +1,111 @@
+{
+  "fruit": [
+    "apple",
+    "banana",
+    "lemon"
+  ],
+  "fruits": [
+    "apples",
+    "bananas",
+    "lemons"
+  ],
+  "vegetable": [
+    "carrot",
+    "potato",
+    "onion",
+    "tomato",
+    "bean"
+  ],
+  "vegetables": [
+    "carrots",
+    "potatoes",
+    "onions",
+    "tomatoes",
+    "beans"
+  ],
+  "animal": [
+    "bird",
+    "cat",
+    "dog",
+    "lion",
+    "tiger",
+    "horse",
+    "rabbit",
+    "kitten",
+    "puppy"
+  ],
+  "animals": [
+    "birds",
+    "cats",
+    "dogs",
+    "lions",
+    "tigers",
+    "horses",
+    "rabbits",
+    "kittens",
+    "puppies"
+  ],
+  "vehicle": [
+    "car",
+    "bike",
+    "bus",
+    "boat",
+    "truck",
+    "bicycle"
+  ],
+  "vehicles": [
+    "cars",
+    "bikes",
+    "buses",
+    "boats",
+    "trucks",
+    "bicycles"
+  ],
+  "container": [
+    "bag",
+    "box",
+    "basket",
+    "bottle",
+    "bowl"
+  ],
+  "containers": [
+    "bags",
+    "boxes",
+    "baskets",
+    "bottles",
+    "bowls"
+  ],
+  "garment": [
+    "coat",
+    "shirt",
+    "hat",
+    "shoe",
+    "sock"
+  ],
+  "garments": [
+    "coats",
+    "shirts",
+    "hats",
+    "shoes",
+    "socks",
+    "pants"
+  ],
+  "tool": [
+    "pen",
+    "pencil",
+    "spoon",
+    "fork",
+    "knife",
+    "hammer",
+    "screwdriver"
+  ],
+  "tools": [
+    "pens",
+    "pencils",
+    "spoons",
+    "forks",
+    "knives",
+    "hammers",
+    "screwdrivers"
+  ]
+}

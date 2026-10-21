@@ -37,16 +37,11 @@ aunt
 away
 baby
 back
-bag
-bags
 ball
 balls
 bank
-basket
 bathroom
 be
-bean
-beans
 because
 become
 bed
@@ -60,23 +55,15 @@ believe
 below
 between
 big
-bike
-bird
-birds
 black
 blanket
 blue
-boat
 body
 book
 books
 both
-bottle
 bottom
 bought
-bowl
-box
-boxes
 boy
 bread
 break
@@ -95,7 +82,6 @@ build
 building
 builds
 built
-bus
 busy
 but
 butter
@@ -113,12 +99,10 @@ came
 camera
 can
 cannot
-car
 card
 care
 carried
 carries
-carrot
 carry
 carrying
 chair
@@ -149,7 +133,6 @@ closes
 closing
 clothes
 cloud
-coat
 coffee
 coin
 coins
@@ -256,7 +239,6 @@ food
 foot
 for
 forget
-fork
 found
 four
 free
@@ -297,7 +279,6 @@ happening
 happy
 hard
 has
-hat
 hate
 have
 having
@@ -355,7 +336,6 @@ keys
 kind
 kitchen
 knew
-knife
 know
 knowing
 knows
@@ -465,7 +445,6 @@ okay
 on
 once
 one
-onion
 only
 open
 opened
@@ -483,7 +462,6 @@ over
 own
 page
 pan
-pants
 paper
 parent
 parents
@@ -491,9 +469,6 @@ park
 part
 pass
 pay
-pen
-pencil
-pens
 people
 person
 phone
@@ -514,7 +489,6 @@ plays
 please
 point
 pot
-potato
 price
 problem
 pull
@@ -579,9 +553,6 @@ shape
 share
 she
 shelf
-shirt
-shoe
-shoes
 shop
 short
 shorter
@@ -606,8 +577,6 @@ smile
 snow
 so
 soap
-sock
-socks
 sofa
 some
 someone
@@ -623,7 +592,6 @@ speak
 speaks
 spend
 spoke
-spoon
 square
 stand
 standing
@@ -693,7 +661,6 @@ tired
 to
 today
 together
-tomato
 tomorrow
 too
 took
@@ -995,3 +962,7 @@ usually
 finally
 rather
 fruits
+vegetable
+vegetables
+garment
+garments

@@ -2,7 +2,7 @@
 
 This is an inspectable browser-compatible JavaScript adapter for the next model. It is not connected to the deployed 800-word model and does not contain another language model.
 
-The model vocabulary has 997 lowercase word forms, 12 existing punctuation/structure tokens, and eight new reference tokens: `<term_0>` through `<term_7>`. The total is 1,017 token IDs. Word IDs were intentionally rebuilt for v4; older tokenizer snapshots and the live model are preserved.
+The model vocabulary has 968 lowercase word forms, 12 existing punctuation/structure tokens, and eight new reference tokens: `<term_0>` through `<term_7>`. The total is 988 token IDs. Word IDs were intentionally rebuilt for v5; older tokenizer snapshots and the live model are preserved.
 
 ## Protocol
 
@@ -40,17 +40,31 @@ A generic answer such as `an animal needs food.` stays generic. The renderer onl
 
 Slots identify surface words, not physical entities. Two mentions of `cat` share one word binding; this does not assert that they describe the same cat. The model still needs contextual evidence such as `my`, `your`, positions, and counts. There is no implemented general entity resolver.
 
-## Fruit-only vocabulary reduction
+## Category vocabulary reduction
 
-The v4 change removes `apple`, `apples`, `banana`, and `lemon` from the model vocabulary, adds `fruits`, and keeps the earlier general concept `fruit`. Singular names map to `fruit <term_n>` and plurals to `fruits <term_n>`. Bindings restore the original word only for explicit references. `an apple` becomes `a fruit <term_n>` and restores to `an apple`. Spelling repair such as `aples` runs before this mapping. The parser also recognizes `bananas` and `lemons`, which were already outside the vocabulary.
+The explicit noun policy is in `concept-groups.json`, also embedded in the tokenizer for browser use. The current vocabulary has 968 word forms, down from 997 in v4 and 1,000 in v3. Examples:
 
-`orange` stays unchanged because it can describe a color. No blanket food, object, action, or color replacement is added. The existing animal/tool/vehicle prototype remains as it was.
+| Surface words | Model category |
+| --- | --- |
+| apple, banana, lemon | fruit |
+| carrot, potato, onion, tomato, bean | vegetable |
+| bird, cat, dog, lion, tiger | animal |
+| car, bike, bus, boat | vehicle |
+| bag, box, basket, bottle, bowl | container |
+| coat, shirt, hat, shoe, sock | garment |
+| pen, pencil, spoon, fork, knife | tool |
 
-Preserved training source is converted by `canonical.py`; it is not edited in place. Explicit source references remain reserved, and new fruit references use unused slots. Assistant-only new fruit mentions become generic, since the model cannot create a reference to an original surface word it never received.
+Plural forms map to plural categories. `an apple` becomes `a fruit <term_n>` and restores to `an apple`; `a bird` becomes `an animal <term_n>` and restores to `a bird`. Spelling repair runs before mapping. Surface names can remain outside the model word vocabulary without being lost from the parser binding table.
+
+The dictionary uses curated noun interpretations, not a general part-of-speech model. It does not support every technical, metaphorical, or verb reading of every mapped word. Common ambiguous words `orange`, `train`, `dress`, `fish`, `chicken`, `brush`, and `plant` are explicitly kept. `cup` and `cups` stay because a measured cup of water must not become an unspecified container of water. Verbs, numbers, family roles, body parts, colors, and relations remain distinct.
+
+Source text is preserved and converted by `canonical.py`. Explicit source references remain reserved, and new noun bindings use unused slots. Assistant-only new nouns become generic categories because the model cannot invent a reference to a surface term it never received. Existing rose/flower and oak/tree mappings remain as before.
+
+This transformation reduces vocabulary size, but adds reference tokens to affected model inputs. It does not prove faster inference or better understanding. The category must not be treated as carrying all properties of a specific member; those need explicit supported facts or a tool.
 
 ## Deliberate limits
 
-- The current dictionary covers a small set of animal words and selected tool, vehicle, flower, and tree words. Recognized model words are preserved rather than unnecessarily generalized.
+- The current dictionary covers the listed category families plus the earlier flower and tree examples. Recognized model words are preserved rather than unnecessarily generalized.
 - Unknown words outside that dictionary remain unsupported. They are not silently changed into a similar spelling or into `object`.
 - Cat and dog share a category but do not share all facts. The binding table preserves the word; it does not teach the model species-specific sounds, food, behavior, or other knowledge. Such tasks need grounded facts supplied in supported language, a separate tool, or an admission of uncertainty.
 - There are eight distinct surface-word bindings per chat. When full, the parser reports failure without reusing a slot. Failed parses do not alter committed state.

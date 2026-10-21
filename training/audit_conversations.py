@@ -23,6 +23,12 @@ def audit():
     if len(base_words) != len(set(base_words)) or len(base_words) != 800:
         raise ValueError('The frozen baseline vocabulary must contain 800 distinct word forms')
     retired = set(tokenizer['retired_words'])
+    groups = json.loads((DATA/'concept-groups.json').read_text())
+    mappings = {word:concept for concept,forms in groups.items() for word in forms}
+    if mappings != tokenizer['generalized_words']:
+        raise ValueError('Tokenizer mappings must match the category policy')
+    if retired.intersection(contract['protected_words']):
+        raise ValueError('An ambiguous protected word cannot be retired')
     if retired != set(contract['retired_words']) or any(w not in tokenizer['generalized_words'] for w in retired):
         raise ValueError('Retired words need an explicit concept mapping')
     if len(words) != len(set(words)) or not (set(base_words)-retired).issubset(words):
@@ -32,15 +38,20 @@ def audit():
     previous = json.loads((DATA/'archive/tokenizer-1020.json').read_text())
     if tokenizer['tokens'][:12] != previous['tokens'][:12]:
         raise ValueError('The previous 12 structural token IDs must remain unchanged')
-    expected_words = [t for t in previous['tokens'] if re.fullmatch('[a-z]+',t) and t not in retired]+['fruits']
+    original_words = [t for t in previous['tokens'] if re.fullmatch('[a-z]+',t)]
+    if retired != set(original_words).intersection(mappings):
+        raise ValueError('Retired words must be exactly the mapped words from the original vocabulary')
+    expected_words = [t for t in original_words if t not in retired]+contract['added_word_forms']
     if words != expected_words:
-        raise ValueError('Only declared fruit words may be retired in this migration')
+        raise ValueError('Vocabulary must follow the declared category policy')
+    if set(mappings.values())-set(words):
+        raise ValueError('Every category must be in the active vocabulary')
     if references != [f'<term_{i}>' for i in range(contract['reference_slots'])]:
         raise ValueError('Reference slot definitions do not match the data contract')
     expected_tokens = previous['tokens'][:12] + words
     expected_tokens += references
     if tokenizer['tokens'] != expected_tokens:
-        raise ValueError('Tokenizer must preserve baseline IDs and append new tokens')
+        raise ValueError('Tokenizer must match the active word order and reference slots')
     if len(expected_tokens) != contract['tokenizer_size']:
         raise ValueError('Tokenizer size does not match the data contract')
     excluded = json.loads((DATA/'excluded-conversations.json').read_text())

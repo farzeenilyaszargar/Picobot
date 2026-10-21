@@ -58,7 +58,7 @@ assert.equal(other.parse('the rose and the oak.').modelText, 'the flower <term_2
 assert.equal(other.parse('an oak.').modelText, 'a tree <term_3>.');
 assert.equal(other.render('a tree <term_3> is here.'), 'an oak is here.');
 assert.throws(() => other.render('tool <term_0>more'), /unknown reference/);
-assert.equal(other.parse('my bird is here.').modelText, 'my bird is here.');
+assert.equal(other.parse('my bird is here.').modelText, 'my animal <term_4> is here.');
 const fruit = createConceptParser(tokenizer);
 assert.equal(fruit.parse('an apple and a banana.').modelText, 'a fruit <term_0> and a fruit <term_1>.');
 assert.equal(fruit.render('a fruit <term_0> is here.'), 'an apple is here.');
@@ -66,17 +66,51 @@ assert.equal(fruit.render('the fruit <term_1> is yellow.'), 'the banana is yello
 assert.equal(fruit.parse('two apples and a lemon.').modelText, 'two fruits <term_2> and a fruit <term_3>.');
 assert.equal(fruit.render('the fruits <term_2> are here.'), 'the apples are here.');
 assert.equal(fruit.render('fruit is food.'), 'fruit is food.');
-assert.equal(fruit.parse('an orange shirt.').modelText, 'an orange shirt.');
+assert.equal(fruit.parse('an orange shirt.').modelText, 'an orange garment <term_4>.');
+assert.equal(fruit.render('an orange garment <term_4>.'), 'an orange shirt.');
 assert.equal(fruit.parse('an orange.').modelText, 'an orange.');
-assert.equal(fruit.bindings.length, 4);
+assert.equal(fruit.bindings.length, 5);
 assert.equal(fruit.parse('pineapple').ready, false);
 const spelling = createConceptParser(tokenizer);
 assert.equal(spelling.parse('teh aples are here.').modelText, 'the fruits <term_0> are here.');
 assert.equal(spelling.parse('the banana is not here.').modelText, 'the fruit <term_1> is not here.');
 assert.equal(spelling.render('the fruit <term_1> is not here.'), 'the banana is not here.');
-assert.equal(new Set(tokenizer.tokens.filter(t => /^[a-z]+$/.test(t))).size, 997);
+assert.equal(new Set(tokenizer.tokens.filter(t => /^[a-z]+$/.test(t))).size, 968);
 for (const word of ['apple', 'apples', 'banana', 'lemon']) assert.ok(!tokenizer.tokens.includes(word));
-console.log(JSON.stringify({ status: 'passed', vocabulary_words: 997, token_ids: tokenizer.tokens.length,
+for (const [raw, model] of [
+  ['a carrot and a potato.', 'a vegetable <term_0> and a vegetable <term_1>.'],
+  ['two carrots and three potatoes.', 'two vegetables <term_0> and three vegetables <term_1>.'],
+  ['my bird and my dog.', 'my animal <term_0> and my animal <term_1>.'],
+  ['my car and my bike.', 'my vehicle <term_0> and my vehicle <term_1>.'],
+  ['two boats.', 'two vehicles <term_0>.'],
+  ['the bottle is in the bag.', 'the container <term_0> is in the container <term_1>.'],
+  ['two boxes.', 'two containers <term_0>.'],
+  ['a hat and two socks.', 'a garment <term_0> and two garments <term_1>.'],
+  ['a knife and two pencils.', 'a tool <term_0> and two tools <term_1>.'],
+]) {
+  const category = createConceptParser(tokenizer);
+  assert.equal(category.parse(raw).modelText, model, raw);
+  assert.equal(category.render(model), raw, raw);
+}
+for (const raw of ['the train is here.', 'i train the model.', 'an orange.',
+  'i dress for work.', 'i fish.', 'my mother and my sister.', 'one two three.', 'one cup of water.']) {
+  assert.equal(createConceptParser(tokenizer).parse(raw).modelText, raw, raw);
+}
+const groups = JSON.parse(fs.readFileSync(new URL('../conversations/concept-groups.json', import.meta.url)));
+let mappedForms = 0;
+for (const [concept, forms] of Object.entries(groups)) {
+  for (const surface of forms) {
+    const category = createConceptParser(tokenizer);
+    const raw = `the ${surface}.`;
+    const model = `the ${concept} <term_0>.`;
+    assert.ok(!tokenizer.tokens.includes(surface), surface);
+    assert.equal(category.parse(raw).modelText, model, surface);
+    assert.equal(category.render(model), raw, surface);
+    mappedForms++;
+  }
+}
+console.log(JSON.stringify({ status: 'passed', category_forms_round_tripped: mappedForms }));
+console.log(JSON.stringify({ status: 'passed', vocabulary_words: 968, token_ids: tokenizer.tokens.length,
   checks: ['bindings across turns', 'plural forms', 'negation', 'contractions', 'generic noun preservation',
     'unknown words', 'slot exhaustion', 'transactional state', 'reference validation', 'reset', 'known words'] }));
 
