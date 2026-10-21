@@ -75,6 +75,49 @@ function appendMessage(content, kind) {
   return item;
 }
 
+function createAnswerStream(item, currentId) {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let target = [];
+  let visible = 0;
+  let pending;
+  let stopped = false;
+  item.classList.add('is-streaming');
+
+  const render = () => {
+    item.textContent = target.slice(0, visible).join('');
+    log.scrollTop = log.scrollHeight;
+  };
+  const update = (text) => {
+    if (stopped || currentId !== generationId) return;
+    target = Array.from(text);
+    if (reducedMotion) {
+      visible = target.length;
+      render();
+      return;
+    }
+    pending ??= (async () => {
+      while (!stopped && currentId === generationId && visible < target.length) {
+        await new Promise((resolve) => setTimeout(resolve, 20));
+        if (stopped || currentId !== generationId) break;
+        visible = Math.min(visible + 2, target.length);
+        render();
+      }
+    })().finally(() => { pending = undefined; });
+  };
+
+  return {
+    update,
+    async finish(text) {
+      update(text);
+      await pending;
+    },
+    stop() {
+      stopped = true;
+      item.classList.remove('is-streaming');
+    },
+  };
+}
+
 function setChatStarted(started) {
   closeModelMenu();
   $('privacy-note').hidden = started || location.hash === '#about';
@@ -132,18 +175,23 @@ form.addEventListener('submit', async (event) => {
   $('model-status').textContent = 'Thinking…';
   updateComposer();
   let answerElement;
+  let answerStream;
+  const streamAnswer = (text) => {
+    if (currentId !== generationId) return;
+    answerElement ??= appendMessage('', 'assistant');
+    answerStream ??= createAnswerStream(answerElement, currentId);
+    $('model-status').textContent = 'Replying…';
+    answerStream.update(text);
+  };
   try {
-    const result = await model.generate(history.map((message) => ({ ...message })), (text) => {
-      if (currentId !== generationId) return;
-      answerElement ??= appendMessage('', 'assistant');
-      answerElement.textContent = text;
-      log.scrollTop = log.scrollHeight;
-    });
+    const result = await model.generate(history.map((message) => ({ ...message })), streamAnswer);
     const response = result.text;
     if (currentId !== generationId) return;
     if (typeof response !== 'string' || !response.trim()) throw new Error('Empty model response');
+    streamAnswer(response);
+    await answerStream.finish(response);
+    if (currentId !== generationId) return;
     history.push({ role: 'assistant', content: response });
-    answerElement ??= appendMessage(response, 'assistant');
     if (result.dropped) appendMessage('Older messages were left out to fit the 128-token context window.', 'notice');
     if (result.truncated) appendMessage('This answer reached the model’s length limit.', 'notice');
   } catch (error) {
@@ -152,6 +200,7 @@ form.addEventListener('submit', async (event) => {
     answerElement?.remove();
     appendMessage(error.message || 'Something interrupted the response. Please try again.', 'notice');
   } finally {
+    answerStream?.stop();
     if (currentId === generationId) {
       busy = false;
       log.removeAttribute('aria-busy');
