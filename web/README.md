@@ -46,3 +46,9 @@ node training/tests/web-lookup.mjs
 ```
 
 Fixtures contain PyTorch logits and greedy answers. Tests check numerical agreement, the binary checksum, vocabulary rejection, context trimming, and cancellation/reuse. Browser checks cover real generation, follow-up questions, unsupported words, and New chat. See the model card for capability limits. This implementation uses JavaScript/CPU and does not promise offline page loading after the tab closes. Model inference stays local. When web lookup is enabled, extracted search terms are sent to Wikipedia; conversation history is not sent to an inference service.
+
+## ASCII video background
+
+The chat page has a same-origin, muted, 16-second ASCII jellyfish video loop. The source is credited to NOAA Ocean Exploration, Gulf of Mexico 2018; see `dist/media/CREDITS.md` for source links and processing details. The 18.5 MB source is transformed offline into a 572 KB WebM and a 917 KB H.264 fallback; the browser chooses one. `tools/render_ascii_background.py` rebuilds the assets with greyscale, contrast, pixelation, glyph rendering, seamless timing, and compression.
+
+`dist/ambient-background.js` loads video sources only when motion is allowed. Reduced-motion and data-saver preferences receive a still poster. The pause/play button is keyboard accessible. The video pauses when the tab is hidden or the About page is open; active chats soften the background to preserve text readability. A failed video or blocked autoplay leaves a still image. No remote video requests, canvas rendering, or animation dependencies are needed at runtime.
