@@ -49,6 +49,16 @@ Fixtures contain PyTorch logits and greedy answers. Tests check numerical agreem
 
 ## ASCII video background
 
-The chat page has a same-origin, muted, 16-second ASCII jellyfish video loop. The source is credited to NOAA Ocean Exploration, Gulf of Mexico 2018; see `dist/media/CREDITS.md` for source links and processing details. The 18.5 MB source is transformed offline into a 572 KB WebM and a 917 KB H.264 fallback; the browser chooses one. `tools/render_ascii_background.py` rebuilds the assets with greyscale, contrast, pixelation, glyph rendering, seamless timing, and compression.
+The chat page has a 20-second field of six small ASCII jellyfish, adapted from **Jellyfish in a aquarium** by **Amada44 / Wikimedia Commons**. The derivative video assets and posters are distributed under **CC BY-SA 3.0**, with source, license, and modification links in the About page and `dist/media/CREDITS.md`.
 
-`dist/ambient-background.js` loads video sources only when motion is allowed. Reduced-motion and data-saver preferences receive a still poster. The pause/play button is keyboard accessible. The video pauses when the tab is hidden or the About page is open; active chats soften the background to preserve text readability. A failed video or blocked autoplay leaves a still image. No remote video requests, canvas rendering, or animation dependencies are needed at runtime.
+`tools/render_ascii_background.py` rebuilds the media from seconds 9–17 of the original footage. It tracks and isolates the bright jellyfish, removes water/tank reflections, applies greyscale and full-range contrast, arranges six independently timed subjects, samples fine 4 × 6 pixel cells, and renders 7-pixel monospace glyphs. The desktop grid is 480 × 180 cells at 1920 × 1080. A separate 780 × 1680 mobile composition keeps all six subjects small around the chat area. The video canvas between subjects is clean white, matching the page.
+
+Each subject follows a phase-offset, cosine-eased forward/reverse cycle. First and last master frames match, including each subject's gentle drift. H.264 MP4 is preferred for its smaller size; VP9 WebM is a fallback. Both are silent, compressed, same-origin assets. Original footage and intermediate frames are not shipped.
+
+`dist/ambient-background.js` loads the right layout only when motion is allowed. Reduced-motion and data-saver preferences receive a responsive still poster. The pause/play button is keyboard accessible. The video pauses when the tab is hidden or the About page is open. Active chats soften the background. Failed media or blocked autoplay leaves a still image; crossing the mobile breakpoint loads the appropriate composition. No remote media requests, canvas rendering, or animation dependencies are needed at runtime.
+
+Verification:
+
+```sh
+node training/tests/ambient-background.mjs
+```

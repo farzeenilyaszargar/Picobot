@@ -7,16 +7,19 @@
     <meta name="description" content="PicoBoi is an experiment in small, personal AI that runs in your browser. Made by @farilyaz." />
     <title>PicoBoi</title>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <link rel="stylesheet" href="./styles.css?v=ascii1" />
+    <link rel="stylesheet" href="./styles.css?v=drifters1" />
     <script type="module" src="./app.js?v=web1"></script>
-    <script type="module" src="./ambient-background.js"></script>
+    <script type="module" src="./ambient-background.js?v=drifters1"></script>
   </head>
   <body>
     <div class="ambient-background" id="ambient-background" aria-hidden="true">
-      <img class="ambient-poster" src="./media/jellyfish-ascii-poster.png" alt="" width="1280" height="720" />
-      <video id="ambient-video" muted loop playsinline preload="none" poster="./media/jellyfish-ascii-poster.png" tabindex="-1" disablepictureinpicture>
-        <source data-src="./media/jellyfish-ascii.webm" type="video/webm" />
-        <source data-src="./media/jellyfish-ascii.mp4" type="video/mp4" />
+      <picture>
+        <source media="(max-width: 600px)" srcset="./media/drifters-ascii-mobile-poster.png" />
+        <img class="ambient-poster" src="./media/drifters-ascii-desktop-poster.png" alt="" width="1920" height="1080" />
+      </picture>
+      <video id="ambient-video" muted loop playsinline preload="none" poster="./media/drifters-ascii-desktop-poster.png" tabindex="-1" disablepictureinpicture>
+        <source data-src="./media/drifters-ascii-desktop.mp4" data-mobile-src="./media/drifters-ascii-mobile.mp4" type="video/mp4" />
+        <source data-src="./media/drifters-ascii-desktop.webm" data-mobile-src="./media/drifters-ascii-mobile.webm" type="video/webm" />
       </video>
     </div>
     <button class="ambient-toggle" id="ambient-toggle" type="button" aria-label="Pause background animation" aria-pressed="false" hidden>
@@ -83,7 +86,7 @@
       <main id="about-page" class="about-page" hidden>
         <section class="about-content" aria-label="About PicoBoi">
           <p class="about-copy" id="about-heading" tabindex="-1">PicoBoi is an experiment by <a href="https://twitter.com/farilyaz" target="_blank" rel="noopener noreferrer">@farilyaz</a> in running small language models directly inside a website, on your own device. The first 100K model runs in this page with an 800-word vocabulary. Unfamiliar topics can be looked up on Wikipedia, with reference excerpts and source links. Search terms leave your device when lookup is enabled. It’s a limited experiment: replies and search matches can be wrong.</p>
-          <p class="ambient-credit">Jellyfish footage: <a href="https://oceanexplorer.noaa.gov/multimedia/video-shorts-ex1803-jelly/" target="_blank" rel="noopener noreferrer">NOAA Ocean Exploration, Gulf of Mexico 2018</a>. Adapted into an ASCII loop.</p>
+          <p class="ambient-credit">Jellyfish footage: <a href="https://commons.wikimedia.org/wiki/File:Jellyfish_in_a_aquarium.webm" target="_blank" rel="noopener noreferrer">Amada44 / Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a>. Isolated, arranged, and adapted into an ASCII loop under the same license.</p>
         </section>
       </main>
 

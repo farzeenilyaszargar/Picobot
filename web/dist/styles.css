@@ -11,19 +11,19 @@ button{cursor:pointer}
 button:focus-visible,a:focus-visible{outline:2px solid #777;outline-offset:5px}
 .site-shell{position:relative;z-index:1;min-height:100svh;display:flex;flex-direction:column}
 .ambient-background{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#fff}
-.ambient-background video,.ambient-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:.48}
+.ambient-background video,.ambient-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:.6}
 .ambient-background video{opacity:0;transition:opacity .5s}
-.ambient-background.is-playing video{opacity:.48}
+.ambient-background.is-playing video{opacity:.6}
 .ambient-background.is-playing .ambient-poster{visibility:hidden}
-.ambient-background::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 10%,#ffffff40 25%,#ffffffed 42%,#fffffff5 58%,#ffffff70 78%,transparent),linear-gradient(#fff 0%,transparent 18%,transparent 80%,#fff 100%)}
+.ambient-background::after{content:"";position:absolute;inset:0;background:linear-gradient(#ffffff60,transparent 14%,transparent 88%,#ffffff60)}
 .ambient-toggle{position:fixed;right:23px;bottom:18px;z-index:2;display:grid;place-items:center;width:30px;height:30px;padding:0;border:1px solid #e9e9e6;border-radius:50%;background:#ffffffed;color:#898987}
 .ambient-toggle:hover{color:#242424;border-color:#b9b9b2}
 .ambient-play,.ambient-toggle[aria-pressed=true] .ambient-pause{display:none}
 .ambient-toggle[aria-pressed=true] .ambient-play{display:block}
 .ambient-credit{margin:28px auto 0;color:#96968e;font-size:11px;line-height:1.8;letter-spacing:0}
 .ambient-credit a{text-decoration:underline;text-underline-offset:3px}
-.chat-active .ambient-background{opacity:.38}
-@media(max-width:600px){.ambient-background video,.ambient-poster{object-position:0% center}.ambient-poster{opacity:.3}.ambient-background.is-playing video{opacity:.3}.ambient-background::after{background:radial-gradient(ellipse at 50% 45%,#ffffffc0, #ffffff70 45%,transparent 80%),linear-gradient(#fff,transparent 20%,transparent 80%,#fff)}.ambient-toggle{right:12px;bottom:12px}.privacy-note{padding-left:48px;padding-right:48px}}
+.chat-active .ambient-background{opacity:.45}
+@media(max-width:600px){.ambient-poster{opacity:.5}.ambient-background.is-playing video{opacity:.5}.ambient-toggle{right:12px;bottom:12px}.privacy-note{padding-left:48px;padding-right:48px}}
 .navbar{padding:18px 52px;display:flex;align-items:center;justify-content:space-between}
 .wordmark{font-size:25px;font-weight:650;letter-spacing:-1.2px;line-height:1.2}
 .wordmark-period{color:#a3a39d}

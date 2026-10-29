@@ -1,0 +1,152 @@
+{
+  "source_page": "https://commons.wikimedia.org/wiki/File:Jellyfish_in_a_aquarium.webm",
+  "source_download": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Jellyfish_in_a_aquarium.webm",
+  "credit": "Amada44 / Wikimedia Commons",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "segment_seconds": [
+    9,
+    17
+  ],
+  "duration_seconds": 20,
+  "fps": 15,
+  "ascii_cell": [
+    4,
+    6
+  ],
+  "font_size": 7,
+  "blackpoint": 24,
+  "whitepoint": 164,
+  "matte": "largest connected bright subject; expanded 9 cells at 320x180",
+  "subjects": 6,
+  "background": "isolated subjects on clean white; no tank or particles",
+  "loop": "independently phase-offset, cosine-eased forward/reverse; identical end frames",
+  "layouts": {
+    "desktop": {
+      "size": [
+        1920,
+        1080
+      ],
+      "ascii_grid": [
+        480,
+        180
+      ],
+      "subject_max_extents": [
+        230,
+        180,
+        205,
+        170,
+        130,
+        155
+      ],
+      "first_frame_boxes": [
+        [
+          122,
+          220,
+          217,
+          213
+        ],
+        [
+          200,
+          698,
+          156,
+          161
+        ],
+        [
+          1591,
+          149,
+          182,
+          190
+        ],
+        [
+          1647,
+          604,
+          143,
+          156
+        ],
+        [
+          585,
+          870,
+          110,
+          123
+        ],
+        [
+          1328,
+          855,
+          112,
+          143
+        ]
+      ],
+      "master_first_last_identical": true,
+      "first_frame_ink_coverage": 0.020922550154320988
+    },
+    "mobile": {
+      "size": [
+        780,
+        1680
+      ],
+      "ascii_grid": [
+        195,
+        280
+      ],
+      "subject_max_extents": [
+        170,
+        145,
+        140,
+        165,
+        115,
+        105
+      ],
+      "first_frame_boxes": [
+        [
+          53,
+          244,
+          160,
+          158
+        ],
+        [
+          583,
+          338,
+          123,
+          137
+        ],
+        [
+          37,
+          1166,
+          121,
+          125
+        ],
+        [
+          590,
+          1204,
+          139,
+          152
+        ],
+        [
+          195,
+          1444,
+          98,
+          109
+        ],
+        [
+          509,
+          116,
+          76,
+          97
+        ]
+      ],
+      "master_first_last_identical": true,
+      "first_frame_ink_coverage": 0.020177045177045178
+    }
+  },
+  "source_sha256": "1ba970cf338480e263db20cc549aa68ab99cb4315231d8f0a4d4fdd1d7042424",
+  "source_bytes": 15176025,
+  "outputs": {
+    "drifters-ascii-desktop-poster.png": 17595,
+    "drifters-ascii-desktop.webm": 3233204,
+    "drifters-ascii-mobile.webm": 2206423,
+    "drifters-ascii-mobile.mp4": 1558802,
+    "drifters-ascii-mobile-poster.png": 12775,
+    "drifters-ascii-desktop.mp4": 2344299
+  }
+}
