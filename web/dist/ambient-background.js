@@ -20,7 +20,7 @@ function syncBackground() {
     loaded = false;
     layer.classList.remove('is-playing');
   }
-  video.poster = mobileLayout.matches ? './media/drifters-ascii-mobile-poster.png' : './media/drifters-ascii-desktop-poster.png';
+  video.poster = mobileLayout.matches ? './media/drifters-ascii-mobile-poster.png?v=currents2' : './media/drifters-ascii-desktop-poster.png?v=currents2';
   toggle.hidden = !onChatPage || !allowed;
   toggle.setAttribute('aria-pressed', String(userPaused));
   toggle.setAttribute('aria-label', userPaused ? 'Play background animation' : 'Pause background animation');
