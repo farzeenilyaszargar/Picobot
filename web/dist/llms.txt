@@ -1,0 +1,16 @@
+# PicoBoi
+
+> PicoBoi is an open-source experiment that runs a tiny language model in a web browser. Created by @farilyaz.
+
+## Pages
+- [Try PicoBoi](https://picobot.lumberfizz.chatgpt.site/): Browser chat using the PicoBoi-100K model.
+- [About PicoBoi](https://picobot.lumberfizz.chatgpt.site/about/): Capabilities, limitations, privacy and source code.
+- [Source code](https://github.com/farzeenilyaszargar/Picobot): Browser app, model artifacts and training code.
+
+## Facts and limits
+- PicoBoi-100K has 99,120 parameters, an 800-word vocabulary and a 128-token context.
+- Model inference runs locally in a browser worker after model files download.
+- The page keeps chat in memory; it does not persist conversation history.
+- Optional unfamiliar-topic lookups send extracted search terms to Wikipedia and show excerpts with source links. Lookup can be disabled.
+- This is a small experimental model. Responses and lookup matches may be incorrect.
+- PicoBoi is a web application, with no app-store listing claimed here.

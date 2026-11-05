@@ -125,25 +125,17 @@ function createAnswerStream(item, currentId) {
 
 function setChatStarted(started) {
   closeModelMenu();
-  $('privacy-note').hidden = started || location.hash === '#about';
+  $('privacy-note').hidden = started;
   $('welcome').hidden = started;
   $('suggestions').hidden = started;
   $('conversation-header').hidden = !started;
   log.hidden = !started;
-  document.body.classList.toggle('chat-active', started && location.hash !== '#about');
+  document.body.classList.toggle('chat-active', started);
 }
 
 function route() {
-  closeModelMenu();
-  const about = location.hash === '#about';
-  $('chat-page').hidden = about;
-  $('about-page').hidden = !about;
-  $('privacy-note').hidden = about || !log.hidden;
-  document.body.classList.toggle('chat-active', !about && !log.hidden);
-  if (about) $('about-link').setAttribute('aria-current', 'page');
-  else $('about-link').removeAttribute('aria-current');
-  document.title = about ? 'about | PicoBoi' : 'PicoBoi';
-  if (about) $('about-heading').focus({ preventScroll: true });
+  // Keep old shared About links working while exposing a crawlable page.
+  if (location.hash === '#about') location.replace(new URL('./about/', location.href));
 }
 
 input.addEventListener('input', updateComposer);

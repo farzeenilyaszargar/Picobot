@@ -4,11 +4,34 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#579bc7" />
-    <meta name="description" content="PicoBoi is an experiment in small, personal AI that runs in your browser. Made by @farilyaz." />
-    <title>PicoBoi</title>
+    <title>PicoBoi — Open-source AI in Your Browser</title>
+    <meta name="description" content="Try PicoBoi, an open-source browser AI experiment. Run a tiny 100K language model on your device, explore its limits, and browse the source on GitHub." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="author" content="@farilyaz" />
+    <link rel="canonical" href="https://picobot.lumberfizz.chatgpt.site/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PicoBoi" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="PicoBoi — Open-source AI in Your Browser" />
+    <meta property="og:description" content="Try PicoBoi, an open-source browser AI experiment. Run a tiny 100K language model on your device, explore its limits, and browse the source on GitHub." />
+    <meta property="og:url" content="https://picobot.lumberfizz.chatgpt.site/" />
+    <meta property="og:image" content="https://picobot.lumberfizz.chatgpt.site/assets/open-sky.webp" />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1586" />
+    <meta property="og:image:height" content="992" />
+    <meta property="og:image:alt" content="An open blue sky with soft clouds, the backdrop to PicoBoi." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@farilyaz" />
+    <meta name="twitter:title" content="PicoBoi — Open-source AI in Your Browser" />
+    <meta name="twitter:description" content="Try PicoBoi, an open-source browser AI experiment. Run a tiny 100K language model on your device, explore its limits, and browse the source on GitHub." />
+    <meta name="twitter:image" content="https://picobot.lumberfizz.chatgpt.site/assets/open-sky.webp" />
+    <meta name="twitter:image:alt" content="An open blue sky with soft clouds, the backdrop to PicoBoi." />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <link rel="stylesheet" href="./styles.css?v=sky-glass2" />
-    <script type="module" src="./app.js?v=web1"></script>
+    <link rel="manifest" href="./site.webmanifest" />
+    <link rel="preload" as="image" type="image/webp" href="./assets/open-sky.webp" fetchpriority="high" />
+    <link rel="stylesheet" href="./styles.css?v=seo1" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://picobot.lumberfizz.chatgpt.site/#website","url":"https://picobot.lumberfizz.chatgpt.site/","name":"PicoBoi","inLanguage":"en"},{"@type":"WebApplication","@id":"https://picobot.lumberfizz.chatgpt.site/#app","name":"PicoBoi","url":"https://picobot.lumberfizz.chatgpt.site/","description":"An open-source experiment running a small language model directly in your browser.","applicationCategory":"EducationalApplication","operatingSystem":"Web browser","isAccessibleForFree":true,"creator":{"@type":"Person","name":"@farilyaz","url":"https://twitter.com/farilyaz"},"subjectOf":{"@type":"SoftwareSourceCode","name":"PicoBoi source code","codeRepository":"https://github.com/farzeenilyaszargar/Picobot","programmingLanguage":["JavaScript","Python"]}}]}</script>
+    <script type="module" src="./app.js?v=web2"></script>
     <script type="module" src="./sky.js"></script>
   </head>
   <body>
@@ -27,7 +50,7 @@
     <div class="site-shell">
       <header class="navbar">
         <a class="wordmark" href="#" aria-label="PicoBoi home">PicoBoi<span class="wordmark-period">.</span></a>
-        <nav aria-label="Main navigation"><a class="nav-link" id="about-link" href="#about">about <span aria-hidden="true">↗</span></a></nav>
+        <nav aria-label="Main navigation"><a class="nav-link" id="about-link" href="./about/">about <span aria-hidden="true">↗</span></a></nav>
       </header>
 
       <main id="chat-page" class="chat-page">
@@ -82,12 +105,6 @@
         </section>
       </main>
 
-      <main id="about-page" class="about-page" hidden>
-        <section class="about-content" aria-label="About PicoBoi">
-          <p class="about-copy" id="about-heading" tabindex="-1">PicoBoi is an open-source experiment by <a href="https://twitter.com/farilyaz" target="_blank" rel="noopener noreferrer">@farilyaz</a> in running small language models directly inside a website, on your own device. The first 100K model runs in this page with an 800-word vocabulary. Unfamiliar topics can be looked up on Wikipedia, with reference excerpts and source links. Search terms leave your device when lookup is enabled. It’s a limited experiment: replies and search matches can be wrong.</p>
-          <p class="about-source"><a href="https://github.com/farzeenilyaszargar/Picobot" target="_blank" rel="noopener noreferrer">Explore the code on GitHub <span aria-hidden="true">↗</span></a></p>
-        </section>
-      </main>
 
       <footer class="privacy-note" id="privacy-note">the model runs in your browser · web lookups contact Wikipedia · chats are not saved by this page</footer>
     </div>

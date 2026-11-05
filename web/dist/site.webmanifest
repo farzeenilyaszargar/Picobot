@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "PicoBoi",
+  "short_name": "PicoBoi",
+  "description": "An open-source browser AI experiment.",
+  "lang": "en",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#579bc7",
+  "theme_color": "#579bc7",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
