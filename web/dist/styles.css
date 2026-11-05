@@ -72,7 +72,7 @@ textarea::placeholder{color:#264d68;opacity:1}
 .about-copy{font-family:Georgia,"Times New Roman",serif;font-size:clamp(25px,3.3vw,38px);font-weight:400;letter-spacing:-.6px;line-height:1.6;color:var(--cream);margin:0;text-wrap:pretty;outline:none;text-shadow:0 2px 14px #24587b38}
 .about-copy a{color:#fffdf3;text-decoration:underline;text-decoration-color:#fff3c0a1;text-decoration-thickness:1px;text-underline-offset:5px}
 .about-copy a:hover{text-decoration-color:#fffaf0}
-.about-source{margin:26px 0 0;font-size:13px;line-height:1.7;color:#173e5b}
+.about-source{margin:26px 0 0;font-size:13px;line-height:1.7;color:#0b2539}
 .about-source a{display:inline-flex;align-items:center;gap:8px;text-decoration:underline;text-decoration-color:#173e5b66;text-underline-offset:5px}
 .about-source a:hover{text-decoration-color:currentColor}
 .conversation-header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}
@@ -105,7 +105,7 @@ textarea::placeholder{color:#264d68;opacity:1}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}.sky-bird{animation:none;left:var(--rest-x);transform:rotate(-5deg)}.bird-wings{animation:none}.message-assistant.is-streaming::after{animation:none}}
 
 .about-intro{margin-top:26px;font-size:clamp(25px,3vw,34px)}
-.about-questions{max-width:690px;margin:44px auto 0;text-align:left;color:#163b59;line-height:1.75;font-size:15px}
+.about-questions{max-width:690px;margin:44px auto 0;text-align:left;color:#0b2539;line-height:1.75;font-size:15px}
 .about-questions section+section{margin-top:28px}
 .about-questions h2{font-size:18px;line-height:1.4;font-weight:600;letter-spacing:-.3px;margin:0 0 8px}
 .about-questions p{margin:0}

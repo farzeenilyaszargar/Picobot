@@ -47,3 +47,7 @@ JSON-LD, sitemap XML, manifest JSON, heading count and local file links were che
 - [Optimize LCP](https://web.dev/articles/optimize-lcp/): discover important CSS background imagery early.
 
 Final local mobile results: Accessibility 100, Best Practices 100, SEO 100. Performance measured 98 in the first run (LCP 1.0 s, TBT 30 ms, CLS 0.099) and 100 in a trace-enabled follow-up (LCP 0.9 s, TBT 40 ms, CLS 0). The trace contained no layout-shift events; the earlier shift did not reproduce, so no unsupported claim of a fixed root cause is made. Lab timing and layout stability can vary between runs. Reports are retained locally under `previews/seo/` (ignored by Git).
+
+About-page follow-up: the first audit identified insufficient contrast in the lower explanatory text and return link. Both now use darker navy. The corrected About page scored 100 in all four Lighthouse categories, with LCP 0.8 s, TBT 0 ms and CLS 0.
+
+Authorized production checks confirmed HTTP 200 for both documents, robots.txt, sitemap.xml, llms.txt, the manifest, app code and sky asset. Text assets are served with gzip; the already-compressed WebP is served without redundant gzip. Current host responses use `public, max-age=0, must-revalidate`. The crawler files, manifest, app module and sky image matched the source snapshot; Sites transforms the document responses. These service-authorized checks do not establish anonymous crawler access: unauthenticated requests to both pages still return HTTP 401 under access mode `custom`.
