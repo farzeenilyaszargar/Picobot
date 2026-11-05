@@ -3,14 +3,27 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#579bc7" />
     <meta name="description" content="PicoBoi is an experiment in small, personal AI that runs in your browser. Made by @farilyaz." />
     <title>PicoBoi</title>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <link rel="stylesheet" href="./styles.css?v=plain-white1" />
+    <link rel="stylesheet" href="./styles.css?v=sky1" />
     <script type="module" src="./app.js?v=web1"></script>
+    <script type="module" src="./sky.js"></script>
   </head>
   <body>
+    <div class="sky-scene" aria-hidden="true">
+      <span class="sky-bird" style="--altitude:19%;--size:110px;--duration:55s;--delay:-43s;--rest-x:17%;--opacity:.78"><span class="bird-wings"></span></span>
+      <span class="sky-bird" style="--altitude:28%;--size:78px;--duration:67s;--delay:-16s;--rest-x:76%;--opacity:.58;--flap:1.65s"><span class="bird-wings"></span></span>
+      <span class="sky-bird" style="--altitude:73%;--size:96px;--duration:73s;--delay:-12s;--rest-x:10%;--opacity:.68;--flap:1.5s"><span class="bird-wings"></span></span>
+      <span class="sky-bird" style="--altitude:83%;--size:70px;--duration:61s;--delay:-39s;--rest-x:81%;--opacity:.5;--flap:1.3s"><span class="bird-wings"></span></span>
+      <span class="sky-bird" style="--altitude:46%;--size:86px;--duration:83s;--delay:-68s;--rest-x:87%;--opacity:.56;--flap:1.8s"><span class="bird-wings"></span></span>
+    </div>
+    <button class="sky-toggle" id="sky-toggle" type="button" aria-label="Pause birds" aria-pressed="false" hidden>
+      <svg class="sky-pause" width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><path d="M2 1h2v8H2zM6 1h2v8H6z" /></svg>
+      <svg class="sky-play" width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><path d="m3 1 6 4-6 4z" /></svg>
+      <span id="sky-toggle-label">Pause birds</span>
+    </button>
     <div class="site-shell">
       <header class="navbar">
         <a class="wordmark" href="#" aria-label="PicoBoi home">PicoBoi<span class="wordmark-period">.</span></a>
@@ -20,7 +33,8 @@
       <main id="chat-page" class="chat-page">
         <section class="chat-stage" aria-labelledby="chat-heading">
           <div class="welcome" id="welcome">
-            <h1 id="chat-heading">Say hello to PicoBoi 👋</h1>
+            <h1 id="chat-heading">Say hello to PicoBoi</h1>
+            <p class="welcome-subtitle">A little space for whatever’s on your mind.</p>
           </div>
 
           <div class="conversation-header" id="conversation-header" hidden>
@@ -36,12 +50,12 @@
               <div class="model-controls">
                 <div class="model-picker" id="model-picker">
                   <button id="model-select" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="model-menu" aria-describedby="model-status">
-                    <span>Picoboi-100K</span>
+                    <span>PicoBoi-100K</span>
                     <svg class="model-chevron" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m4 6 4 4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" /></svg>
                   </button>
                   <div class="model-menu" id="model-menu" role="menu" aria-label="Choose a model" hidden>
                     <button class="model-option" id="model-100k" type="button" role="menuitemradio" aria-checked="true" tabindex="-1">
-                      <span>Picoboi-100K</span>
+                      <span>PicoBoi-100K</span>
                       <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 10 3 3 7-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
                     </button>
                     <button class="model-option" type="button" role="menuitemradio" aria-checked="false" aria-disabled="true" tabindex="-1" disabled>

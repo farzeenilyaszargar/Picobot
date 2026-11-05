@@ -46,3 +46,9 @@ node training/tests/web-lookup.mjs
 ```
 
 Fixtures contain PyTorch logits and greedy answers. Tests check numerical agreement, the binary checksum, vocabulary rejection, context trimming, and cancellation/reuse. Browser checks cover real generation, follow-up questions, unsupported words, and New chat. See the model card for capability limits. This implementation uses JavaScript/CPU and does not promise offline page loading after the tab closes. Model inference stays local. When web lookup is enabled, extracted search terms are sent to Wikipedia; conversation history is not sent to an inference service.
+
+## Open sky theme
+
+The full site uses the generated, locally served `dist/assets/open-sky.webp` backdrop and a blue/cream palette. `tools/sky-art-direction.md` records the asset's built-in ImageGen prompt and design details. The composer combines a translucent gradient, backdrop blur, rim highlights, and soft blue shadows for a glossy glass finish.
+
+`dist/assets/ascii-gulls.svg` contains eight frames of original, text-based bird art. Rebuild it with `tools/build_ascii_birds.py` using Python and Pillow. Five small birds follow slow, staggered CSS flight loops behind the interface; mobile uses four smaller birds. There is no video download or per-frame JavaScript. `dist/sky.js` handles pause/play, reduced-motion settings, and tab visibility. Reduced motion shows still birds, and the visible button can freeze flight and wingbeats together. About and active-chat views share the theme.
