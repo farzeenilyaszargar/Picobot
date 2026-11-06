@@ -17,6 +17,51 @@ let generationId = 0;
 let loadFailed = false;
 let lookupController;
 
+// Decorative prompts use the placeholder, never the user's draft or live region.
+const syncComposerPrompts = setupComposerPrompts();
+
+function setupComposerPrompts() {
+  const examples = ['Say Wassup', 'What’s the capital of France?', 'Tell me something interesting', 'Help me fix a sentence'];
+  const fallback = input.placeholder;
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let timer;
+  const canAnimate = () => !document.hidden && document.activeElement !== input && !input.value && !busy && !motion.matches;
+
+  function sync() {
+    clearTimeout(timer);
+    input.placeholder = motion.matches ? examples[0] : fallback;
+    if (!canAnimate()) return;
+    let example = 0;
+    let characters = 0;
+    let deleting = false;
+    function tick() {
+      if (!canAnimate()) { sync(); return; }
+      const text = examples[example];
+      characters += deleting ? -1 : 1;
+      input.placeholder = text.slice(0, characters);
+      let delay = deleting ? 35 : 85;
+      if (characters === text.length) {
+        deleting = true;
+        delay = 2000;
+      } else if (characters === 0) {
+        deleting = false;
+        example = (example + 1) % examples.length;
+        delay = 450;
+      }
+      timer = setTimeout(tick, delay);
+    }
+    timer = setTimeout(tick, 700);
+  }
+
+  input.addEventListener('focus', sync);
+  input.addEventListener('blur', sync);
+  document.addEventListener('visibilitychange', sync);
+  motion.addEventListener('change', sync);
+  window.addEventListener('pagehide', () => clearTimeout(timer));
+  window.addEventListener('pageshow', sync);
+  return sync;
+}
+
 function closeModelMenu(returnFocus = false) {
   modelMenu.hidden = true;
   document.body.classList.remove('model-menu-open');
@@ -63,6 +108,7 @@ document.addEventListener('focusin', (event) => {
 });
 
 function updateComposer() {
+  syncComposerPrompts();
   input.style.height = 'auto';
   input.style.height = `${Math.min(input.scrollHeight, 180)}px`;
   send.disabled = busy || !input.value.trim() || (!model && !getProjectReply(input.value));
