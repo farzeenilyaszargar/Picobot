@@ -110,23 +110,23 @@ export class PicoboiEngine {
     return this.linear(this.norm(x, 'final_norm.weight'), 'embedding.weight');
   }
 
-  tokenize(text) {
+  tokenize(text, { allowUnknown = false } = {}) {
     const normalized = text.toLowerCase().trim();
     if (!normalized) throw new InputError('Write a message first.');
-    const pieces = normalized.match(/[a-z]+|[.,?!:]/g) || [];
+    const pieces = normalized.match(allowUnknown ? /[a-z]+|\d+|[.,?!:]/g : /[a-z]+|[.,?!:]/g) || [];
     if (pieces.join('') !== normalized.replace(/\s/g, '')) {
       throw new InputError('This model accepts English words and . , ? ! : punctuation. Spell numbers as words.');
     }
     const unknown = [...new Set(pieces.filter(word => !Object.hasOwn(this.ids, word)))];
-    if (unknown.length) throw new InputError(`Outside this model’s 800-word vocabulary: ${unknown.slice(0, 8).join(', ')}. Try simpler words or one of the example prompts.`);
-    return pieces.map(piece => this.ids[piece]);
+    if (unknown.length && !allowUnknown) throw new InputError(`Outside this model’s 800-word vocabulary: ${unknown.slice(0, 8).join(', ')}. Try simpler words or one of the example prompts.`);
+    return pieces.map(piece => this.ids[piece] ?? this.ids['<unk>']);
   }
 
-  prepare(messages) {
+  prepare(messages, options) {
     if (!Array.isArray(messages) || !messages.length || messages.length % 2 !== 1) throw new InputError('Start a new chat and try again.');
     let turns = messages.map((message, i) => {
       if (message.role !== (i % 2 ? 'assistant' : 'user')) throw new InputError('Start a new chat and try again.');
-      return [this.ids[`<${message.role}>`], ...this.tokenize(message.content), this.ids['<turn>']];
+      return [this.ids[`<${message.role}>`], ...this.tokenize(message.content, options), this.ids['<turn>']];
     });
     const reserve = 32;
     const size = () => 2 + turns.reduce((total, turn) => total + turn.length, 0);
@@ -138,8 +138,8 @@ export class PicoboiEngine {
     return { tokens: [this.ids['<bos>'], ...turns.flat(), this.ids['<assistant>']], dropped };
   }
 
-  async generate(messages, onToken = () => {}, cancelled = () => false) {
-    const { tokens, dropped } = this.prepare(messages);
+  async generate(messages, onToken = () => {}, cancelled = () => false, options) {
+    const { tokens, dropped } = this.prepare(messages, options);
     this.reset();
     let logits;
     for (let i = 0; i < tokens.length; i++) {

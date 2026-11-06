@@ -1,5 +1,6 @@
 import { getProjectReply } from './project-replies.js';
 import { lookupWeb } from './web-lookup.js';
+import { answerWithWikipedia } from './wiki-assistance.js';
 
 const $ = (id) => document.getElementById(id);
 const form = $('chat-form');
@@ -240,70 +241,81 @@ form.addEventListener('submit', async (event) => {
     $('model-status').textContent = 'Replying…';
     answerStream.update(text);
   };
+  const controller = new AbortController();
+  lookupController = controller;
+  let lookupNotice;
   try {
-    const result = await model.generate(history.map((message) => ({ ...message })), streamAnswer, (text) => {
-      if (currentId === generationId) appendMessage(`I read that as: ${text}`, 'notice');
+    const result = await answerWithWikipedia({
+      messages: history.map((message) => ({ ...message })),
+      generate: (...args) => model.generate(...args),
+      lookup: lookupWeb,
+      enabled: $('web-lookup').checked,
+      signal: controller.signal,
+      onToken: streamAnswer,
+      onNormalized: (text) => {
+        if (currentId === generationId) appendMessage(`I read that as: ${text}`, 'notice');
+      },
+      onLookup: () => {
+        if (currentId !== generationId) return;
+        answerStream?.stop();
+        answerElement?.remove();
+        answerElement = undefined;
+        answerStream = undefined;
+        $('model-status').textContent = 'Checking Wikipedia…';
+        lookupNotice = appendMessage('Checking a Wikipedia reference…', 'notice');
+      },
     });
-    const response = result.text;
     if (currentId !== generationId) return;
-    if (typeof response !== 'string' || !response.trim()) throw new Error('Empty model response');
-    streamAnswer(response);
-    await answerStream.finish(response);
+    if (result.usedLookup) {
+      // Raw excerpts and unknown user words cannot enter ordinary model history.
+      history.pop();
+      lookupNotice.textContent = result.text
+        ? result.referenceApplied ? `Using Wikipedia · ${result.sources[0].title}`
+          : `Wikipedia reference · ${result.sources[0].title}. This excerpt may not answer your exact question.`
+        : 'No matching Wikipedia summary found. Try a more specific topic.';
+      if (!result.text) return;
+    } else {
+      if (typeof result.text !== 'string' || !result.text.trim()) throw new Error('Empty model response');
+      history[history.length - 1].content = result.normalizedInput;
+      history.push({ role: 'assistant', content: result.text });
+    }
+    streamAnswer(result.text);
+    answerElement.dataset.responseSource = result.usedLookup ? 'web-assisted' : 'model';
+    await answerStream.finish(result.text);
     if (currentId !== generationId) return;
-    history[history.length - 1].content = result.normalizedInput;
-    history.push({ role: 'assistant', content: response });
+    if (result.usedLookup) {
+      const sources = document.createElement('span');
+      sources.className = 'web-sources';
+      sources.append('Wikipedia sources: ');
+      result.sources.forEach((source, index) => {
+        if (index) sources.append(' · ');
+        const link = document.createElement('a');
+        link.href = source.url;
+        link.textContent = source.title;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        sources.append(link);
+      });
+      answerElement.append(sources);
+      log.scrollTop = log.scrollHeight;
+    }
     if (result.dropped) appendMessage('Older messages were left out to fit the 128-token context window.', 'notice');
     if (result.truncated) appendMessage('This answer reached the model’s length limit.', 'notice');
   } catch (error) {
     if (currentId !== generationId) return;
-    history.pop();
+    if (history.at(-1)?.role === 'user') history.pop();
+    answerStream?.stop();
     answerElement?.remove();
-    if (error.code === 'UNKNOWN_WORDS' && $('web-lookup').checked) {
-      $('model-status').textContent = 'Searching Wikipedia…';
-      const notice = appendMessage(`Looking up unfamiliar terms: ${error.words.slice(0, 8).join(', ')}…`, 'notice');
-      const controller = new AbortController();
-      lookupController = controller;
-      try {
-        const result = await lookupWeb(content, error.words, { signal: controller.signal });
-        if (currentId !== generationId) return;
-        notice.textContent = result.text
-          ? `From Wikipedia · ${result.sources[0].title}. This is a reference excerpt; it may not answer your exact question.`
-          : 'No matching Wikipedia summary found. Try a more specific topic.';
-        if (result.text) {
-          answerElement = appendMessage('', 'assistant');
-          answerElement.dataset.responseSource = 'web';
-          answerStream = createAnswerStream(answerElement, currentId);
-          $('model-status').textContent = 'Replying…';
-          await answerStream.finish(result.text);
-          if (currentId !== generationId) return;
-          const sources = document.createElement('span');
-          sources.className = 'web-sources';
-          sources.append('Wikipedia sources: ');
-          result.sources.forEach((source, index) => {
-            if (index) sources.append(' · ');
-            const link = document.createElement('a');
-            link.href = source.url;
-            link.textContent = source.title;
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            sources.append(link);
-          });
-          answerElement.append(sources);
-          log.scrollTop = log.scrollHeight;
-        }
-      } catch (lookupError) {
-        if (currentId !== generationId) return;
-        notice.textContent = lookupError.name === 'TimeoutError'
-          ? 'The Wikipedia lookup timed out. Please try again.'
-          : 'Could not reach Wikipedia. Check your connection or try another topic.';
-      } finally {
-        if (lookupController === controller) lookupController = undefined;
-      }
+    if (lookupNotice) {
+      lookupNotice.textContent = error.name === 'TimeoutError'
+        ? 'The Wikipedia lookup timed out. Please try again.'
+        : 'Could not complete the Wikipedia lookup. Check your connection or try another topic.';
     } else {
       appendMessage(error.message || 'Something interrupted the response. Please try again.', 'notice');
     }
   } finally {
     answerStream?.stop();
+    if (lookupController === controller) lookupController = undefined;
     if (currentId === generationId) {
       busy = false;
       log.removeAttribute('aria-busy');
@@ -331,16 +343,16 @@ $('new-chat').addEventListener('click', () => {
 });
 
 function connectLocalModel() {
-  const worker = new Worker(new URL('./model-worker.js?v=web1', import.meta.url), { type: 'module' });
+  const worker = new Worker(new URL('./model-worker.js?v=wiki-assist1', import.meta.url), { type: 'module' });
   let sequence = 0;
   let pending;
   const adapter = {
-    generate(messages, onToken, onNormalized) {
+    generate(messages, onToken, onNormalized, options = {}) {
       if (pending) return Promise.reject(new Error('A response is already running.'));
       return new Promise((resolve, reject) => {
         const id = ++sequence;
         pending = { id, resolve, reject, onToken, onNormalized };
-        worker.postMessage({ type: 'generate', id, messages });
+        worker.postMessage({ type: 'generate', id, messages, ...options });
       });
     },
     cancel() {

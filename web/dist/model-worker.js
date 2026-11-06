@@ -1,5 +1,6 @@
 import { PicoboiEngine } from './inference.js';
 import { createNormalizer } from './normalize.js';
+import { modelLookupRequest, referencePrompt } from './wiki-assistance.js';
 
 let engine, normalize, active = 0;
 async function load() {
@@ -31,6 +32,16 @@ self.onmessage = async ({ data }) => {
     await ready;
     const messages = data.messages.map(message => ({ ...message }));
     const latest = messages.at(-1);
+    if (typeof data.reference === 'string') {
+      const prompt = referencePrompt(latest.content, data.reference);
+      if (!prompt) throw new Error('The reference does not fit this model’s context.');
+      // Unknown source words use the existing <unk> ID. Token IDs and weights stay intact.
+      // Buffer this pass: only an answer supported by the source may reach the UI.
+      const result = await engine.generate([{ role: 'user', content: prompt }], () => {},
+        () => active !== id, { allowUnknown: true });
+      if (active === id) self.postMessage({ type: 'done', id, ...result });
+      return;
+    }
     const normalized = normalize(latest.content);
     if (normalized.changed) self.postMessage({ type: 'normalized', id, text: normalized.text });
     if (normalized.unsupported.length) {
@@ -43,7 +54,7 @@ self.onmessage = async ({ data }) => {
     const result = await engine.generate(messages,
       text => { if (active === id) self.postMessage({ type: 'token', id, text }); },
       () => active !== id);
-    if (active === id) self.postMessage({ type: 'done', id, ...result, normalizedInput: normalized.text });
+    if (active === id) self.postMessage({ type: 'done', id, ...result, normalizedInput: normalized.text, lookupRequest: modelLookupRequest(result.text) });
   } catch (error) {
     if (active === id) self.postMessage({ type: 'error', id, message: error.message });
   }
