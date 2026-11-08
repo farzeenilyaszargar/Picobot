@@ -73,3 +73,28 @@ Re-run a matched synthetic test with:
 The 20-update real-data checks with batch four averaged roughly 5,800 to 8,100 non-padding tokens per second, including startup and final validation. Batch six won the fixed-shape benchmark but was slower in its short real-data check. Treat 20 to 30 minutes per 10M-token arm as an initial estimate. Compilation, checkpointing, validation and other Mac activity can change elapsed time.
 
 Resume was tested on the exact decoder. Its parameters and optimizer arrays matched the uninterrupted run element for element after 12 updates. Assistant-only initialization from a checkpoint was tested separately. The browser city parser has shared fixtures with Python. Integrating a trained 10M checkpoint and its BPE tokenizer into the live chat remains a later step.
+
+## Continued training target
+
+The current target is **1 billion cumulative processed tokens for the 10M-parameter city-slot model**. Count processed tokens across that model's stages, including the completed base and assistant stages. Track unique corpus tokens and assistant loss targets separately. Keep the original tokenizer and city controls fixed so the continued model can use the same browser tokenizer.
+
+The first continuation stage is budgeted for 30M additional raw target tokens, with a provisional 15% dialogue share. Initialize from the completed city-slot base checkpoint and use a fresh optimizer for continued full-loss training. The existing assistant checkpoint remains available for frontend testing. Recheck held-out chat and entity handling after the continuation stage, and expand the corpus for subsequent stages to avoid relying on many repeats of the pilot data.
+
+```sh
+.venv/bin/python training/prepare_decoder.py \
+  --source-manifest training/picoboi_10m_continuation_sources.json \
+  --cities training/picoboi_10m_cities.json --paired --city-dialogues \
+  --holdout-cities Lisbon Auckland --vocab-size 4096 --context 512 \
+  --tokenizer training/runs/picoboi-10m-paired/cities/tokenizer.json \
+  --output training/runs/picoboi-10m-continuation-data
+
+.venv/bin/python training/train_decoder.py \
+  --config training/configs/picoboi-10m.json \
+  --backend mlx --precision bf16 --batch 4 --lr 0.00015 \
+  --data training/runs/picoboi-10m-continuation-data/cities \
+  --run-dir training/runs/picoboi-10m-continuation-01 \
+  --tokens 30000000 --dialogue-share 0.15 --stop-after 2000 --checkpoint-every 500 \
+  --init training/runs/picoboi-10m-cities/last.safetensors
+```
+
+For subsequent batches, keep the same settings and replace `--init …` with `--resume`. Report measured non-padding tokens from checkpoints. The raw budget used for scheduling can differ slightly because city slots change sequence lengths.
