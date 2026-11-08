@@ -4,6 +4,8 @@
 
 The repository has a tied RoPE/SwiGLU decoder with full multi-head attention, an assistant-masked CPU/MPS training path, a JS/CPU browser worker and an optional Wikipedia lookup. The concept parser already binds noun categories to eight conversation references. The local corpus audit records **574,565 English words in 3,429 conversations**, including the two local batches 230–231. English words and the new tokenizer's token count are different units. These are the starting points for the design. [Training](training/README.md) · [Browser](web/README.md) · [Parser](training/conversations/concept-parser.mjs) · [Corpus audit](training/conversations/audit.json)
 
+[Local 100M pilot instructions](training/PICOBOI_100M.md)
+
 ## Decoder and browser budget
 
 | Component | First build |
