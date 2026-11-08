@@ -12,11 +12,16 @@ from pathlib import Path
 def inspect(config):
     v, d, f = (config[k] for k in ('vocab_size', 'd_model', 'd_ff'))
     n, heads = config['unique_blocks'], config['n_heads']
+    kv_heads = config.get('n_kv_heads', heads)
     order, context = config['block_order'], config['train_context']
     if any(type(x) is not int or x <= 0 for x in (v, d, f, n, heads, context)):
         raise ValueError('Dimensions must be positive integers')
     if d % heads or (d // heads) % 2:
         raise ValueError('Attention head width must be an even integer for RoPE')
+    if type(kv_heads) is not int or kv_heads <= 0 or heads % kv_heads:
+        raise ValueError('KV heads must be a positive divisor of query heads')
+    kv = kv_heads * (d // heads)
+    attention = 2 * d * (d + kv)
     if not order or any(type(i) is not int for i in order) or set(order) != set(range(n)):
         raise ValueError('Every unique block must be used, with valid integer indices')
     supported = dict(normalization='pre_rmsnorm', feed_forward='swiglu', position_encoding='rope',
@@ -27,7 +32,7 @@ def inspect(config):
     for i in range(n):
         prefix = f'blocks.{i}.'
         for projection in ('q', 'k', 'v', 'o'):
-            tensors[prefix + projection + '.weight'] = [d, d]
+            tensors[prefix + projection + '.weight'] = [kv if projection in ('k', 'v') else d, d]
         for projection in ('gate', 'up'):
             tensors[prefix + projection + '.weight'] = [f, d]
         tensors[prefix + 'down.weight'] = [d, f]
@@ -35,19 +40,19 @@ def inspect(config):
             tensors[prefix + norm + '.weight'] = [d]
     # Output projection aliases embedding.weight; reused blocks alias their original tensors.
     total = sum(prod(shape) for shape in tensors.values())
-    formula = v*d + n*(4*d*d + 3*d*f) + (2*n+1)*d
+    formula = v*d + n*(attention + 3*d*f) + (2*n+1)*d
     if total != formula or total != config['expected_parameters'] or total > config['parameter_budget']:
         raise ValueError(f'Parameter count/budget mismatch: {total}')
     stages = len(order)
     return dict(name=config['name'], status=config['status'], unique_parameters=total,
                 unique_blocks=n, executed_blocks=stages, block_order=order,
                 head_dimension=d//heads, train_context=context,
-                parameter_breakdown=dict(embeddings=v*d, attention=n*4*d*d,
+                parameter_breakdown=dict(embeddings=v*d, attention=n*attention,
                                          feed_forward=n*3*d*f, normalization=(2*n+1)*d),
                 raw_weight_bytes=dict(fp32=4*total, fp16=2*total, int8=total),
-                fp16_kv_cache_bytes_at_full_context=2*context*d*stages*2,
-                approximate_cached_decode_macs_at_full_context=stages*(4*d*d+3*d*f+2*context*d)+v*d,
-                estimate_limits='Batch size one; MHA; separate KV cache per execution stage; excludes '
+                fp16_kv_cache_bytes_at_full_context=2*context*kv*stages*2,
+                approximate_cached_decode_macs_at_full_context=stages*(attention+3*d*f+2*context*d)+v*d,
+                estimate_limits='Batch size one; separate KV cache per execution stage; excludes '
                                 'RoPE, norms, activations, softmax, runtime buffers, metadata, and quantization scales.',
                 tensor_shapes=tensors)
 

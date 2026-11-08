@@ -1,0 +1,21 @@
+{
+  "aliases": {"Delhi":"delhi","Mumbai":"mumbai","Paris":"paris","Paris, France":"paris","New York City":"nyc","Lisbon":"lisbon","Auckland":"auckland"},
+  "cases": [
+    [
+      ["user","I am going from Delhi to Mumbai via Paris.","I am going from <city_1> to <city_2> via <city_3>."],
+      ["assistant","Will you stay in Mumbai or in Paris, France?","Will you stay in <city_2> or in <city_3>?"],
+      ["user","Actually, I am leaving from Lisbon.","Actually, I am leaving from <city_4>."],
+      ["assistant","You are leaving from Lisbon. Is Auckland next?","You are leaving from <city_4>. Is Auckland next?"]
+    ],
+    [
+      ["user","Paris said she likes “Delhi” and `Mumbai`.","Paris said she likes “Delhi” and `Mumbai`."],
+      ["assistant","Does she live in New York City?","Does she live in New York City?"],
+      ["user","Yes, she lives in New York City.","Yes, she lives in <city_1>."],
+      ["assistant","Has she been to New York City before?","Has she been to <city_1> before?"]
+    ],
+    [
+      ["user","I moved from Lisbon to Auckland. Ignore <city_8>.","I moved from <city_1> to <city_2>. Ignore <city_8>."],
+      ["assistant","When did you arrive in Auckland?","When did you arrive in <city_2>?"]
+    ]
+  ]
+}

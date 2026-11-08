@@ -1,0 +1,7 @@
+torch==2.14.1
+numpy==2.5.4
+tokenizers==0.23.3
+datasets==5.1.0
+mlx==0.32.4 ; platform_system == "Darwin" and platform_machine == "arm64"
+
+safetensors==0.8.0

@@ -21,11 +21,13 @@ class Block(nn.Module):
         super().__init__()
         d, f = config['d_model'], config['d_ff']
         self.heads = config['n_heads']
+        self.kv_heads = config.get('n_kv_heads', self.heads)
         self.head_dim = d // self.heads
         self.attention_norm = RMSNorm(d, config['norm_epsilon'])
         self.ffn_norm = RMSNorm(d, config['norm_epsilon'])
         for name in ('q', 'k', 'v', 'o'):
-            setattr(self, name, nn.Linear(d, d, bias=False))
+            width = self.kv_heads * self.head_dim if name in ('k', 'v') else d
+            setattr(self, name, nn.Linear(d, width, bias=False))
         self.gate = nn.Linear(d, f, bias=False)
         self.up = nn.Linear(d, f, bias=False)
         self.down = nn.Linear(f, d, bias=False)
@@ -33,12 +35,15 @@ class Block(nn.Module):
     def forward(self, x, cos, sin):
         b, t, d = x.shape
         z = self.attention_norm(x)
-        q, k, v = [layer(z).view(b, t, self.heads, self.head_dim).transpose(1, 2)
-                   for layer in (self.q, self.k, self.v)]
+        q = self.q(z).view(b, t, self.heads, self.head_dim).transpose(1, 2)
+        k, v = [layer(z).view(b, t, self.kv_heads, self.head_dim).transpose(1, 2)
+                for layer in (self.k, self.v)]
         def rotate(z):
             even, odd = z[..., 0::2], z[..., 1::2]
-            return torch.stack((even*cos - odd*sin, even*sin + odd*cos), -1).flatten(-2)
-        attended = F.scaled_dot_product_attention(rotate(q), rotate(k), v, is_causal=True)
+            c, s = cos.to(z.dtype), sin.to(z.dtype)
+            return torch.stack((even*c - odd*s, even*s + odd*c), -1).flatten(-2)
+        attended = F.scaled_dot_product_attention(
+            rotate(q), rotate(k), v, is_causal=True, enable_gqa=self.kv_heads != self.heads)
         x = x + self.o(attended.transpose(1, 2).reshape(b, t, d))
         z = self.ffn_norm(x)
         return x + self.down(F.silu(self.gate(z)) * self.up(z))

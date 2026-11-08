@@ -2,6 +2,8 @@
 
 Train a small English conversational model from scratch for laptop browsers. Aim for grammatical short replies, useful follow-up questions, and correct references to entities mentioned earlier in a chat. Use imported Hugging Face datasets and the existing Picoboi conversations. The initial experiment tests whether a local dictionary helps a 10M decoder handle names it never saw in training.
 
+[Local preparation and training instructions](../training/PICOBOI_10M.md)
+
 ## Decoder
 
 | Component | Starting configuration |

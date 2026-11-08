@@ -1,0 +1,4 @@
+[
+  {"dataset":"roneneldan/TinyStories","revision":"f54c09fd23315a6f9c86f9dc80f725de7d8f9c64","column":"text","license":"cdla-sharing-1.0","rows":35000,"shuffle_buffer":2048,"parquet_shard":"data/train-00000-of-00004-2d5a1467fff1081b.parquet"},
+  {"dataset":"HuggingFaceTB/smol-smoltalk","revision":"f73fe857d519ff6ac5af2ea67c4d3834da7b8bcc","column":"messages","license":"apache-2.0","rows":30000,"shuffle_buffer":2048,"short_chat":true,"parquet_shard":"data/train-00000-of-00004.parquet"}
+]
