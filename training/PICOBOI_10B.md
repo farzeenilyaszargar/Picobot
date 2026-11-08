@@ -22,3 +22,24 @@ The current single-device trainer keeps FP32 master weights even with BF16 compu
 ```
 
 Run the benchmark on an authorized machine with enough memory. Verify useful tokens per second, then run a checkpoint and resume check with a representative prepared dataset before a sustained run. The architecture, corpus, and training schedule for the smaller experiment establish starting points. A full run still needs a dedicated token budget and a measured, deduplicated data inventory. Training has yet to start.
+
+## First real-data check
+
+The following command packs a small, pinned corpus at the 10B configuration's context and vocabulary sizes. It combines TinyStories, short Smol-SmolTalk exchanges, and the existing local corpus. This corpus is for validating the training path and provides a separate holdout. Select and freeze the production tokenizer on a representative data mix before a sustained run.
+
+```sh
+.venv/bin/python training/prepare_decoder.py \
+  --source-manifest training/picoboi_10m_sources.json \
+  --context 2048 --vocab-size 8192 \
+  --output training/runs/picoboi-10b-pilot
+```
+
+On the benchmark machine, copy the complete output directory, including its tokenizer, manifest, indexes and masks. Check the real-data path with a bounded invocation. It writes metrics and avoids allocating disk space for a resumable checkpoint.
+
+```sh
+.venv/bin/python training/train_decoder.py \
+  --config training/configs/picoboi-10b.json \
+  --backend torch --device cuda --precision bf16 \
+  --data training/runs/picoboi-10b-pilot --run-dir training/runs/picoboi-10b-smoke \
+  --batch 1 --steps 2 --validation-rows 2 --no-checkpoint
+```
