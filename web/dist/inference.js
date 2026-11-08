@@ -6,17 +6,21 @@ export class PicoboiEngine {
   constructor(manifest, tokenizer, buffer) {
     const c = manifest.config;
     if (manifest.format !== 'picoboi-f32-le-v1' || buffer.byteLength !== manifest.weights_bytes ||
-        manifest.parameters !== 99120 || c.d_model !== 48 || c.n_heads !== 2 || c.vocab_size !== tokenizer.tokens.length) {
+        ![[99120, 48, 2], [9902336, 256, 4]].some(([count, width, heads]) =>
+          manifest.parameters === count && c.d_model === width && c.n_heads === heads) ||
+        c.vocab_size !== tokenizer.tokens.length) {
       throw new Error('The model assets do not match. Please reload the page.');
     }
     this.config = c;
+    this.kvHeads = c.n_kv_heads ?? c.n_heads;
     this.tokenizer = tokenizer;
     this.ids = tokenizer.token_to_id;
     this.weights = {};
     const view = new DataView(buffer);
+    const littleEndian = new Uint8Array(Uint32Array.of(1).buffer)[0] === 1;
     for (const [name, tensor] of Object.entries(manifest.tensors)) {
-      const values = new Float32Array(tensor.length);
-      for (let i = 0; i < values.length; i++) values[i] = view.getFloat32((tensor.offset + i) * 4, true);
+      const values = new Float32Array(buffer, tensor.offset * 4, tensor.length);
+      if (!littleEndian) for (let i = 0; i < values.length; i++) values[i] = view.getFloat32((tensor.offset + i) * 4, true);
       this.weights[name] = values;
     }
     this.reset();
@@ -25,8 +29,8 @@ export class PicoboiEngine {
   reset() {
     this.position = 0;
     this.caches = this.config.block_order.map(() => ({
-      keys: new Float32Array(this.config.train_context * this.config.d_model),
-      values: new Float32Array(this.config.train_context * this.config.d_model),
+      keys: new Float32Array(this.config.train_context * this.config.d_model / this.config.n_heads * this.kvHeads),
+      values: new Float32Array(this.config.train_context * this.config.d_model / this.config.n_heads * this.kvHeads),
     }));
   }
 
@@ -53,7 +57,7 @@ export class PicoboiEngine {
 
   rotate(x) {
     const dim = this.config.d_model / this.config.n_heads;
-    for (let head = 0; head < this.config.n_heads; head++) {
+    for (let head = 0; head < x.length / dim; head++) {
       for (let j = 0; j < dim; j += 2) {
         const angle = this.position * Math.pow(this.config.rope_theta, -j / dim);
         const cos = Math.cos(angle), sin = Math.sin(angle), i = head * dim + j;
@@ -68,7 +72,7 @@ export class PicoboiEngine {
   step(token) {
     const c = this.config, d = c.d_model, dim = d / c.n_heads;
     if (!Number.isInteger(token) || token < 0 || token >= c.vocab_size) throw new Error('Invalid token');
-    if (this.position >= c.train_context) throw new InputError('This chat has reached the 128-token context limit. Start a new chat.');
+    if (this.position >= c.train_context) throw new InputError(`This chat has reached the ${c.train_context}-token context limit. Start a new chat.`);
     let x = this.weights['embedding.weight'].slice(token * d, (token + 1) * d);
     c.block_order.forEach((block, stage) => {
       const prefix = `blocks.${block}.`;
@@ -77,15 +81,17 @@ export class PicoboiEngine {
       const k = this.rotate(this.linear(normalized, prefix + 'k.weight'));
       const v = this.linear(normalized, prefix + 'v.weight');
       const cache = this.caches[stage];
-      cache.keys.set(k, this.position * d);
-      cache.values.set(v, this.position * d);
+      const kvWidth = dim * this.kvHeads;
+      cache.keys.set(k, this.position * kvWidth);
+      cache.values.set(v, this.position * kvWidth);
       const attended = new Float32Array(d);
       for (let head = 0; head < c.n_heads; head++) {
+        const kvHead = Math.floor(head * this.kvHeads / c.n_heads);
         const scores = new Float32Array(this.position + 1);
         let max = -Infinity;
         for (let t = 0; t <= this.position; t++) {
           let score = 0;
-          for (let j = 0; j < dim; j++) score += q[head * dim + j] * cache.keys[t * d + head * dim + j];
+          for (let j = 0; j < dim; j++) score += q[head * dim + j] * cache.keys[t * kvWidth + kvHead * dim + j];
           scores[t] = score / Math.sqrt(dim);
           max = Math.max(max, scores[t]);
         }
@@ -93,7 +99,7 @@ export class PicoboiEngine {
         for (let t = 0; t < scores.length; t++) { scores[t] = Math.exp(scores[t] - max); total += scores[t]; }
         for (let j = 0; j < dim; j++) {
           let sum = 0;
-          for (let t = 0; t < scores.length; t++) sum += scores[t] / total * cache.values[t * d + head * dim + j];
+          for (let t = 0; t < scores.length; t++) sum += scores[t] / total * cache.values[t * kvWidth + kvHead * dim + j];
           attended[head * dim + j] = sum;
         }
       }
@@ -138,6 +144,14 @@ export class PicoboiEngine {
     return { tokens: [this.ids['<bos>'], ...turns.flat(), this.ids['<assistant>']], dropped };
   }
 
+  forbiddenTokens() {
+    return new Set(['<pad>', '<unk>', '<bos>', '<user>', '<assistant>'].map(t => this.ids[t]));
+  }
+
+  decode(ids) {
+    return ids.map(id => this.tokenizer.tokens[id]).join(' ').replace(/\s+([.,?!:])/g, '$1');
+  }
+
   async generate(messages, onToken = () => {}, cancelled = () => false, options) {
     const { tokens, dropped } = this.prepare(messages, options);
     this.reset();
@@ -147,7 +161,7 @@ export class PicoboiEngine {
       logits = this.step(tokens[i]);
       if (i % 8 === 0) await new Promise(resolve => setTimeout(resolve, 0));
     }
-    const forbidden = new Set(['<pad>', '<unk>', '<bos>', '<user>', '<assistant>'].map(t => this.ids[t]));
+    const forbidden = this.forbiddenTokens();
     const generated = [];
     let ended = false;
     const limit = Math.min(48, this.config.train_context - tokens.length);
@@ -155,13 +169,13 @@ export class PicoboiEngine {
       if (cancelled()) throw new Error('Cancelled');
       let next = -1;
       for (let i = 0; i < logits.length; i++) if (!forbidden.has(i) && (next < 0 || logits[i] > logits[next])) next = i;
-      if (next === this.ids['<turn>'] || next === this.ids['<eos>']) { ended = true; break; }
-      generated.push(this.tokenizer.tokens[next]);
-      const text = generated.join(' ').replace(/\s+([.,?!:])/g, '$1');
+      if (next === (this.ids['<turn>'] ?? this.ids['<end_turn>']) || next === this.ids['<eos>']) { ended = true; break; }
+      generated.push(next);
+      const text = this.decode(generated, true);
       onToken(text);
       logits = this.step(next);
       await new Promise(resolve => setTimeout(resolve, 0));
     }
-    return { text: generated.join(' ').replace(/\s+([.,?!:])/g, '$1'), dropped, truncated: !ended };
+    return { text: this.decode(generated), dropped, truncated: !ended };
   }
 }

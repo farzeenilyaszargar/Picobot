@@ -1,0 +1,903 @@
+{
+  "format": "picoboi-f32-le-v1",
+  "name": "PicoBoi-10M",
+  "parameters": 9902336,
+  "config": {
+    "name": "picoboi-10m",
+    "status": "untrained",
+    "vocab_size": 4096,
+    "d_model": 256,
+    "d_ff": 704,
+    "n_heads": 4,
+    "n_kv_heads": 2,
+    "unique_blocks": 12,
+    "block_order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "normalization": "pre_rmsnorm",
+    "norm_epsilon": 1e-05,
+    "feed_forward": "swiglu",
+    "position_encoding": "rope",
+    "rope_theta": 10000.0,
+    "tie_embeddings": true,
+    "linear_bias": false,
+    "output_bias": false,
+    "learned_step_embeddings": false,
+    "train_context": 512,
+    "weight_dtype": "float32",
+    "expected_parameters": 9902336,
+    "parameter_budget": 10000000
+  },
+  "tensors": {
+    "embedding.weight": {
+      "shape": [
+        4096,
+        256
+      ],
+      "offset": 0,
+      "length": 1048576
+    },
+    "final_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 1048576,
+      "length": 256
+    },
+    "blocks.0.q.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 1048832,
+      "length": 65536
+    },
+    "blocks.0.k.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 1114368,
+      "length": 32768
+    },
+    "blocks.0.v.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 1147136,
+      "length": 32768
+    },
+    "blocks.0.o.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 1179904,
+      "length": 65536
+    },
+    "blocks.0.gate.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 1245440,
+      "length": 180224
+    },
+    "blocks.0.up.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 1425664,
+      "length": 180224
+    },
+    "blocks.0.down.weight": {
+      "shape": [
+        256,
+        704
+      ],
+      "offset": 1605888,
+      "length": 180224
+    },
+    "blocks.0.attention_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 1786112,
+      "length": 256
+    },
+    "blocks.0.ffn_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 1786368,
+      "length": 256
+    },
+    "blocks.1.q.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 1786624,
+      "length": 65536
+    },
+    "blocks.1.k.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 1852160,
+      "length": 32768
+    },
+    "blocks.1.v.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 1884928,
+      "length": 32768
+    },
+    "blocks.1.o.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 1917696,
+      "length": 65536
+    },
+    "blocks.1.gate.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 1983232,
+      "length": 180224
+    },
+    "blocks.1.up.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 2163456,
+      "length": 180224
+    },
+    "blocks.1.down.weight": {
+      "shape": [
+        256,
+        704
+      ],
+      "offset": 2343680,
+      "length": 180224
+    },
+    "blocks.1.attention_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 2523904,
+      "length": 256
+    },
+    "blocks.1.ffn_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 2524160,
+      "length": 256
+    },
+    "blocks.2.q.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 2524416,
+      "length": 65536
+    },
+    "blocks.2.k.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 2589952,
+      "length": 32768
+    },
+    "blocks.2.v.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 2622720,
+      "length": 32768
+    },
+    "blocks.2.o.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 2655488,
+      "length": 65536
+    },
+    "blocks.2.gate.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 2721024,
+      "length": 180224
+    },
+    "blocks.2.up.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 2901248,
+      "length": 180224
+    },
+    "blocks.2.down.weight": {
+      "shape": [
+        256,
+        704
+      ],
+      "offset": 3081472,
+      "length": 180224
+    },
+    "blocks.2.attention_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 3261696,
+      "length": 256
+    },
+    "blocks.2.ffn_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 3261952,
+      "length": 256
+    },
+    "blocks.3.q.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 3262208,
+      "length": 65536
+    },
+    "blocks.3.k.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 3327744,
+      "length": 32768
+    },
+    "blocks.3.v.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 3360512,
+      "length": 32768
+    },
+    "blocks.3.o.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 3393280,
+      "length": 65536
+    },
+    "blocks.3.gate.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 3458816,
+      "length": 180224
+    },
+    "blocks.3.up.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 3639040,
+      "length": 180224
+    },
+    "blocks.3.down.weight": {
+      "shape": [
+        256,
+        704
+      ],
+      "offset": 3819264,
+      "length": 180224
+    },
+    "blocks.3.attention_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 3999488,
+      "length": 256
+    },
+    "blocks.3.ffn_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 3999744,
+      "length": 256
+    },
+    "blocks.4.q.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 4000000,
+      "length": 65536
+    },
+    "blocks.4.k.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 4065536,
+      "length": 32768
+    },
+    "blocks.4.v.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 4098304,
+      "length": 32768
+    },
+    "blocks.4.o.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 4131072,
+      "length": 65536
+    },
+    "blocks.4.gate.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 4196608,
+      "length": 180224
+    },
+    "blocks.4.up.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 4376832,
+      "length": 180224
+    },
+    "blocks.4.down.weight": {
+      "shape": [
+        256,
+        704
+      ],
+      "offset": 4557056,
+      "length": 180224
+    },
+    "blocks.4.attention_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 4737280,
+      "length": 256
+    },
+    "blocks.4.ffn_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 4737536,
+      "length": 256
+    },
+    "blocks.5.q.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 4737792,
+      "length": 65536
+    },
+    "blocks.5.k.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 4803328,
+      "length": 32768
+    },
+    "blocks.5.v.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 4836096,
+      "length": 32768
+    },
+    "blocks.5.o.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 4868864,
+      "length": 65536
+    },
+    "blocks.5.gate.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 4934400,
+      "length": 180224
+    },
+    "blocks.5.up.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 5114624,
+      "length": 180224
+    },
+    "blocks.5.down.weight": {
+      "shape": [
+        256,
+        704
+      ],
+      "offset": 5294848,
+      "length": 180224
+    },
+    "blocks.5.attention_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 5475072,
+      "length": 256
+    },
+    "blocks.5.ffn_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 5475328,
+      "length": 256
+    },
+    "blocks.6.q.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 5475584,
+      "length": 65536
+    },
+    "blocks.6.k.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 5541120,
+      "length": 32768
+    },
+    "blocks.6.v.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 5573888,
+      "length": 32768
+    },
+    "blocks.6.o.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 5606656,
+      "length": 65536
+    },
+    "blocks.6.gate.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 5672192,
+      "length": 180224
+    },
+    "blocks.6.up.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 5852416,
+      "length": 180224
+    },
+    "blocks.6.down.weight": {
+      "shape": [
+        256,
+        704
+      ],
+      "offset": 6032640,
+      "length": 180224
+    },
+    "blocks.6.attention_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 6212864,
+      "length": 256
+    },
+    "blocks.6.ffn_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 6213120,
+      "length": 256
+    },
+    "blocks.7.q.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 6213376,
+      "length": 65536
+    },
+    "blocks.7.k.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 6278912,
+      "length": 32768
+    },
+    "blocks.7.v.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 6311680,
+      "length": 32768
+    },
+    "blocks.7.o.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 6344448,
+      "length": 65536
+    },
+    "blocks.7.gate.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 6409984,
+      "length": 180224
+    },
+    "blocks.7.up.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 6590208,
+      "length": 180224
+    },
+    "blocks.7.down.weight": {
+      "shape": [
+        256,
+        704
+      ],
+      "offset": 6770432,
+      "length": 180224
+    },
+    "blocks.7.attention_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 6950656,
+      "length": 256
+    },
+    "blocks.7.ffn_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 6950912,
+      "length": 256
+    },
+    "blocks.8.q.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 6951168,
+      "length": 65536
+    },
+    "blocks.8.k.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 7016704,
+      "length": 32768
+    },
+    "blocks.8.v.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 7049472,
+      "length": 32768
+    },
+    "blocks.8.o.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 7082240,
+      "length": 65536
+    },
+    "blocks.8.gate.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 7147776,
+      "length": 180224
+    },
+    "blocks.8.up.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 7328000,
+      "length": 180224
+    },
+    "blocks.8.down.weight": {
+      "shape": [
+        256,
+        704
+      ],
+      "offset": 7508224,
+      "length": 180224
+    },
+    "blocks.8.attention_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 7688448,
+      "length": 256
+    },
+    "blocks.8.ffn_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 7688704,
+      "length": 256
+    },
+    "blocks.9.q.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 7688960,
+      "length": 65536
+    },
+    "blocks.9.k.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 7754496,
+      "length": 32768
+    },
+    "blocks.9.v.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 7787264,
+      "length": 32768
+    },
+    "blocks.9.o.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 7820032,
+      "length": 65536
+    },
+    "blocks.9.gate.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 7885568,
+      "length": 180224
+    },
+    "blocks.9.up.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 8065792,
+      "length": 180224
+    },
+    "blocks.9.down.weight": {
+      "shape": [
+        256,
+        704
+      ],
+      "offset": 8246016,
+      "length": 180224
+    },
+    "blocks.9.attention_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 8426240,
+      "length": 256
+    },
+    "blocks.9.ffn_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 8426496,
+      "length": 256
+    },
+    "blocks.10.q.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 8426752,
+      "length": 65536
+    },
+    "blocks.10.k.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 8492288,
+      "length": 32768
+    },
+    "blocks.10.v.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 8525056,
+      "length": 32768
+    },
+    "blocks.10.o.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 8557824,
+      "length": 65536
+    },
+    "blocks.10.gate.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 8623360,
+      "length": 180224
+    },
+    "blocks.10.up.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 8803584,
+      "length": 180224
+    },
+    "blocks.10.down.weight": {
+      "shape": [
+        256,
+        704
+      ],
+      "offset": 8983808,
+      "length": 180224
+    },
+    "blocks.10.attention_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 9164032,
+      "length": 256
+    },
+    "blocks.10.ffn_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 9164288,
+      "length": 256
+    },
+    "blocks.11.q.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 9164544,
+      "length": 65536
+    },
+    "blocks.11.k.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 9230080,
+      "length": 32768
+    },
+    "blocks.11.v.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 9262848,
+      "length": 32768
+    },
+    "blocks.11.o.weight": {
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 9295616,
+      "length": 65536
+    },
+    "blocks.11.gate.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 9361152,
+      "length": 180224
+    },
+    "blocks.11.up.weight": {
+      "shape": [
+        704,
+        256
+      ],
+      "offset": 9541376,
+      "length": 180224
+    },
+    "blocks.11.down.weight": {
+      "shape": [
+        256,
+        704
+      ],
+      "offset": 9721600,
+      "length": 180224
+    },
+    "blocks.11.attention_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 9901824,
+      "length": 256
+    },
+    "blocks.11.ffn_norm.weight": {
+      "shape": [
+        256
+      ],
+      "offset": 9902080,
+      "length": 256
+    }
+  },
+  "weights": "weights.bin",
+  "weights_bytes": 39609344,
+  "weights_sha256": "706df1d8ac3cba7b40e4db68eb2c19bcb8d28c4e84b1638c2535b29a770d023e",
+  "tokenizer_sha256": "a32159b0e1b0406dc79b6b558f7995a5ade689343b6d933cc782724c2b29aa42"
+}

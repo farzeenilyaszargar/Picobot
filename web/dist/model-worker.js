@@ -2,9 +2,10 @@ import { PicoboiEngine } from './inference.js';
 import { createNormalizer } from './normalize.js';
 import { modelLookupRequest, referencePrompt } from './wiki-assistance.js';
 
+const is10M = new URL(import.meta.url).searchParams.get('model') === '10m';
 let engine, normalize, active = 0;
 async function load() {
-  const base = new URL('./models/picoboi-100k-v1/', import.meta.url);
+  const base = new URL(is10M ? './models/picoboi-10m-v1/' : './models/picoboi-100k-v1/', import.meta.url);
   const get = async (path) => {
     const response = await fetch(new URL(path, base));
     if (!response.ok) throw new Error('Could not download the model. Check your connection and reload.');
@@ -16,8 +17,15 @@ async function load() {
   const weights = await get(manifest.weights).then(r => r.arrayBuffer());
   const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', weights))].map(n => n.toString(16).padStart(2, '0')).join('');
   if (hash !== manifest.weights_sha256) throw new Error('The model download was incomplete. Please reload.');
-  engine = new PicoboiEngine(manifest, tokenizer, weights);
-  normalize = createNormalizer(tokenizer);
+  if (is10M) {
+    const [{ Picoboi10M }, aliases] = await Promise.all([
+      import('./inference-10m.js'), get('cities.json').then(r => r.json()),
+    ]);
+    engine = new Picoboi10M(manifest, tokenizer, weights, aliases);
+  } else {
+    engine = new PicoboiEngine(manifest, tokenizer, weights);
+    normalize = createNormalizer(tokenizer);
+  }
   self.postMessage({ type: 'ready' });
 }
 const ready = load().catch(error => { self.postMessage({ type: 'load-error', message: error.message }); throw error; });
@@ -32,6 +40,13 @@ self.onmessage = async ({ data }) => {
     await ready;
     const messages = data.messages.map(message => ({ ...message }));
     const latest = messages.at(-1);
+    if (is10M) {
+      const result = await engine.generate(messages,
+        text => { if (active === id) self.postMessage({ type: 'token', id, text }); },
+        () => active !== id);
+      if (active === id) self.postMessage({ type: 'done', id, ...result, normalizedInput: latest.content });
+      return;
+    }
     if (typeof data.reference === 'string') {
       const prompt = referencePrompt(latest.content, data.reference);
       if (!prompt) throw new Error('The reference does not fit this model’s context.');

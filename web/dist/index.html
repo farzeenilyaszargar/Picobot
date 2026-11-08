@@ -31,7 +31,7 @@
     <link rel="preload" as="image" type="image/webp" href="./assets/open-sky.webp" fetchpriority="high" />
     <link rel="stylesheet" href="./styles.css?v=birds-no-control1" />
     <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://picobot.lumberfizz.chatgpt.site/#website","url":"https://picobot.lumberfizz.chatgpt.site/","name":"PicoBoi","inLanguage":"en"},{"@type":"WebApplication","@id":"https://picobot.lumberfizz.chatgpt.site/#app","name":"PicoBoi","url":"https://picobot.lumberfizz.chatgpt.site/","description":"An open-source experiment running a small language model directly in your browser.","applicationCategory":"EducationalApplication","operatingSystem":"Web browser","isAccessibleForFree":true,"creator":{"@type":"Person","name":"@farilyaz","url":"https://twitter.com/farilyaz"},"subjectOf":{"@type":"SoftwareSourceCode","name":"PicoBoi source code","codeRepository":"https://github.com/farzeenilyaszargar/Picobot","programmingLanguage":["JavaScript","Python"]}}]}</script>
-    <script type="module" src="./app.js?v=wiki-assist1"></script>
+    <script type="module" src="./app.js?v=local-10m"></script>
     <script type="module" src="./sky.js?v=2"></script>
   </head>
   <body>
@@ -68,7 +68,7 @@
               <div class="model-controls">
                 <div class="model-picker" id="model-picker">
                   <button id="model-select" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="model-menu" aria-describedby="model-status">
-                    <span>PicoBoi-100K</span>
+                    <span id="model-label">PicoBoi-100K</span>
                     <svg class="model-chevron" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m4 6 4 4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" /></svg>
                   </button>
                   <div class="model-menu" id="model-menu" role="menu" aria-label="Choose a model" hidden>
@@ -76,8 +76,8 @@
                       <span>PicoBoi-100K</span>
                       <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 10 3 3 7-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
                     </button>
-                    <button class="model-option" type="button" role="menuitemradio" aria-checked="false" aria-disabled="true" tabindex="-1" disabled>
-                      <span>PicoBoi-10M</span><span class="coming-soon">Coming soon</span>
+                    <button class="model-option" id="model-10m" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
+                      <span>PicoBoi-10M</span>
                     </button>
                   </div>
                 </div>

@@ -11,7 +11,9 @@ const history = [];
 const modelPicker = $('model-picker');
 const modelTrigger = $('model-select');
 const modelMenu = $('model-menu');
-const currentModelOption = $('model-100k');
+const modelOptions = { '100k': $('model-100k'), '10m': $('model-10m') };
+let selectedModel;
+let disconnectModel;
 let model = null;
 let busy = false;
 let generationId = 0;
@@ -75,7 +77,7 @@ function openModelMenu() {
   modelMenu.hidden = false;
   document.body.classList.add('model-menu-open');
   modelTrigger.setAttribute('aria-expanded', 'true');
-  currentModelOption.focus();
+  modelOptions[selectedModel].focus();
 }
 
 modelTrigger.addEventListener('click', () => {
@@ -88,11 +90,20 @@ modelTrigger.addEventListener('keydown', (event) => {
     openModelMenu();
   }
 });
-currentModelOption.addEventListener('click', () => closeModelMenu(true));
+for (const [key, option] of Object.entries(modelOptions)) {
+  option.addEventListener('click', () => {
+    closeModelMenu(true);
+    chooseModel(key);
+  });
+}
 modelMenu.addEventListener('keydown', (event) => {
   if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
     event.preventDefault();
-    currentModelOption.focus();
+    const options = Object.values(modelOptions);
+    const index = options.indexOf(document.activeElement);
+    const next = event.key === 'Home' ? 0 : event.key === 'End' ? options.length - 1
+      : (index + (event.key === 'ArrowDown' ? 1 : -1) + options.length) % options.length;
+    options[next].focus();
   }
 });
 document.addEventListener('keydown', (event) => {
@@ -114,7 +125,7 @@ function updateComposer() {
   input.style.height = `${Math.min(input.scrollHeight, 180)}px`;
   send.disabled = busy || !input.value.trim() || (!model && !getProjectReply(input.value));
   $('model-select').disabled = busy;
-  $('web-lookup').disabled = busy;
+  $('web-lookup').disabled = busy || selectedModel === '10m';
   if (busy) closeModelMenu();
 }
 
@@ -210,7 +221,7 @@ form.addEventListener('submit', async (event) => {
   input.value = '';
   updateComposer();
 
-  const projectReply = getProjectReply(content);
+  const projectReply = selectedModel === '100k' && getProjectReply(content);
   if (projectReply) {
     const item = appendMessage('', 'assistant');
     const link = document.createElement('a');
@@ -245,7 +256,9 @@ form.addEventListener('submit', async (event) => {
   lookupController = controller;
   let lookupNotice;
   try {
-    const result = await answerWithWikipedia({
+    const result = selectedModel === '10m'
+      ? await model.generate(history.map(message => ({ ...message })), streamAnswer)
+      : await answerWithWikipedia({
       messages: history.map((message) => ({ ...message })),
       generate: (...args) => model.generate(...args),
       lookup: lookupWeb,
@@ -299,7 +312,7 @@ form.addEventListener('submit', async (event) => {
       answerElement.append(sources);
       log.scrollTop = log.scrollHeight;
     }
-    if (result.dropped) appendMessage('Older messages were left out to fit the 128-token context window.', 'notice');
+    if (result.dropped) appendMessage('Older messages were left out to fit the model’s context window.', 'notice');
     if (result.truncated) appendMessage('This answer reached the model’s length limit.', 'notice');
   } catch (error) {
     if (currentId !== generationId) return;
@@ -342,8 +355,8 @@ $('new-chat').addEventListener('click', () => {
   input.focus();
 });
 
-function connectLocalModel() {
-  const worker = new Worker(new URL('./model-worker.js?v=wiki-assist1', import.meta.url), { type: 'module' });
+function connectLocalModel(key) {
+  const worker = new Worker(new URL(`./model-worker.js?v=local-10m&model=${key}`, import.meta.url), { type: 'module' });
   let sequence = 0;
   let pending;
   const adapter = {
@@ -387,10 +400,41 @@ function connectLocalModel() {
     if (data.type === 'done') request.resolve(data);
     else request.reject(Object.assign(new Error(data.message), { code: data.code, words: data.words }));
   });
+  return () => worker.terminate();
 }
 
-try { connectLocalModel(); }
-catch { loadFailed = true; $('model-status').textContent = 'Load failed'; $('model-help').textContent = 'This browser could not start the local model. Try a current browser.'; }
+function chooseModel(key) {
+  if (selectedModel === key || busy) return;
+  disconnectModel?.();
+  if (history.length) {
+    history.length = 0;
+    appendMessage('Switched models. The next reply starts with a fresh context.', 'notice');
+  }
+  selectedModel = key;
+  model = null;
+  loadFailed = false;
+  const is10M = key === '10m';
+  $('model-label').textContent = is10M ? 'PicoBoi-10M' : 'PicoBoi-100K';
+  $('model-help').textContent = is10M
+    ? '10M experiment · 512-token context · 40 MB download. Replies can be wrong.'
+    : '100K experiment · 800-word vocabulary · 128-token context. Replies can be wrong.';
+  $('web-lookup').closest('label').hidden = is10M;
+  $('model-status').textContent = 'Loading…';
+  for (const [name, option] of Object.entries(modelOptions)) option.setAttribute('aria-checked', String(name === key));
+  const url = new URL(location.href);
+  if (is10M) url.searchParams.set('model', key);
+  else url.searchParams.delete('model');
+  window.history.replaceState(null, '', url);
+  try { disconnectModel = connectLocalModel(key); }
+  catch {
+    loadFailed = true;
+    $('model-status').textContent = 'Load failed';
+    $('model-help').textContent = 'This browser could not start the local model. Try a current browser.';
+  }
+  updateComposer();
+}
+
+chooseModel(new URLSearchParams(location.search).get('model') === '10m' ? '10m' : '100k');
 
 window.addEventListener('hashchange', route);
 route();
