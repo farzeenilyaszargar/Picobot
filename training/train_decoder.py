@@ -12,6 +12,7 @@ import signal
 import time
 
 import numpy as np
+from inspect_architecture import inspect
 
 ROOT = Path(__file__).resolve().parent
 
@@ -415,6 +416,7 @@ def main():
     parser.add_argument('--init', type=Path, help='Load weights and start a new optimizer, also across backends')
     args = parser.parse_args()
     config = json.loads(args.config.read_text())
+    parameters = inspect(config)['unique_parameters']
     if min(args.batch, args.accumulate, args.steps or args.tokens or 0, args.threads, args.checkpoint_every,
            args.validation_rows) < 1 or args.lr <= 0:
         parser.error('Training settings must be positive')
@@ -428,20 +430,35 @@ def main():
         parser.error('Synthetic benchmarks require --steps')
     if args.dialogue_share is not None and (args.loss != 'full' or not 0 < args.dialogue_share < 1):
         parser.error('--dialogue-share requires full loss and a value strictly between zero and one')
-    if not (args.benchmark or args.no_checkpoint):
-        args.run_dir.mkdir(parents=True, exist_ok=True)
-        required = 12 * config['expected_parameters'] + 512 * 2**20
-        if shutil.disk_usage(args.run_dir).free < required:
-            parser.error(f'Need {required / 2**30:.2f} GiB free for an atomic checkpoint in the run directory')
     if args.backend == 'mlx':
         if args.device:
             parser.error('MLX uses the Apple GPU without a --device argument')
         args.device = 'metal'
-        engine = MLXTrainer(config, args)
     else:
         import torch
         args.device = args.device or ('cuda' if torch.cuda.is_available() else
                                       'mps' if torch.backends.mps.is_available() else 'cpu')
+    if args.device == 'cuda':
+        if not torch.cuda.is_available():
+            parser.error('CUDA was requested but no CUDA device is available')
+        capacity = torch.cuda.get_device_properties(torch.cuda.current_device()).total_memory
+    else:
+        try:
+            capacity = os.sysconf('SC_PHYS_PAGES') * os.sysconf('SC_PAGE_SIZE')
+        except (AttributeError, OSError, ValueError):
+            capacity = None
+    minimum = 16 * parameters  # FP32 weights, gradients, and two AdamW moment arrays.
+    if capacity and 0 < capacity < minimum:
+        parser.error(f'{args.device} has {capacity / 2**30:.2f} GiB total memory. '
+                     f'This trainer needs at least {minimum / 2**30:.2f} GiB before activations.')
+    if not (args.benchmark or args.no_checkpoint):
+        args.run_dir.mkdir(parents=True, exist_ok=True)
+        required = 12 * parameters + 512 * 2**20
+        if shutil.disk_usage(args.run_dir).free < required:
+            parser.error(f'Need {required / 2**30:.2f} GiB free for an atomic checkpoint in the run directory')
+    if args.backend == 'mlx':
+        engine = MLXTrainer(config, args)
+    else:
         engine = TorchTrainer(config, args)
     if args.benchmark:
         if not 1 <= args.context <= config['train_context']:
